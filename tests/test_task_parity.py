@@ -84,6 +84,9 @@ NOT_LOCOMOTION = {
     # one-shot, no command, no gait prior, and a reward budget of height, not of
     # velocity tracking.
     "jumper.ref_free_jump",
+    # A sideways barrel roll: one-shot, no command, no gait prior, no fell-over
+    # termination, symmetry off, and a reward budget of turn about the long axis.
+    "jumper.roll",
     # Walks the tripod gait with the body's posture commanded on top: a second
     # command term, three tracking rewards for it, two observations, `upright`
     # replaced by its command-relative version, and both ceilings raised (which
