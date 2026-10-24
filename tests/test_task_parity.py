@@ -87,6 +87,10 @@ NOT_LOCOMOTION = {
     # A sideways barrel roll: one-shot, no command, no gait prior, no fell-over
     # termination, symmetry off, and a reward budget of turn about the long axis.
     "jumper.roll",
+    # Picks debris up with the left claw and puts it in a tray, standing on five
+    # legs: 21 driven joints, props in the scene, a world-wide friction model of
+    # its own, symmetry off, and a reward ladder for a manipulation job.
+    "jumper.pick_place",
     # Walks the tripod gait with the body's posture commanded on top: a second
     # command term, three tracking rewards for it, two observations, `upright`
     # replaced by its command-relative version, and both ceilings raised (which
