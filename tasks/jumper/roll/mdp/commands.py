@@ -65,13 +65,18 @@ class RollTrackerCfg(CommandTermCfg):
     entity_name: str = "robot"
     #: Never resampled mid-episode: the bookkeeping is the episode's.
     resampling_time_range: tuple[float, float] = (1.0e9, 1.0e9)
-    #: Control steps after a *turned* spawn during which the body is left to
-    #: settle and nothing is paid or charged for it. Measured with the legs held
-    #: at HOME: a body set down on its side does not stay there -- spawns from 90
-    #: to 345 degrees all flopped onto the back, the rest onto the feet, with
-    #: ground forces up to 170 N -- and that turn and that thump are the spawn's,
-    #: not the policy's. The angle is still tracked throughout.
-    settle_steps: int = 25
+    #: Control steps after a *turned* spawn during which nothing is paid or
+    #: charged: the first contact's thump is the spawn's, not the policy's.
+    #:
+    #: **5, down from 25.** With the legs held at HOME a body set down on its side
+    #: flops onto its back -- spawns from 90 to 345 degrees all did, measured --
+    #: and 25 steps (0.5 s) was long enough for the flop to finish before the
+    #: policy was judged at all. So nearly every mid-roll spawn became a spawn on
+    #: the back, the far side was never practised, and the first Colab run
+    #: (1000 iterations, T4, 2026-10-24) learnt to roll onto its back and stop
+    #: there: 0.27 turns per episode from iteration 300 on, no completions. At 5
+    #: steps a spawn on its far side starts the policy on its far side.
+    settle_steps: int = 5
 
     def build(self, env: ManagerBasedRlEnv) -> RollTracker:
         return RollTracker(self, env)
@@ -92,6 +97,9 @@ class RollTracker(CommandTerm):
         self.spawn = torch.zeros(n, device=self.device)
         #: The episode started turned (see `settle_steps`).
         self.rolled_spawn = torch.zeros(n, dtype=torch.bool, device=self.device)
+        #: The furthest the body has got this episode, capped at one full roll:
+        #: the high-water mark `roll_progress` pays against.
+        self.best = torch.zeros(n, device=self.device)
         self._turned = torch.zeros(n, device=self.device)
         self._done = torch.zeros(n, device=self.device)
         self.metrics["turns"] = self._turned
@@ -131,6 +139,7 @@ class RollTracker(CommandTerm):
         self.angle[env_ids] = _wrap(a)
         self.total[env_ids] = a
         self.spawn[env_ids] = a
+        self.best[env_ids] = a.clamp(max=TWO_PI)
         self.rolled_spawn[env_ids] = a != 0.0
 
     def _update_metrics(self) -> None:
@@ -149,6 +158,8 @@ class RollTracker(CommandTerm):
         self.angle.copy_(now)
         # Until the settle window closes, the turn so far is gravity's.
         self.spawn.copy_(torch.where(self.settling, self.total, self.spawn))
+        capped = self.total.clamp(max=TWO_PI)
+        self.best.copy_(torch.where(self.settling, capped, torch.maximum(self.best, capped)))
 
 
 __all__ = ["RollTracker", "RollTrackerCfg", "TWO_PI", "roll_angle"]

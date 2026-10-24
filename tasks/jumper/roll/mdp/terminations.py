@@ -25,6 +25,7 @@ def standing_after_roll(
     min_feet: int = 4,
     max_ang_vel: float = 2.0,
     foot_force: float = 1.0,
+    min_own_turn: float = 1.0,
 ) -> torch.Tensor:
     """True when the body has turned within `turn_tolerance` of a full roll and
     is standing: tilt under `max_tilt`, at least `min_feet` feet loaded over
@@ -42,8 +43,12 @@ def standing_after_roll(
         & (tilt < max_tilt)
         & (feet >= min_feet)
         & (w < max_ang_vel)
-        # A spawn that falls onto its feet by itself has not rolled.
+        # A spawn that falls onto its feet by itself has not rolled: the settle
+        # window has to be over, and the policy has to have turned the body
+        # `min_own_turn` radians itself. With the window cut to 5 steps a spawn
+        # near 300 degrees can tip onto its feet just after it.
         & ~cmd.settling
+        & (cmd.total_now() - cmd.spawn >= min_own_turn)
     )
 
 

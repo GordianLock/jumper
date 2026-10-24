@@ -1,10 +1,20 @@
 """Rewards for the sideways roll.
 
-**The objective** is the turn itself: `roll_progress` pays for every radian the
-body turns the right way about its long axis, up to one full roll, and charges
-every radian back the same. It is a rate capped at `max_rate`, so a fling that
-gets the turn over in a few frames pays no more than a controlled roll at that
-speed; the cap is the tempo asked for.
+**The objective** is the turn itself: `roll_progress` pays for every radian of
+*new ground* -- each step the body gets further round than it has been this
+episode, up to one full roll. Falling back costs nothing and re-covering old
+ground pays nothing, so rocking cannot farm it and a failed push is free.
+
+That last point is the fix the first trained run asked for. It paid the net
+turn, so a push that tipped the body from its back to 240 degrees and let it fall
+back was worth zero before its drift and heading costs and less than zero after
+them; the policy learnt to lie on its back and stay there. The motion is
+possible: a cross-entropy search over two held leg postures (64 samples x 10
+rounds, native CPU, 2026-10-24) took the body from its back past 360 degrees in
+the first round, and its elite averaged 504 degrees by the tenth.
+
+It is a rate capped at `max_rate`, so a fling that gets the turn over in a few
+frames pays no more than a controlled roll at that speed.
 
 Once the turn is (nearly) complete, `finish_upright` and `finish_home` pull the
 body level and the legs back to HOME, and `roll_complete` pays a one-off bonus
@@ -32,13 +42,12 @@ def _tracker(env, command_name: str):
 
 
 def roll_progress(env, command_name: str = "roll", max_rate: float = 4.0) -> torch.Tensor:
-    """Turn rate about the long axis, rad/s, counted only up to one full roll and
-    capped at `max_rate` from above. Uncapped from below: turning back costs
-    what turning forward paid, so rocking earns nothing."""
+    """New ground about the long axis, rad/s: how far the body got past its
+    furthest point so far this episode (capped at one full roll), per second,
+    capped at `max_rate`. Never negative."""
     cmd = _tracker(env, command_name)
-    before = cmd.total.clamp(max=TWO_PI)
     after = cmd.total_now().clamp(max=TWO_PI)
-    rate = ((after - before) / env.step_dt).clamp(max=max_rate)
+    rate = ((after - cmd.best).clamp(min=0.0) / env.step_dt).clamp(max=max_rate)
     return rate * (~cmd.settling).float()
 
 

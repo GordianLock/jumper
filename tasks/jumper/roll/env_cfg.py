@@ -94,10 +94,12 @@ HISTORY_TERMS = frozenset({"joint_pos", "joint_vel", "actions", "actuator_force"
 
 # ── Spawns ─────────────────────────────────────────────────────────────────────
 #: Share of episodes started partway round, and the turn they start at (rad,
-#: right side down). Up to ~300 degrees: a spawn nearly round would land standing
-#: and collect the bonus for a roll it did not make.
+#: right side down). Up to 280 degrees: completion needs a turn of the policy's
+#: own (`mdp/terminations.py`, `min_own_turn`, 57 degrees), and from 280 that is
+#: the whole of the last side. Measured with the legs at HOME, bodies set down
+#: below about 310 degrees flop back onto the back rather than onto the feet.
 ROLLED_FRACTION = 0.6
-ROLLED_ANGLE_RANGE = (math.radians(20.0), math.radians(300.0))
+ROLLED_ANGLE_RANGE = (math.radians(20.0), math.radians(280.0))
 ROLLED_JOINT_NOISE = 0.1
 
 # ── The objective ──────────────────────────────────────────────────────────────
@@ -129,9 +131,14 @@ STAND_MAX_ANG_VEL = 2.0
 IMPACT_THRESHOLD = 40.0
 IMPACT_WEIGHT = -1.0
 
-HEADING_WEIGHT = -1.0
-FORWARD_DRIFT_WEIGHT = -0.5
-FORWARD_DRIFT_SCALE = 0.10
+#: Softened after the first trained run, where these two were the largest costs
+#: (-0.30 and -0.44 per second of episode against 0.39 for the turn, iterations
+#: 900-999): a body rolling over its side shifts and swings a little, and a push
+#: that fails still moves it. They keep the roll sideways; they should not make
+#: trying it a loss.
+HEADING_WEIGHT = -0.3
+FORWARD_DRIFT_WEIGHT = -0.2
+FORWARD_DRIFT_SCALE = 0.20
 
 LEG_COLLISION_WEIGHT = -1.0
 JOINT_LIMIT_WEIGHT = -1.0
