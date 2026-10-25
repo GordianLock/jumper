@@ -23,6 +23,7 @@ from mjlab.entity import Entity
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 
 from ...roll.mdp.commands import TWO_PI
+from ...roll.mdp.rewards import airborne
 
 
 def _cmd(env, name: str):
@@ -93,15 +94,6 @@ def complete(env, **kwargs) -> torch.Tensor:
     from .terminations import standing_done
 
     return standing_done(env, **kwargs).float()
-
-
-def airborne(env, command_name: str = "roll") -> torch.Tensor:
-    """1 while nothing of the robot touches the floor."""
-    body = env.scene["body_ground_contact"].data.force
-    feet = env.scene["feet_ground_contact"].data.force
-    assert body is not None and feet is not None
-    off = (body.norm(dim=-1).sum(dim=1) < 0.5) & (feet.norm(dim=-1).sum(dim=1) < 0.5)
-    return off.float() * (~_cmd(env, command_name).settling).float()
 
 
 __all__ = ["airborne", "complete", "finish_home", "finish_upright", "nearly_done",

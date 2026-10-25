@@ -128,8 +128,18 @@ STAND_MAX_ANG_VEL = 2.0
 # ── The costs ──────────────────────────────────────────────────────────────────
 #: Net non-foot ground force above this (N) is charged quadratically. The robot
 #: weighs about 25 N on the model; this charges landing hard, not lying down.
-IMPACT_THRESHOLD = 40.0
-IMPACT_WEIGHT = -1.0
+#:
+#: **Tightened from 40 N at weight -1**, which the first policy to complete the
+#: roll left far behind: `model_1499` of the 2026-10-24 Colab run (T4, 1500
+#: iterations), measured on 16 envs, native CPU, observation noise on, peaked at a
+#: median 129 N of body on the floor (198 at worst) -- five times its weight,
+#: landing on what will be the shell. It rolled in 0.88 s, every time.
+IMPACT_THRESHOLD = 30.0
+IMPACT_WEIGHT = -2.0
+
+#: Per second with nothing touching the floor. The same policy spent a median
+#: 0.20 s of its roll with no contact at all -- a roll should stay on the ground.
+AIRBORNE_WEIGHT = -2.0
 
 #: Softened after the first trained run, where these two were the largest costs
 #: (-0.30 and -0.44 per second of episode against 0.39 for the turn, iterations
@@ -285,6 +295,10 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
         "body_impact": RewardTermCfg(
             func=roll_mdp.rewards.body_impact, weight=IMPACT_WEIGHT,
             params={"sensor_name": "body_ground_contact", "threshold": IMPACT_THRESHOLD},
+        ),
+        "airborne": RewardTermCfg(
+            func=roll_mdp.rewards.airborne, weight=AIRBORNE_WEIGHT,
+            params={"command_name": "roll"},
         ),
         "heading_error": RewardTermCfg(
             func=roll_mdp.rewards.heading_error, weight=HEADING_WEIGHT

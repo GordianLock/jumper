@@ -22,7 +22,8 @@ the step it is standing -- which also ends the episode (`terminations.py`).
 None of the three pays before the turn, so standing still at HOME earns nothing.
 
 **The costs** keep the roll a roll: thumping the body into the ground
-(`body_impact`, the shell's sake), turning away from the start heading or
+(`body_impact`, the shell's sake), time with nothing touching the floor
+(`airborne`), turning away from the start heading or
 creeping forward instead of sideways (`heading_error`, `forward_drift`), legs
 knocking each other, joint limits and jittery targets.
 """
@@ -117,6 +118,16 @@ def body_impact(
     return cost * (~_tracker(env, command_name).settling).float()
 
 
+def airborne(env, command_name: str = "roll") -> torch.Tensor:
+    """1 while nothing of the robot touches the floor (no body, no foot over 0.5 N),
+    outside a spawn's settle window."""
+    body = env.scene["body_ground_contact"].data.force
+    feet = env.scene["feet_ground_contact"].data.force
+    assert body is not None and feet is not None
+    off = (body.norm(dim=-1).sum(dim=1) < 0.5) & (feet.norm(dim=-1).sum(dim=1) < 0.5)
+    return off.float() * (~_tracker(env, command_name).settling).float()
+
+
 def heading_error(env) -> torch.Tensor:
     """y^2 of the body's forward axis in the world, normalised over its
     horizontal part: 0 facing the spawn heading (+x, or -x), 1 turned 90 degrees.
@@ -139,6 +150,7 @@ def forward_drift(env, scale: float = 0.10, cap: float = 4.0) -> torch.Tensor:
 
 
 __all__ = [
+    "airborne",
     "body_impact",
     "finish_home",
     "finish_upright",
