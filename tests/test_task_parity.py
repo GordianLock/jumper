@@ -87,6 +87,9 @@ NOT_LOCOMOTION = {
     # A sideways barrel roll: one-shot, no command, no gait prior, no fell-over
     # termination, symmetry off, and a reward budget of turn about the long axis.
     "jumper.roll",
+    # jumper.roll's physics and sensors with a fading demonstration fed forward and
+    # a self-righting share of episodes: one-shot, no command, symmetry off.
+    "jumper.momentum_roll",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of
     # its own, symmetry off, and a reward ladder for a manipulation job.

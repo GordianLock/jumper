@@ -65,6 +65,7 @@ from .jumper import gesture_hello  # noqa: F401,E402
 from .jumper import gesture_paw  # noqa: F401,E402
 from .jumper import gesture_salute  # noqa: F401,E402
 from .jumper import jump  # noqa: F401,E402
+from .jumper import momentum_roll  # noqa: F401,E402
 from .jumper import pick_place  # noqa: F401,E402
 from .jumper import posture  # noqa: F401,E402
 from .jumper import ref_free_jump  # noqa: F401,E402
