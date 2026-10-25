@@ -92,6 +92,9 @@ NOT_LOCOMOTION = {
     "jumper.momentum_roll",
     # jumper.momentum_roll with its demonstration tracked for the whole of training.
     "jumper.styled_roll",
+    # jumper.momentum_roll's machinery with style and joint-safety rewards in place
+    # of efficiency: four contact sensors of its own, symmetry off.
+    "jumper.flourish_roll",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of
     # its own, symmetry off, and a reward ladder for a manipulation job.

@@ -59,6 +59,7 @@ from .jumper import dance_dream_wings  # noqa: F401,E402
 from .jumper import dance_maze  # noqa: F401,E402
 from .jumper import dance_waist  # noqa: F401,E402
 from .jumper import five_foot  # noqa: F401,E402
+from .jumper import flourish_roll  # noqa: F401,E402
 from .jumper import flat  # noqa: F401,E402
 from .jumper import gesture_bow  # noqa: F401,E402
 from .jumper import gesture_hello  # noqa: F401,E402
