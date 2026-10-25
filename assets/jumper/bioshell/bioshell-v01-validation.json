@@ -1,0 +1,26 @@
+[
+  {
+    "design": "bioshell-crowned-dome-v01",
+    "watertight": true,
+    "manufacturing_scale_mm": true,
+    "protected_mount_and_front_shift_m": 0,
+    "collision_gap_random_directions_m": 0.00017507072134055612,
+    "mujoco_load": false
+  },
+  {
+    "design": "bioshell-central-keel-v01",
+    "watertight": true,
+    "manufacturing_scale_mm": true,
+    "protected_mount_and_front_shift_m": 0,
+    "collision_gap_random_directions_m": 0.0001805838714773328,
+    "mujoco_load": false
+  },
+  {
+    "design": "bioshell-low-rocker-crest-v01",
+    "watertight": true,
+    "manufacturing_scale_mm": true,
+    "protected_mount_and_front_shift_m": 0,
+    "collision_gap_random_directions_m": 0.0004465980572067943,
+    "mujoco_load": false
+  }
+]

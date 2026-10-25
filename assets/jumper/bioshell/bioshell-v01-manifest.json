@@ -1,0 +1,134 @@
+{
+  "schema": "jumper-bioshell-v01",
+  "coordinate_frame": "upper_shell_link",
+  "unit": "meter",
+  "source_stl": "assets/jumper/urdf/jumper/meshes/visual/upper_shell_link.stl",
+  "stock_mass_kg": 0.102436653,
+  "stock_volume_m3": 9.852338542739657e-05,
+  "density_kg_m3": 1039.719174849987,
+  "front_plus_x": true,
+  "parent_body_shell_offset_m": [
+    -0.0073137,
+    0,
+    0.0315
+  ],
+  "variants": {
+    "bioshell-crowned-dome-v01": {
+      "description": "Broad dome and spaced blunt nodules",
+      "visual_mesh": "assets/jumper/bioshell/bioshell-crowned-dome-v01-visual.stl",
+      "collision_mesh": "assets/jumper/bioshell/bioshell-crowned-dome-v01-collision.stl",
+      "print_stl_mm": "assets/jumper/bioshell/bioshell-crowned-dome-v01-print-mm.stl",
+      "colored_preview_ply": "assets/jumper/bioshell/bioshell-crowned-dome-v01-colored.ply",
+      "colored_print_3mf": "assets/jumper/bioshell/bioshell-crowned-dome-v01-colored.3mf",
+      "mjcf": "assets/jumper/jumper-bioshell-crowned-dome-v01.xml",
+      "visual_triangles": 18144,
+      "collision_triangles": 1210,
+      "max_added_height_m": 0.004761226989919086,
+      "max_protected_vertex_shift_m": 0.0,
+      "collision_support_gap_test_m": 0.0,
+      "volume_m3": 0.0001436133994809838,
+      "mass_kg": 0.14931760520577003,
+      "center_of_mass_m": [
+        -0.0022230937285652183,
+        -0.00014339922179512786,
+        0.027086506563036506
+      ],
+      "inertia_about_com_kg_m2": [
+        [
+          0.0004122013510208423,
+          -2.53376746360313e-06,
+          -2.178410760059623e-05
+        ],
+        [
+          -2.533767463603102e-06,
+          0.00037794181795615736,
+          -5.052582538227599e-08
+        ],
+        [
+          -2.1784107600596246e-05,
+          -5.052582538232575e-08,
+          0.0007520244700460852
+        ]
+      ],
+      "density_kg_m3": 1039.719174849987
+    },
+    "bioshell-central-keel-v01": {
+      "description": "Longitudinal crest and shoulder bosses",
+      "visual_mesh": "assets/jumper/bioshell/bioshell-central-keel-v01-visual.stl",
+      "collision_mesh": "assets/jumper/bioshell/bioshell-central-keel-v01-collision.stl",
+      "print_stl_mm": "assets/jumper/bioshell/bioshell-central-keel-v01-print-mm.stl",
+      "colored_preview_ply": "assets/jumper/bioshell/bioshell-central-keel-v01-colored.ply",
+      "colored_print_3mf": "assets/jumper/bioshell/bioshell-central-keel-v01-colored.3mf",
+      "mjcf": "assets/jumper/jumper-bioshell-central-keel-v01.xml",
+      "visual_triangles": 18144,
+      "collision_triangles": 1220,
+      "max_added_height_m": 0.005889663018607858,
+      "max_protected_vertex_shift_m": 0.0,
+      "collision_support_gap_test_m": 0.0,
+      "volume_m3": 0.00013165867280932458,
+      "mass_kg": 0.13688804665515536,
+      "center_of_mass_m": [
+        -0.001287598125219903,
+        8.193792843572668e-06,
+        0.026442323535427557
+      ],
+      "inertia_about_com_kg_m2": [
+        [
+          0.0003918690320819703,
+          -2.0864346346699413e-06,
+          -1.9828788902120707e-05
+        ],
+        [
+          -2.086434634669904e-06,
+          0.00035793386871340276,
+          -4.0538961343230553e-07
+        ],
+        [
+          -1.9828788902120747e-05,
+          -4.053896134322886e-07,
+          0.0007139945559972087
+        ]
+      ],
+      "density_kg_m3": 1039.719174849987
+    },
+    "bioshell-low-rocker-crest-v01": {
+      "description": "Low asymmetric rocker and lateral contact ribs",
+      "visual_mesh": "assets/jumper/bioshell/bioshell-low-rocker-crest-v01-visual.stl",
+      "collision_mesh": "assets/jumper/bioshell/bioshell-low-rocker-crest-v01-collision.stl",
+      "print_stl_mm": "assets/jumper/bioshell/bioshell-low-rocker-crest-v01-print-mm.stl",
+      "colored_preview_ply": "assets/jumper/bioshell/bioshell-low-rocker-crest-v01-colored.ply",
+      "colored_print_3mf": "assets/jumper/bioshell/bioshell-low-rocker-crest-v01-colored.3mf",
+      "mjcf": "assets/jumper/jumper-bioshell-low-rocker-crest-v01.xml",
+      "visual_triangles": 18144,
+      "collision_triangles": 1240,
+      "max_added_height_m": 0.0033427342655451245,
+      "max_protected_vertex_shift_m": 0.0,
+      "collision_support_gap_test_m": 0.0,
+      "volume_m3": 0.0001392467534897305,
+      "mass_kg": 0.14477751963888214,
+      "center_of_mass_m": [
+        -0.001674764885641758,
+        -0.001817314490564445,
+        0.026722339230486506
+      ],
+      "inertia_about_com_kg_m2": [
+        [
+          0.0004171462475161164,
+          2.507744303209865e-06,
+          -2.151384508432382e-05
+        ],
+        [
+          2.507744303209887e-06,
+          0.0003722683731493923,
+          2.2581089925191863e-06
+        ],
+        [
+          -2.1513845084323834e-05,
+          2.2581089925191796e-06,
+          0.0007527267883214501
+        ]
+      ],
+      "density_kg_m3": 1039.719174849987
+    }
+  }
+}
