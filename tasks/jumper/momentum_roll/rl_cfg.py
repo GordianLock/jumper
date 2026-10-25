@@ -27,6 +27,9 @@ def agent_cfg() -> RslRlOnPolicyRunnerCfg:
         # The prior is gone by 1200 (`PRIOR_END_ITERATIONS`); the rest is the
         # objective on its own.
         max_iterations=2500,
+        # Every 250 iterations rather than 50: a Colab backup of 50 checkpoints
+        # (jumper5's, 452 MB) is too large to hand over whole.
+        save_interval=250,
         # Off: the roll goes right side first, and a mirrored sample would teach
         # the other way round from the same observation.
         symmetry=False,

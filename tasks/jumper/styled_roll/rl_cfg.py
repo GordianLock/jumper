@@ -21,6 +21,9 @@ def agent_cfg() -> RslRlOnPolicyRunnerCfg:
         lam=0.95,
         num_steps_per_env=NUM_STEPS_PER_ENV,
         max_iterations=2500,
+        # Every 250 iterations rather than 50: a Colab backup of 50 checkpoints
+        # (jumper5's, 452 MB) is too large to hand over whole.
+        save_interval=250,
         # Off: the roll goes right side first (jumper.momentum_roll's reason).
         symmetry=False,
     )

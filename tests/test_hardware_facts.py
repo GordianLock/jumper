@@ -72,6 +72,10 @@ DIRECT = {
         make_velocity_env_cfg,
         ("base_ang_vel", "projected_gravity", "actuator_force"),
     ),
+    "jumper.showcase_roll": (
+        make_velocity_env_cfg,
+        ("base_ang_vel", "projected_gravity", "actuator_force"),
+    ),
     "jumper.dance": (
         make_tracking_env_cfg,
         ("base_ang_vel", "projected_gravity", "actuator_force"),

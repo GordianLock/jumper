@@ -21,6 +21,9 @@ def agent_cfg() -> RslRlOnPolicyRunnerCfg:
         lam=0.95,
         num_steps_per_env=24,
         max_iterations=5000,
+        # Every 250 iterations rather than 50: a Colab backup of 50 checkpoints
+        # (jumper5's, 452 MB) is too large to hand over whole.
+        save_interval=250,
         # **Off, and it has to be.** The roll goes right side first; its mirror
         # image goes left side first. Augmenting with mirrored samples would teach
         # the actor both from the same observation. A left roll is the mirrored

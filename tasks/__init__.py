@@ -72,6 +72,7 @@ from .jumper import posture  # noqa: F401,E402
 from .jumper import ref_free_jump  # noqa: F401,E402
 from .jumper import ripple  # noqa: F401,E402
 from .jumper import roll  # noqa: F401,E402
+from .jumper import showcase_roll  # noqa: F401,E402
 from .jumper import styled_roll  # noqa: F401,E402
 from .jumper import swing  # noqa: F401,E402
 from .jumper import tetrapod  # noqa: F401,E402
