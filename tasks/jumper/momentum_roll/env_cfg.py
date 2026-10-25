@@ -24,8 +24,7 @@ mode does.
 - `1 - DEMO_FRACTION - BACK_FRACTION` from standing, the roll the robot is asked for;
 - `DEMO_FRACTION` partway through the demonstration, at its recorded state;
 - `BACK_FRACTION` on the back, **self-righting**: upright either way round counts.
-  On the robot this is the way out of a roll that stalled, and the actor cannot
-  tell the two apart -- on its back is on its back.
+  Off for now (see `BACK_FRACTION`).
 
 ## The physics is jumper.roll's
 
@@ -69,7 +68,13 @@ ACTION_SCALE = 0.75
 
 # ── Episodes ───────────────────────────────────────────────────────────────────
 DEMO_FRACTION = 0.4
-BACK_FRACTION = 0.25
+#: **0, from 0.25.** Trained at 0.25 (the 2026-10-24 Colab run, model_1999), the
+#: back starts never once succeeded -- 0 of 32 self-righted in evaluation, and
+#: they lay still -- while the roll itself completed 32 of 32. Self-righting will
+#: be its own task, trained from arbitrary positions and transferred afterwards;
+#: here the back starts only cost a quarter of the training. The mechanism stays,
+#: so a later run can turn it back on.
+BACK_FRACTION = 0.0
 #: On the back, give or take 40 degrees, legs near HOME.
 BACK_ANGLE_RANGE = (math.radians(140.0), math.radians(220.0))
 BACK_JOINT_NOISE = 0.2

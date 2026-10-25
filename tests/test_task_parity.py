@@ -90,6 +90,8 @@ NOT_LOCOMOTION = {
     # jumper.roll's physics and sensors with a fading demonstration fed forward and
     # a self-righting share of episodes: one-shot, no command, symmetry off.
     "jumper.momentum_roll",
+    # jumper.momentum_roll with its demonstration tracked for the whole of training.
+    "jumper.styled_roll",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of
     # its own, symmetry off, and a reward ladder for a manipulation job.
