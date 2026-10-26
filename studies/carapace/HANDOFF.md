@@ -201,10 +201,69 @@ All of these numbers are in `logs/`. In that folder, `gentle*.log` holds the loa
   95 N, roughly four times the robot's weight.
 - The tail alone hurts every roll.
 
+### Rear horns on the three-horn front (session 2)
+
+The user's goal was clarified: not one shell that does every roll, but a map of which
+shell can do which roll. The rear horn sets were tested on the three-horn front
+(centre horn20 plus the low front corners of tri20s) instead of the single horn:
+`tri20s_rc`, `tri20s_rt`, `tri20s_rct`. `righting.build()` takes these as
+`<front>_<rear>`. The taller front corners (tri20m) are not tested yet; the user may want
+them next.
+
+Rest poses belly-up:
+
+| Shell | Head-up | Side lean | Height | On the floor |
+|---|---|---|---|---|
+| tri20s_rc | 7° | none | 11.5 cm | centre horn, both rear corners (same as rc20) |
+| tri20s_rt | 11° | about 20° | 11.1 cm | one front corner, tail |
+| tri20s_rct | 6° | none | 11.6 cm | centre horn, a rear corner, tail |
+
+Search results. Each cell shows how many of the three searches reached at least 29 of the
+32 starts, with each search's best rate in brackets:
+
+| Shell | Flip | Side | Diagonal |
+|---|---|---|---|
+| tri20s_rc | 3/3 (31, 32, 32) | **2/3 (32, 32, 0)** | 1/3 (0, 32, 0) |
+| tri20s_rt | 0/3 (16, 18, 16) | 0/3 (7, 0, 2) | 0/3 (0, 18, 0) |
+| tri20s_rct | 1/3 (12, 30, 12) | 1/3 (12, 29, 13) | 1/3 (31, 0, 13) |
+
+The side-roll axes were checked: tri20s_rc's two plans are 11° and 13° off the
+centreline, and tri20s_rct's is 14° off it. Its diagonal plans sit on the diagonal
+(alignment 1.00).
+
+Loads, measured with `gentle.py` (`logs/gentle_tri20s_rear.log`). The earlier
+horn20 flip, rc20 diagonal and rct20 side plans were re-measured in the same run and
+reproduced 4.2, 5.7 and 5.6 N·m.
+
+| Roll | Plan | Joint torque | Limbs | Shell | Horn |
+|---|---|---|---|---|---|
+| flip | `plan_tri20s_rc_s1` | 4.3 | 76 | 0 | 55 |
+| flip | `plan_tri20s_rc_s2` | 5.6 | 64 | 0 | 73 |
+| flip | `plan_tri20s_rc_s3` | 6.9 | 73 | 0 | 49 |
+| flip | `plan_tri20s_rct_s2` | 5.1 | 85 | 0 | 100 |
+| side | `plan_tri20s_rc_side_s2` | **4.1** | 89 | 0 | 55 |
+| side | `plan_tri20s_rc_side_s1` | 4.7 | 56 | 0 | 155 |
+| side | `plan_tri20s_rct_side_s2` | 5.5 | 112 | 0 | 88 |
+| diag | `plan_tri20s_rc_diag_s2` | **5.1** | 74 | 0 | 52 |
+| diag | `plan_tri20s_rct_diag_s1` | 6.5 | 83 | 0 | 49 |
+
+Takeaways:
+
+- **tri20s_rc can do all three rolls.** Its side roll is the best found so far: 32 of
+  32 starts and 4.1 N·m, below the jump's 4.8. Unlike rct20's side roll (95 N), it never
+  touches the shell. Its diagonal, at 5.1 N·m, is also the gentlest so far, though only
+  one search of three found it.
+- With a single front horn, the rear corners never produced a side roll. The front
+  corners are what make it possible.
+- The tail still hurts. tri20s_rt does nothing reliably. Adding the tail to the corners
+  (tri20s_rct) lowers the flip and side reliability and adds no gentleness. Its one gain
+  is that the side roll no longer hits the shell (0 N against rct20's 95 N).
+
 ## Next steps the user has asked about or hinted at
 
-- Combine the **front corner horns with the rear horns**. The user explicitly wants this
-  next, for example tri20s or tri20m plus rc20 or rct20.
+- Combine the **front corner horns with the rear horns**. tri20s is done (session 2,
+  above). tri20m with the same three rear sets is the possible follow-up the user
+  mentioned: `tri20m_rc`, `tri20m_rt`, `tri20m_rct` already build.
 - Other sizes and angles of these horns.
 - **Side rails or channels** low along the shell sides at shell-top height, to rock the
   body onto its edge. This is the most likely fix for the side roll, and it might soften
