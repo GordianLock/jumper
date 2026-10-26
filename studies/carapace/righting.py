@@ -50,6 +50,14 @@ def build(variant):
     #   rc20  -- two rear corner horns, 2.5 cm, (-0.04, +-0.035) -> (-0.075, +-0.065)
     #   rt20  -- one small rear centreline horn ("tail"), 2.5 cm, (-0.06, 0) -> (-0.095, 0)
     #   rct20 -- both
+    # The same rear horns can sit on the three-horn front instead: "<front>_<rear>", for
+    # example tri20s_rc, tri20s_rt, tri20s_rct (front = tri20s, rear = rc, rt or rct).
+    # Each piece passed clearance.py on its own, so their union is clear of the legs too.
+    front = None
+    for rear in ("rct", "rc", "rt"):
+        if variant.endswith("_" + rear):
+            front, variant = variant[: -len(rear) - 1], rear + "20"
+            break
     if variant in ("rc20", "rt20", "rct20"):
         line = xml[xml.index('<geom name="robot/base_link_meshcol"'):].split("\n")[0]
         extra = ""
@@ -63,7 +71,7 @@ def build(variant):
                       f'fromto="-0.06 0 {TOP} -0.095 0 {TOP + 0.025}" mass="0.015" '
                       f'contype="1" conaffinity="0" condim="3" friction="0.6 0.005 0.0001" rgba="0.9 0.5 0.1 1"/>')
         xml = xml.replace(line, line + extra, 1)
-        variant = "horn20"
+        variant = front or "horn20"
     side = {"tri20s": 0.025, "tri20m": 0.035}.get(variant)
     if side is not None:
         # two smaller horns toward the front corners, angled out and forward; the tip is

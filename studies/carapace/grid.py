@@ -16,12 +16,17 @@ SHELLS = os.environ.get("SHELLS", "horn20,horn30,tri20s,tri20m").split(",")
 NAMES = {"horn20": "20 deg horn", "horn30": "30 deg horn",
          "tri20s": "20 deg + 2.5 cm corner horns", "tri20m": "20 deg + 3.5 cm corner horns",
          "rt20": "front horn + rear tail", "rc20": "front horn + rear corners",
-         "rct20": "front + rear corners + tail"}
+         "rct20": "front + rear corners + tail",
+         "tri20s_rc": "3 front horns + rear corners", "tri20s_rt": "3 front horns + tail",
+         "tri20s_rct": "3 front + rear corners + tail"}
 W, H, FPS_STEP, SECONDS = 320, 240, 10, 3.2
 
 rates = {}
-for log in ["righting3.log", "righting_axes2.log", "righting_tri.log", "righting_rear.log", "righting_rear2.log"]:
+for log in ["righting3.log", "righting_axes2.log", "righting_tri.log", "righting_rear.log",
+            "righting_rear2.log", "righting_tri20s_rear.log"]:
     seen = {}
+    if not os.path.exists(HERE + "logs/" + log):
+        continue
     for line in open(HERE + "logs/" + log):
         mt = re.match(r"\s+(\S+): best plan rights (\d+)/32", line)
         if mt:
