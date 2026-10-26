@@ -104,7 +104,9 @@ line-length = 100
 # keep rebases workable).
 # Note it must not be written as exclude = ["rl"] -- that would exclude our own
 # rl/mjrl along with them.
-exclude = ["rl/mjlab", "rl/rsl_rl"]
+exclude = ["rl/mjlab", "rl/rsl_rl", "studies"]
+# (carapace-study branch only: studies/ holds one-off simulation probes, not
+# framework code; this branch is not meant to be merged.)
 
 [tool.ruff.lint]
 # Written out rather than left to ruff's default, because the default moved
