@@ -72,7 +72,9 @@ def build(variant):
                       f'contype="1" conaffinity="0" condim="3" friction="0.6 0.005 0.0001" rgba="0.9 0.5 0.1 1"/>')
         xml = xml.replace(line, line + extra, 1)
         variant = front or "horn20"
-    side = {"tri20s": 0.025, "tri20m": 0.035}.get(variant)
+    # front corner horns on the 20 or 30 deg centre horn: tri<deg><s|m>, s = 2.5 cm, m = 3.5 cm
+    tri = re.fullmatch(r"tri(20|30)([sm])", variant)
+    side = {"s": 0.025, "m": 0.035}[tri.group(2)] if tri else None
     if side is not None:
         # two smaller horns toward the front corners, angled out and forward; the tip is
         # as far toward the corner as stays clear of the legs' floor-reaching sweep
@@ -85,7 +87,7 @@ def build(variant):
                       f'fromto="0.02 {sgn * 0.035} {TOP} 0.065 {sgn * 0.065} {TOP + side}" mass="0.015" '
                       f'contype="1" conaffinity="0" condim="3" friction="0.6 0.005 0.0001" rgba="0.9 0.5 0.1 1"/>')
         xml = xml.replace(line, line + extra, 1)
-        variant = "horn20"
+        variant = "horn" + tri.group(1)
     if variant.startswith("horn"):
         # calibrated: these sizes settle at 20.1 and 30.1 deg head-up (stock: 7.8)
         deg = {"horn20": 15.43, "horn30": 21.99}.get(variant) or float(variant[4:]); r = 0.012
