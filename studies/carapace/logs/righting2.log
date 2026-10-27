@@ -1,0 +1,63 @@
+stock rests at body-up -0.99, head pitch 7.8 deg, base height 0.061 m
+  stock it  0 best -9.61 upright-in-pop 0.00 t_up nans (3s)
+  stock it  5 best -9.61 upright-in-pop 0.00 t_up nans (21s)
+  stock it 10 best -9.61 upright-in-pop 0.00 t_up nans (37s)
+  stock it 15 best -9.61 upright-in-pop 0.00 t_up nans (53s)
+  stock it 20 best -9.61 upright-in-pop 0.00 t_up nans (70s)
+  stock it 25 best -9.61 upright-in-pop 0.00 t_up nans (85s)
+  stock it 30 best -9.61 upright-in-pop 0.00 t_up nans (101s)
+  stock it 35 best -9.61 upright-in-pop 0.00 t_up nans (117s)
+  stock it 39 best -9.61 upright-in-pop 0.00 t_up nans (130s)
+  median peak floor force (N): limbs 0, feet 0, shell 39, sensors 0
+  stock: best plan rights 0/32 perturbed starts, median time to upright None
+stock rests at body-up -0.99, head pitch 7.8 deg, base height 0.061 m
+  stock it  0 best -9.61 upright-in-pop 0.00 t_up nans (4s)
+  stock it  5 best -9.61 upright-in-pop 0.00 t_up nans (19s)
+  stock it 10 best -9.61 upright-in-pop 0.00 t_up nans (34s)
+  stock it 15 best -9.61 upright-in-pop 0.00 t_up nans (48s)
+  stock it 20 best -9.61 upright-in-pop 0.00 t_up nans (63s)
+  stock it 25 best -9.61 upright-in-pop 0.00 t_up nans (78s)
+  stock it 30 best -9.61 upright-in-pop 0.00 t_up nans (94s)
+  stock it 35 best -9.61 upright-in-pop 0.00 t_up nans (109s)
+  stock it 39 best -9.61 upright-in-pop 0.00 t_up nans (122s)
+  median peak floor force (N): limbs 0, feet 0, shell 40, sensors 0
+  stock: best plan rights 0/32 perturbed starts, median time to upright None
+stock rests at body-up -0.99, head pitch 7.8 deg, base height 0.061 m
+  stock it  0 best -9.61 upright-in-pop 0.00 t_up nans (4s)
+  stock it  5 best -9.61 upright-in-pop 0.00 t_up nans (19s)
+  stock it 10 best -9.61 upright-in-pop 0.00 t_up nans (33s)
+  stock it 15 best -9.61 upright-in-pop 0.00 t_up nans (47s)
+  stock it 20 best -9.61 upright-in-pop 0.00 t_up nans (61s)
+  stock it 25 best -9.61 upright-in-pop 0.00 t_up nans (75s)
+  stock it 30 best -9.61 upright-in-pop 0.00 t_up nans (90s)
+  stock it 35 best -9.61 upright-in-pop 0.00 t_up nans (105s)
+  stock it 39 best -9.61 upright-in-pop 0.00 t_up nans (117s)
+  median peak floor force (N): limbs 0, feet 0, shell 39, sensors 0
+  stock: best plan rights 0/32 perturbed starts, median time to upright None
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -7.15 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -7.15 upright-in-pop 0.00 t_up nans (19s)
+  horn20 it 10 best -6.71 upright-in-pop 0.00 t_up nans (33s)
+  horn20 it 15 best -6.58 upright-in-pop 0.00 t_up nans (48s)
+  horn20 it 20 best -6.58 upright-in-pop 0.00 t_up nans (61s)
+  horn20 it 25 best -6.57 upright-in-pop 0.00 t_up nans (76s)
+  horn20 it 30 best -6.57 upright-in-pop 0.00 t_up nans (90s)
+  horn20 it 35 best -6.57 upright-in-pop 0.00 t_up nans (104s)
+  horn20 it 39 best -6.57 upright-in-pop 0.00 t_up nans (115s)
+  median peak floor force (N): limbs 9, feet 0, shell 25, sensors 0, horn 39
+  horn20: best plan rights 0/32 perturbed starts, median time to upright None
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -7.15 upright-in-pop 0.00 t_up nans (3s)
+  horn20 it  5 best -7.08 upright-in-pop 0.00 t_up nans (18s)
+  horn20 it 10 best -6.83 upright-in-pop 0.00 t_up nans (33s)
+  horn20 it 15 best -6.59 upright-in-pop 0.00 t_up nans (47s)
+  horn20 it 20 best -6.59 upright-in-pop 0.00 t_up nans (62s)
+  horn20 it 25 best -6.59 upright-in-pop 0.00 t_up nans (76s)
+  horn20 it 30 best -6.59 upright-in-pop 0.00 t_up nans (91s)
+  horn20 it 35 best -6.58 upright-in-pop 0.00 t_up nans (105s)
+  horn20 it 39 best -6.58 upright-in-pop 0.00 t_up nans (116s)
+  median peak floor force (N): limbs 18, feet 0, shell 26, sensors 0, horn 38
+  horn20: best plan rights 0/32 perturbed starts, median time to upright None
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -7.15 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -7.15 upright-in-pop 0.00 t_up nans (20s)

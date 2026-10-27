@@ -1,0 +1,270 @@
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best -5.49 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best 36.72 upright-in-pop 0.01 t_up 1.02s (21s)
+  tri20s it 10 best 36.96 upright-in-pop 0.19 t_up 0.86s (39s)
+  tri20s it 15 best 35.68 upright-in-pop 0.41 t_up 0.90s (60s)
+  tri20s it 20 best 35.00 upright-in-pop 0.91 t_up 0.83s (79s)
+  tri20s it 25 best 34.47 upright-in-pop 0.81 t_up 0.86s (99s)
+  tri20s it 30 best 33.77 upright-in-pop 0.95 t_up 0.85s (118s)
+  tri20s it 35 best 34.25 upright-in-pop 0.99 t_up 0.82s (137s)
+  tri20s it 40 best 34.86 upright-in-pop 0.96 t_up 0.84s (157s)
+  tri20s it 45 best 34.94 upright-in-pop 0.99 t_up 0.82s (175s)
+  tri20s it 49 best 35.04 upright-in-pop 1.00 t_up 0.81s (190s)
+  tri20s: flip axis at -101 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.43
+  median peak floor force (N): limbs 39, feet 34, shell 37, sensors 0, horn 46
+  tri20s: best plan rights 32/32 perturbed starts, median time to upright 0.834
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best -6.43 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best 0.87 upright-in-pop 0.00 t_up nans (23s)
+  tri20s it 10 best 36.95 upright-in-pop 0.05 t_up 0.91s (42s)
+  tri20s it 15 best 35.38 upright-in-pop 0.26 t_up 0.91s (62s)
+  tri20s it 20 best 33.71 upright-in-pop 0.50 t_up 0.83s (82s)
+  tri20s it 25 best 33.20 upright-in-pop 0.77 t_up 0.83s (102s)
+  tri20s it 30 best 33.24 upright-in-pop 0.62 t_up 0.83s (122s)
+  tri20s it 35 best 33.83 upright-in-pop 0.70 t_up 0.84s (140s)
+  tri20s it 40 best 33.83 upright-in-pop 0.65 t_up 0.85s (160s)
+  tri20s it 45 best 33.83 upright-in-pop 0.70 t_up 0.85s (179s)
+  tri20s it 49 best 33.93 upright-in-pop 0.66 t_up 0.84s (194s)
+  tri20s: flip axis at -53 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.37
+  median peak floor force (N): limbs 46, feet 36, shell 34, sensors 0, horn 64
+  tri20s: best plan rights 27/32 perturbed starts, median time to upright 1.002
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best -6.60 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best -2.96 upright-in-pop 0.00 t_up nans (21s)
+  tri20s it 10 best 36.72 upright-in-pop 0.01 t_up 0.97s (39s)
+  tri20s it 15 best 35.46 upright-in-pop 0.05 t_up 0.81s (57s)
+  tri20s it 20 best 34.20 upright-in-pop 0.11 t_up 0.88s (75s)
+  tri20s it 25 best 32.93 upright-in-pop 0.16 t_up 0.85s (93s)
+  tri20s it 30 best 31.67 upright-in-pop 0.33 t_up 0.84s (111s)
+  tri20s it 35 best 32.06 upright-in-pop 0.24 t_up 0.83s (131s)
+  tri20s it 40 best 32.06 upright-in-pop 0.55 t_up 0.81s (150s)
+  tri20s it 45 best 33.25 upright-in-pop 0.75 t_up 0.83s (170s)
+  tri20s it 49 best 33.53 upright-in-pop 0.77 t_up 0.82s (186s)
+  tri20s: flip axis at -71 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.35
+  median peak floor force (N): limbs 49, feet 39, shell 64, sensors 0, horn 59
+  tri20s: best plan rights 21/32 perturbed starts, median time to upright 0.856
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best 4.73 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best 11.27 upright-in-pop 0.00 t_up nans (21s)
+  tri20s it 10 best 13.15 upright-in-pop 0.00 t_up nans (38s)
+  tri20s it 15 best 12.52 upright-in-pop 0.00 t_up nans (57s)
+  tri20s it 20 best 11.29 upright-in-pop 0.00 t_up nans (75s)
+  tri20s it 25 best 11.05 upright-in-pop 0.00 t_up nans (92s)
+  tri20s it 30 best 11.17 upright-in-pop 0.00 t_up nans (109s)
+  tri20s it 35 best 12.08 upright-in-pop 0.00 t_up nans (125s)
+  tri20s it 40 best 12.12 upright-in-pop 0.00 t_up nans (141s)
+  tri20s it 45 best 12.22 upright-in-pop 0.00 t_up nans (159s)
+  tri20s it 49 best 12.37 upright-in-pop 0.00 t_up nans (173s)
+  tri20s_side: flip axis at 173 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.91, alignment with target 0.42
+  median peak floor force (N): limbs 52, feet 21, shell 0, sensors 0, horn 68
+  tri20s_side: best plan rights 0/32 perturbed starts, median time to upright None
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best 6.47 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best 6.47 upright-in-pop 0.00 t_up nans (23s)
+  tri20s it 10 best 14.67 upright-in-pop 0.00 t_up nans (40s)
+  tri20s it 15 best 13.21 upright-in-pop 0.00 t_up nans (60s)
+  tri20s it 20 best 12.65 upright-in-pop 0.00 t_up nans (78s)
+  tri20s it 25 best 12.28 upright-in-pop 0.00 t_up nans (98s)
+  tri20s it 30 best 11.84 upright-in-pop 0.00 t_up nans (119s)
+  tri20s it 35 best 12.40 upright-in-pop 0.00 t_up nans (138s)
+  tri20s it 40 best 12.85 upright-in-pop 0.00 t_up nans (158s)
+  tri20s it 45 best 12.91 upright-in-pop 0.00 t_up nans (178s)
+  tri20s it 49 best 12.91 upright-in-pop 0.00 t_up nans (193s)
+  tri20s_side: flip axis at 154 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.77, alignment with target 0.63
+  median peak floor force (N): limbs 54, feet 25, shell 4, sensors 0, horn 75
+  tri20s_side: best plan rights 0/32 perturbed starts, median time to upright None
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best 7.93 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best 8.83 upright-in-pop 0.01 t_up 1.08s (24s)
+  tri20s it 10 best 15.71 upright-in-pop 0.04 t_up 0.88s (46s)
+  tri20s it 15 best 14.71 upright-in-pop 0.00 t_up nans (65s)
+  tri20s it 20 best 13.65 upright-in-pop 0.00 t_up nans (84s)
+  tri20s it 25 best 13.54 upright-in-pop 0.00 t_up nans (102s)
+  tri20s it 30 best 12.97 upright-in-pop 0.00 t_up nans (120s)
+  tri20s it 35 best 13.27 upright-in-pop 0.00 t_up nans (138s)
+  tri20s it 40 best 13.37 upright-in-pop 0.00 t_up nans (157s)
+  tri20s it 45 best 13.37 upright-in-pop 0.00 t_up nans (175s)
+  tri20s it 49 best 13.37 upright-in-pop 0.00 t_up nans (189s)
+  tri20s_side: flip axis at -175 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.81, alignment with target 0.57
+  median peak floor force (N): limbs 51, feet 30, shell 0, sensors 0, horn 86
+  tri20s_side: best plan rights 1/32 perturbed starts, median time to upright 1.084
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best 4.61 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best 15.17 upright-in-pop 0.01 t_up 1.14s (23s)
+  tri20s it 10 best 46.91 upright-in-pop 0.11 t_up 0.95s (42s)
+  tri20s it 15 best 43.56 upright-in-pop 0.51 t_up 0.82s (60s)
+  tri20s it 20 best 40.62 upright-in-pop 0.61 t_up 0.83s (81s)
+  tri20s it 25 best 39.67 upright-in-pop 0.65 t_up 0.87s (101s)
+  tri20s it 30 best 37.45 upright-in-pop 0.69 t_up 0.82s (121s)
+  tri20s it 35 best 38.46 upright-in-pop 0.77 t_up 0.82s (142s)
+  tri20s it 40 best 38.77 upright-in-pop 0.84 t_up 0.82s (163s)
+  tri20s it 45 best 41.14 upright-in-pop 0.76 t_up 0.82s (183s)
+  tri20s it 49 best 41.14 upright-in-pop 0.86 t_up 0.83s (198s)
+  tri20s_diag: flip axis at -47 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.02, alignment with target 1.00
+  median peak floor force (N): limbs 102, feet 49, shell 51, sensors 0, horn 115
+  tri20s_diag: best plan rights 30/32 perturbed starts, median time to upright 0.92
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best 6.68 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best 17.40 upright-in-pop 0.00 t_up nans (23s)
+  tri20s it 10 best 18.04 upright-in-pop 0.04 t_up 0.99s (42s)
+  tri20s it 15 best 32.30 upright-in-pop 0.23 t_up 0.89s (63s)
+  tri20s it 20 best 44.24 upright-in-pop 0.72 t_up 0.84s (83s)
+  tri20s it 25 best 43.92 upright-in-pop 0.95 t_up 0.83s (103s)
+  tri20s it 30 best 42.43 upright-in-pop 0.98 t_up 0.82s (123s)
+  tri20s it 35 best 42.43 upright-in-pop 0.97 t_up 0.83s (143s)
+  tri20s it 40 best 42.90 upright-in-pop 0.97 t_up 0.84s (163s)
+  tri20s it 45 best 43.05 upright-in-pop 1.00 t_up 0.82s (183s)
+  tri20s it 49 best 43.18 upright-in-pop 0.98 t_up 0.83s (200s)
+  tri20s_diag: flip axis at -45 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.02, alignment with target 1.00
+  median peak floor force (N): limbs 78, feet 41, shell 0, sensors 0, horn 53
+  tri20s_diag: best plan rights 32/32 perturbed starts, median time to upright 0.903
+tri20s rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  tri20s it  0 best 7.83 upright-in-pop 0.00 t_up nans (4s)
+  tri20s it  5 best 15.71 upright-in-pop 0.00 t_up nans (22s)
+  tri20s it 10 best 15.71 upright-in-pop 0.00 t_up nans (41s)
+  tri20s it 15 best 14.85 upright-in-pop 0.00 t_up nans (57s)
+  tri20s it 20 best 14.32 upright-in-pop 0.00 t_up nans (74s)
+  tri20s it 25 best 13.74 upright-in-pop 0.00 t_up nans (91s)
+  tri20s it 30 best 13.98 upright-in-pop 0.00 t_up nans (106s)
+  tri20s it 35 best 13.98 upright-in-pop 0.00 t_up nans (124s)
+  tri20s it 40 best 14.02 upright-in-pop 0.00 t_up nans (140s)
+  tri20s it 45 best 14.25 upright-in-pop 0.00 t_up nans (156s)
+  tri20s it 49 best 14.28 upright-in-pop 0.00 t_up nans (170s)
+  tri20s_diag: flip axis at 129 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.80, alignment with target 0.60
+  median peak floor force (N): limbs 38, feet 19, shell 0, sensors 0, horn 64
+  tri20s_diag: best plan rights 0/32 perturbed starts, median time to upright None
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best -5.51 upright-in-pop 0.00 t_up nans (3s)
+  tri20m it  5 best 36.69 upright-in-pop 0.01 t_up 0.93s (21s)
+  tri20m it 10 best 36.89 upright-in-pop 0.15 t_up 0.82s (39s)
+  tri20m it 15 best 35.31 upright-in-pop 0.51 t_up 0.81s (58s)
+  tri20m it 20 best 34.67 upright-in-pop 0.77 t_up 0.81s (76s)
+  tri20m it 25 best 33.67 upright-in-pop 0.98 t_up 0.79s (96s)
+  tri20m it 30 best 33.45 upright-in-pop 0.95 t_up 0.80s (113s)
+  tri20m it 35 best 33.95 upright-in-pop 1.00 t_up 0.80s (131s)
+  tri20m it 40 best 34.09 upright-in-pop 1.00 t_up 0.80s (150s)
+  tri20m it 45 best 34.21 upright-in-pop 1.00 t_up 0.81s (169s)
+  tri20m it 49 best 34.29 upright-in-pop 1.00 t_up 0.81s (184s)
+  tri20m: flip axis at -114 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.53
+  median peak floor force (N): limbs 56, feet 40, shell 0, sensors 0, horn 40
+  tri20m: best plan rights 32/32 perturbed starts, median time to upright 0.8300000000000001
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best -5.67 upright-in-pop 0.00 t_up nans (4s)
+  tri20m it  5 best 36.68 upright-in-pop 0.01 t_up 0.87s (22s)
+  tri20m it 10 best 36.95 upright-in-pop 0.47 t_up 0.63s (42s)
+  tri20m it 15 best 35.76 upright-in-pop 0.74 t_up 0.73s (62s)
+  tri20m it 20 best 35.50 upright-in-pop 0.83 t_up 0.74s (83s)
+  tri20m it 25 best 35.63 upright-in-pop 0.89 t_up 0.75s (103s)
+  tri20m it 30 best 35.29 upright-in-pop 0.89 t_up 0.75s (121s)
+  tri20m it 35 best 35.66 upright-in-pop 0.86 t_up 0.77s (140s)
+  tri20m it 40 best 35.66 upright-in-pop 0.79 t_up 0.76s (160s)
+  tri20m it 45 best 35.66 upright-in-pop 0.83 t_up 0.77s (180s)
+  tri20m it 49 best 35.66 upright-in-pop 0.77 t_up 0.77s (196s)
+  tri20m: flip axis at -64 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.53
+  median peak floor force (N): limbs 40, feet 35, shell 0, sensors 0, horn 41
+  tri20m: best plan rights 32/32 perturbed starts, median time to upright 0.8320000000000001
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best -8.53 upright-in-pop 0.00 t_up nans (4s)
+  tri20m it  5 best 36.93 upright-in-pop 0.01 t_up 1.05s (22s)
+  tri20m it 10 best 36.96 upright-in-pop 0.46 t_up 0.73s (40s)
+  tri20m it 15 best 35.92 upright-in-pop 0.96 t_up 0.75s (59s)
+  tri20m it 20 best 35.44 upright-in-pop 0.96 t_up 0.75s (80s)
+  tri20m it 25 best 35.51 upright-in-pop 1.00 t_up 0.82s (100s)
+  tri20m it 30 best 35.05 upright-in-pop 1.00 t_up 0.81s (121s)
+  tri20m it 35 best 35.35 upright-in-pop 1.00 t_up 0.77s (139s)
+  tri20m it 40 best 35.62 upright-in-pop 1.00 t_up 0.81s (157s)
+  tri20m it 45 best 35.62 upright-in-pop 1.00 t_up 0.81s (176s)
+  tri20m it 49 best 35.62 upright-in-pop 1.00 t_up 0.81s (192s)
+  tri20m: flip axis at 115 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.10
+  median peak floor force (N): limbs 33, feet 28, shell 30, sensors 0, horn 48
+  tri20m: best plan rights 32/32 perturbed starts, median time to upright 0.864
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best 5.04 upright-in-pop 0.00 t_up nans (4s)
+  tri20m it  5 best 12.02 upright-in-pop 0.00 t_up nans (22s)
+  tri20m it 10 best 15.71 upright-in-pop 0.00 t_up nans (39s)
+  tri20m it 15 best 13.60 upright-in-pop 0.00 t_up nans (56s)
+  tri20m it 20 best 12.72 upright-in-pop 0.00 t_up nans (73s)
+  tri20m it 25 best 11.78 upright-in-pop 0.00 t_up nans (90s)
+  tri20m it 30 best 11.38 upright-in-pop 0.00 t_up nans (107s)
+  tri20m it 35 best 12.10 upright-in-pop 0.00 t_up nans (125s)
+  tri20m it 40 best 12.37 upright-in-pop 0.00 t_up nans (142s)
+  tri20m it 45 best 12.53 upright-in-pop 0.00 t_up nans (158s)
+  tri20m it 49 best 13.35 upright-in-pop 0.00 t_up nans (172s)
+  tri20m_side: flip axis at 42 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.76, alignment with target 0.46
+  median peak floor force (N): limbs 68, feet 25, shell 40, sensors 0, horn 76
+  tri20m_side: best plan rights 0/32 perturbed starts, median time to upright None
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best 7.87 upright-in-pop 0.00 t_up nans (3s)
+  tri20m it  5 best 8.06 upright-in-pop 0.01 t_up 1.08s (20s)
+  tri20m it 10 best 15.59 upright-in-pop 0.03 t_up 0.75s (37s)
+  tri20m it 15 best 12.99 upright-in-pop 0.08 t_up 0.55s (55s)
+  tri20m it 20 best 11.16 upright-in-pop 0.00 t_up nans (73s)
+  tri20m it 25 best 8.97 upright-in-pop 0.01 t_up 1.06s (91s)
+  tri20m it 30 best 7.82 upright-in-pop 0.00 t_up nans (109s)
+  tri20m it 35 best 9.57 upright-in-pop 0.00 t_up nans (126s)
+  tri20m it 40 best 9.86 upright-in-pop 0.00 t_up nans (143s)
+  tri20m it 45 best 10.00 upright-in-pop 0.00 t_up nans (160s)
+  tri20m it 49 best 10.06 upright-in-pop 0.02 t_up 0.71s (174s)
+  tri20m_side: flip axis at -8 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.82, alignment with target 0.57
+  median peak floor force (N): limbs 64, feet 42, shell 64, sensors 0, horn 76
+  tri20m_side: best plan rights 0/32 perturbed starts, median time to upright None
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best 6.11 upright-in-pop 0.00 t_up nans (3s)
+  tri20m it  5 best 9.71 upright-in-pop 0.00 t_up nans (21s)
+  tri20m it 10 best 15.71 upright-in-pop 0.00 t_up nans (38s)
+  tri20m it 15 best 14.48 upright-in-pop 0.00 t_up nans (56s)
+  tri20m it 20 best 13.62 upright-in-pop 0.00 t_up nans (74s)
+  tri20m it 25 best 12.47 upright-in-pop 0.00 t_up nans (92s)
+  tri20m it 30 best 11.69 upright-in-pop 0.00 t_up nans (110s)
+  tri20m it 35 best 12.10 upright-in-pop 0.00 t_up nans (128s)
+  tri20m it 40 best 12.10 upright-in-pop 0.00 t_up nans (146s)
+  tri20m it 45 best 12.10 upright-in-pop 0.00 t_up nans (163s)
+  tri20m it 49 best 12.23 upright-in-pop 0.00 t_up nans (177s)
+  tri20m_side: flip axis at 57 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.69, alignment with target 0.40
+  median peak floor force (N): limbs 48, feet 20, shell 40, sensors 0, horn 91
+  tri20m_side: best plan rights 0/32 perturbed starts, median time to upright None
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best 6.41 upright-in-pop 0.00 t_up nans (4s)
+  tri20m it  5 best 14.41 upright-in-pop 0.00 t_up nans (22s)
+  tri20m it 10 best 14.41 upright-in-pop 0.00 t_up nans (38s)
+  tri20m it 15 best 14.46 upright-in-pop 0.00 t_up nans (55s)
+  tri20m it 20 best 13.41 upright-in-pop 0.00 t_up nans (72s)
+  tri20m it 25 best 12.83 upright-in-pop 0.00 t_up nans (89s)
+  tri20m it 30 best 12.69 upright-in-pop 0.00 t_up nans (106s)
+  tri20m it 35 best 12.83 upright-in-pop 0.00 t_up nans (123s)
+  tri20m it 40 best 12.85 upright-in-pop 0.00 t_up nans (140s)
+  tri20m it 45 best 12.85 upright-in-pop 0.00 t_up nans (157s)
+  tri20m it 49 best 13.03 upright-in-pop 0.00 t_up nans (170s)
+  tri20m_diag: flip axis at -45 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.84, alignment with target 0.55
+  median peak floor force (N): limbs 39, feet 20, shell 20, sensors 0, horn 71
+  tri20m_diag: best plan rights 0/32 perturbed starts, median time to upright None
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best 11.52 upright-in-pop 0.00 t_up nans (4s)
+  tri20m it  5 best 12.57 upright-in-pop 0.00 t_up nans (21s)
+  tri20m it 10 best 15.71 upright-in-pop 0.00 t_up nans (41s)
+  tri20m it 15 best 14.31 upright-in-pop 0.00 t_up nans (58s)
+  tri20m it 20 best 14.66 upright-in-pop 0.00 t_up nans (77s)
+  tri20m it 25 best 14.30 upright-in-pop 0.00 t_up nans (97s)
+  tri20m it 30 best 13.53 upright-in-pop 0.00 t_up nans (116s)
+  tri20m it 35 best 13.56 upright-in-pop 0.00 t_up nans (135s)
+  tri20m it 40 best 14.29 upright-in-pop 0.00 t_up nans (154s)
+  tri20m it 45 best 14.29 upright-in-pop 0.00 t_up nans (172s)
+  tri20m it 49 best 14.29 upright-in-pop 0.00 t_up nans (187s)
+  tri20m_diag: flip axis at 148 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.83, alignment with target 0.54
+  median peak floor force (N): limbs 55, feet 22, shell 0, sensors 0, horn 60
+  tri20m_diag: best plan rights 0/32 perturbed starts, median time to upright None
+tri20m rests at body-up -0.91, head pitch 22.8 deg, base height 0.089 m
+  tri20m it  0 best 4.91 upright-in-pop 0.00 t_up nans (4s)
+  tri20m it  5 best 13.09 upright-in-pop 0.00 t_up nans (22s)
+  tri20m it 10 best 13.09 upright-in-pop 0.01 t_up 0.96s (39s)
+  tri20m it 15 best 12.55 upright-in-pop 0.01 t_up 0.77s (58s)
+  tri20m it 20 best 13.99 upright-in-pop 0.00 t_up nans (76s)
+  tri20m it 25 best 13.28 upright-in-pop 0.00 t_up nans (94s)
+  tri20m it 30 best 12.27 upright-in-pop 0.00 t_up nans (112s)
+  tri20m it 35 best 13.02 upright-in-pop 0.00 t_up nans (130s)
+  tri20m it 40 best 13.22 upright-in-pop 0.00 t_up nans (147s)
+  tri20m it 45 best 13.22 upright-in-pop 0.00 t_up nans (165s)
+  tri20m it 49 best 13.22 upright-in-pop 0.00 t_up nans (180s)
+  tri20m_diag: flip axis at -59 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.71, alignment with target 0.69
+  median peak floor force (N): limbs 38, feet 12, shell 49, sensors 0, horn 63
+  tri20m_diag: best plan rights 0/32 perturbed starts, median time to upright None

@@ -1,0 +1,10 @@
+rc20    flip  plan_rc20_s1           rights 32/32 | joint torque median 4.3 p90 4.7 N*m (worst at LF_J2_joint) | median peaks N: limbs 57 shell 0 horn 69 feet 77
+rc20    flip  plan_rc20_s2           rights 32/32 | joint torque median 9.4 p90 10.0 N*m (worst at LF_J1_joint) | median peaks N: limbs 117 shell 55 horn 66 feet 71
+rc20    flip  plan_rc20_s3           rights 32/32 | joint torque median 6.7 p90 6.7 N*m (worst at RF_J0_joint) | median peaks N: limbs 96 shell 40 horn 97 feet 57
+rc20    diag  plan_rc20_diag_s1      rights 32/32 | joint torque median 5.7 p90 6.2 N*m (worst at LF_J1_joint) | median peaks N: limbs 83 shell 0 horn 99 feet 73
+rc20    diag  plan_rc20_diag_s2      rights 32/32 | joint torque median 8.5 p90 8.5 N*m (worst at RF_J0_joint) | median peaks N: limbs 78 shell 0 horn 50 feet 50
+rc20    diag  plan_rc20_diag_s3      rights 31/32 | joint torque median 6.3 p90 6.3 N*m (worst at RR_J0_joint) | median peaks N: limbs 116 shell 0 horn 85 feet 101
+rct20   flip  plan_rct20_s1          rights 32/32 | joint torque median 9.4 p90 9.5 N*m (worst at LF_J0_joint) | median peaks N: limbs 91 shell 11 horn 57 feet 80
+rct20   flip  plan_rct20_s2          rights 32/32 | joint torque median 4.2 p90 4.2 N*m (worst at RR_J1_joint) | median peaks N: limbs 66 shell 34 horn 50 feet 56
+rct20   side  plan_rct20_side_s1     rights 32/32 | joint torque median 5.6 p90 5.8 N*m (worst at LR_J0_joint) | median peaks N: limbs 41 shell 95 horn 48 feet 65
+rct20   diag  plan_rct20_diag_s3     rights 32/32 | joint torque median 6.2 p90 6.4 N*m (worst at LF_J0_joint) | median peaks N: limbs 70 shell 95 horn 77 feet 48

@@ -1,0 +1,30 @@
+stock rests at body-up -0.99, head pitch 7.8 deg, base height 0.061 m
+  stock it  0 best -4.77 upright-in-pop 0.00 t_up nans (6s)
+  stock it  5 best 12.39 upright-in-pop 0.01 t_up 0.86s (34s)
+  stock it 10 best -4.73 upright-in-pop 0.00 t_up nans (61s)
+  stock it 15 best -4.73 upright-in-pop 0.00 t_up nans (89s)
+  stock it 20 best -4.74 upright-in-pop 0.00 t_up nans (117s)
+  stock it 25 best -4.72 upright-in-pop 0.00 t_up nans (147s)
+  stock it 30 best -4.71 upright-in-pop 0.00 t_up nans (164s)
+  stock it 34 best -4.71 upright-in-pop 0.00 t_up nans (176s)
+  stock: best plan rights 32/32 perturbed starts, median time to upright 0.878
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -3.77 upright-in-pop 0.00 t_up nans (3s)
+  horn20 it  5 best -3.73 upright-in-pop 0.00 t_up nans (18s)
+  horn20 it 10 best -3.09 upright-in-pop 0.00 t_up nans (33s)
+  horn20 it 15 best -2.62 upright-in-pop 0.00 t_up nans (49s)
+  horn20 it 20 best -3.70 upright-in-pop 0.00 t_up nans (64s)
+  horn20 it 25 best -3.69 upright-in-pop 0.00 t_up nans (80s)
+  horn20 it 30 best -3.69 upright-in-pop 0.00 t_up nans (96s)
+  horn20 it 34 best -3.69 upright-in-pop 0.00 t_up nans (108s)
+  horn20: best plan rights 0/32 perturbed starts, median time to upright None
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best -3.86 upright-in-pop 0.00 t_up nans (3s)
+  horn30 it  5 best -3.84 upright-in-pop 0.00 t_up nans (18s)
+  horn30 it 10 best 8.72 upright-in-pop 0.00 t_up nans (33s)
+  horn30 it 15 best -3.58 upright-in-pop 0.00 t_up nans (47s)
+  horn30 it 20 best 4.11 upright-in-pop 0.00 t_up nans (61s)
+  horn30 it 25 best 12.90 upright-in-pop 0.11 t_up 1.05s (75s)
+  horn30 it 30 best 12.92 upright-in-pop 0.45 t_up 1.03s (89s)
+  horn30 it 34 best 12.92 upright-in-pop 0.54 t_up 0.99s (101s)
+  horn30: best plan rights 14/32 perturbed starts, median time to upright 1.1440000000000001

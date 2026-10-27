@@ -1,0 +1,135 @@
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best -5.76 upright-in-pop 0.00 t_up nans (3s)
+  rct20 it  5 best -5.18 upright-in-pop 0.00 t_up nans (20s)
+  rct20 it 10 best -3.60 upright-in-pop 0.00 t_up nans (35s)
+  rct20 it 15 best 35.24 upright-in-pop 0.57 t_up 0.78s (51s)
+  rct20 it 20 best 34.89 upright-in-pop 0.91 t_up 0.81s (67s)
+  rct20 it 25 best 33.95 upright-in-pop 1.00 t_up 0.81s (84s)
+  rct20 it 30 best 33.66 upright-in-pop 0.79 t_up 0.84s (101s)
+  rct20 it 35 best 34.13 upright-in-pop 0.94 t_up 0.84s (117s)
+  rct20 it 40 best 34.14 upright-in-pop 0.81 t_up 0.84s (135s)
+  rct20 it 45 best 34.31 upright-in-pop 0.78 t_up 0.83s (152s)
+  rct20 it 49 best 34.31 upright-in-pop 0.88 t_up 0.85s (166s)
+  rct20: flip axis at -87 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.19
+  median peak floor force (N): limbs 58, feet 39, shell 15, sensors 0, horn 59
+  rct20: best plan rights 31/32 perturbed starts, median time to upright 0.884
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best -6.07 upright-in-pop 0.00 t_up nans (3s)
+  rct20 it  5 best 5.17 upright-in-pop 0.00 t_up nans (18s)
+  rct20 it 10 best 36.70 upright-in-pop 0.01 t_up 0.84s (33s)
+  rct20 it 15 best 35.99 upright-in-pop 0.48 t_up 0.76s (49s)
+  rct20 it 20 best 35.85 upright-in-pop 0.91 t_up 0.76s (65s)
+  rct20 it 25 best 35.82 upright-in-pop 0.89 t_up 0.76s (79s)
+  rct20 it 30 best 35.57 upright-in-pop 0.83 t_up 0.77s (95s)
+  rct20 it 35 best 35.96 upright-in-pop 0.80 t_up 0.77s (111s)
+  rct20 it 40 best 35.96 upright-in-pop 0.88 t_up 0.76s (128s)
+  rct20 it 45 best 36.03 upright-in-pop 0.88 t_up 0.77s (144s)
+  rct20 it 49 best 36.03 upright-in-pop 0.96 t_up 0.76s (157s)
+  rct20: flip axis at -25 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.19
+  median peak floor force (N): limbs 29, feet 28, shell 34, sensors 0, horn 39
+  rct20: best plan rights 32/32 perturbed starts, median time to upright 0.804
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best -6.48 upright-in-pop 0.00 t_up nans (3s)
+  rct20 it  5 best -5.32 upright-in-pop 0.00 t_up nans (18s)
+  rct20 it 10 best 36.84 upright-in-pop 0.04 t_up 0.64s (33s)
+  rct20 it 15 best 35.06 upright-in-pop 0.26 t_up 0.66s (49s)
+  rct20 it 20 best 33.94 upright-in-pop 0.55 t_up 0.56s (67s)
+  rct20 it 25 best 33.30 upright-in-pop 0.66 t_up 0.69s (85s)
+  rct20 it 30 best 32.77 upright-in-pop 0.88 t_up 0.68s (101s)
+  rct20 it 35 best 33.20 upright-in-pop 0.83 t_up 0.68s (117s)
+  rct20 it 40 best 33.36 upright-in-pop 0.77 t_up 0.69s (132s)
+  rct20 it 45 best 33.45 upright-in-pop 0.89 t_up 0.69s (148s)
+  rct20 it 49 best 33.45 upright-in-pop 0.79 t_up 0.70s (162s)
+  rct20: flip axis at 92 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.22
+  median peak floor force (N): limbs 66, feet 24, shell 56, sensors 0, horn 203
+  rct20: best plan rights 12/32 perturbed starts, median time to upright 1.016
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best 5.40 upright-in-pop 0.00 t_up nans (4s)
+  rct20 it  5 best 9.50 upright-in-pop 0.00 t_up nans (20s)
+  rct20 it 10 best 47.21 upright-in-pop 0.11 t_up 0.81s (37s)
+  rct20 it 15 best 46.89 upright-in-pop 0.66 t_up 0.76s (53s)
+  rct20 it 20 best 45.73 upright-in-pop 0.88 t_up 0.76s (69s)
+  rct20 it 25 best 44.91 upright-in-pop 0.99 t_up 0.76s (85s)
+  rct20 it 30 best 43.81 upright-in-pop 1.00 t_up 0.76s (103s)
+  rct20 it 35 best 43.90 upright-in-pop 0.99 t_up 0.76s (120s)
+  rct20 it 40 best 44.09 upright-in-pop 0.96 t_up 0.75s (137s)
+  rct20 it 45 best 44.09 upright-in-pop 1.00 t_up 0.74s (154s)
+  rct20 it 49 best 44.09 upright-in-pop 1.00 t_up 0.75s (168s)
+  rct20_side: flip axis at -179 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.02, alignment with target 1.00
+  median peak floor force (N): limbs 42, feet 29, shell 99, sensors 0, horn 52
+  rct20_side: best plan rights 29/32 perturbed starts, median time to upright 0.806
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best 8.20 upright-in-pop 0.00 t_up nans (3s)
+  rct20 it  5 best 10.09 upright-in-pop 0.00 t_up nans (19s)
+  rct20 it 10 best 15.37 upright-in-pop 0.00 t_up nans (36s)
+  rct20 it 15 best 14.25 upright-in-pop 0.00 t_up nans (52s)
+  rct20 it 20 best 13.82 upright-in-pop 0.00 t_up nans (68s)
+  rct20 it 25 best 12.94 upright-in-pop 0.00 t_up nans (85s)
+  rct20 it 30 best 11.40 upright-in-pop 0.00 t_up nans (101s)
+  rct20 it 35 best 12.14 upright-in-pop 0.00 t_up nans (118s)
+  rct20 it 40 best 12.14 upright-in-pop 0.00 t_up nans (136s)
+  rct20 it 45 best 12.19 upright-in-pop 0.00 t_up nans (153s)
+  rct20 it 49 best 12.19 upright-in-pop 0.00 t_up nans (166s)
+  rct20_side: flip axis at 175 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.78, alignment with target 0.63
+  median peak floor force (N): limbs 58, feet 12, shell 0, sensors 0, horn 72
+  rct20_side: best plan rights 0/32 perturbed starts, median time to upright None
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best 5.25 upright-in-pop 0.00 t_up nans (3s)
+  rct20 it  5 best 8.90 upright-in-pop 0.00 t_up nans (19s)
+  rct20 it 10 best 14.38 upright-in-pop 0.01 t_up 0.85s (34s)
+  rct20 it 15 best 21.62 upright-in-pop 0.03 t_up 0.72s (50s)
+  rct20 it 20 best 41.42 upright-in-pop 0.36 t_up 0.70s (67s)
+  rct20 it 25 best 40.59 upright-in-pop 0.72 t_up 0.68s (82s)
+  rct20 it 30 best 39.31 upright-in-pop 0.79 t_up 0.66s (98s)
+  rct20 it 35 best 40.05 upright-in-pop 0.83 t_up 0.67s (114s)
+  rct20 it 40 best 41.32 upright-in-pop 0.81 t_up 0.68s (130s)
+  rct20 it 45 best 41.32 upright-in-pop 0.86 t_up 0.66s (146s)
+  rct20 it 49 best 41.66 upright-in-pop 0.79 t_up 0.68s (159s)
+  rct20_side: flip axis at 38 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.12, alignment with target 0.71
+  median peak floor force (N): limbs 81, feet 26, shell 115, sensors 0, horn 186
+  rct20_side: best plan rights 12/32 perturbed starts, median time to upright 0.725
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best 5.48 upright-in-pop 0.00 t_up nans (3s)
+  rct20 it  5 best 8.19 upright-in-pop 0.00 t_up nans (21s)
+  rct20 it 10 best 30.02 upright-in-pop 0.05 t_up 1.07s (38s)
+  rct20 it 15 best 44.73 upright-in-pop 0.50 t_up 0.92s (54s)
+  rct20 it 20 best 44.24 upright-in-pop 0.78 t_up 0.95s (71s)
+  rct20 it 25 best 44.32 upright-in-pop 0.74 t_up 0.92s (88s)
+  rct20 it 30 best 43.00 upright-in-pop 0.74 t_up 0.95s (103s)
+  rct20 it 35 best 43.00 upright-in-pop 0.68 t_up 0.95s (120s)
+  rct20 it 40 best 43.03 upright-in-pop 0.84 t_up 0.92s (135s)
+  rct20 it 45 best 43.09 upright-in-pop 0.92 t_up 0.92s (152s)
+  rct20 it 49 best 44.05 upright-in-pop 0.93 t_up 0.92s (165s)
+  rct20_diag: flip axis at -38 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.06, alignment with target 0.99
+  median peak floor force (N): limbs 61, feet 50, shell 62, sensors 0, horn 45
+  rct20_diag: best plan rights 14/32 perturbed starts, median time to upright 1.04
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best 5.80 upright-in-pop 0.00 t_up nans (3s)
+  rct20 it  5 best 16.74 upright-in-pop 0.01 t_up 0.83s (19s)
+  rct20 it 10 best 24.13 upright-in-pop 0.01 t_up 1.01s (35s)
+  rct20 it 15 best 27.55 upright-in-pop 0.08 t_up 0.63s (52s)
+  rct20 it 20 best 40.00 upright-in-pop 0.42 t_up 0.59s (69s)
+  rct20 it 25 best 40.78 upright-in-pop 0.60 t_up 0.57s (86s)
+  rct20 it 30 best 40.88 upright-in-pop 0.60 t_up 0.58s (103s)
+  rct20 it 35 best 40.99 upright-in-pop 0.61 t_up 0.58s (119s)
+  rct20 it 40 best 41.36 upright-in-pop 0.60 t_up 0.60s (135s)
+  rct20 it 45 best 41.36 upright-in-pop 0.64 t_up 0.58s (151s)
+  rct20 it 49 best 41.36 upright-in-pop 0.60 t_up 0.59s (163s)
+  rct20_diag: flip axis at -45 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.05, alignment with target 1.00
+  median peak floor force (N): limbs 77, feet 40, shell 0, sensors 0, horn 94
+  rct20_diag: best plan rights 20/32 perturbed starts, median time to upright 0.674
+rct20 rests at body-up -0.99, head pitch 6.1 deg, base height 0.116 m
+  rct20 it  0 best 5.73 upright-in-pop 0.00 t_up nans (4s)
+  rct20 it  5 best 7.52 upright-in-pop 0.00 t_up nans (19s)
+  rct20 it 10 best 47.29 upright-in-pop 0.04 t_up 0.68s (34s)
+  rct20 it 15 best 45.09 upright-in-pop 0.44 t_up 0.63s (50s)
+  rct20 it 20 best 42.73 upright-in-pop 0.69 t_up 0.63s (66s)
+  rct20 it 25 best 41.62 upright-in-pop 0.67 t_up 0.64s (81s)
+  rct20 it 30 best 39.65 upright-in-pop 0.56 t_up 0.65s (97s)
+  rct20 it 35 best 41.34 upright-in-pop 0.53 t_up 0.63s (114s)
+  rct20 it 40 best 41.57 upright-in-pop 0.72 t_up 0.67s (129s)
+  rct20 it 45 best 42.65 upright-in-pop 0.60 t_up 0.67s (145s)
+  rct20 it 49 best 42.65 upright-in-pop 0.66 t_up 0.66s (157s)
+  rct20_diag: flip axis at -43 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.04, alignment with target 1.00
+  median peak floor force (N): limbs 62, feet 38, shell 110, sensors 0, horn 72
+  rct20_diag: best plan rights 31/32 perturbed starts, median time to upright 0.738

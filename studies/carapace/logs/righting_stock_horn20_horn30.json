@@ -1,0 +1,29 @@
+[
+ {
+  "variant": "stock",
+  "rest_up": -0.9907227395130584,
+  "rest_pitch": 7.8060524492207835,
+  "rest_z": 0.060785836511404304,
+  "best_score": 12.386655628262666,
+  "robust_success": 1.0,
+  "robust_t_up_median": 0.878
+ },
+ {
+  "variant": "horn20",
+  "rest_up": -0.9255448285070931,
+  "rest_pitch": 20.059908415728763,
+  "rest_z": 0.08860737406392746,
+  "best_score": 0.9019846734314502,
+  "robust_success": 0.0,
+  "robust_t_up_median": null
+ },
+ {
+  "variant": "horn30",
+  "rest_up": -0.8647205328681231,
+  "rest_pitch": 30.13429898785238,
+  "rest_z": 0.08981269301818319,
+  "best_score": 12.931663069196457,
+  "robust_success": 0.4375,
+  "robust_t_up_median": 1.1440000000000001
+ }
+]

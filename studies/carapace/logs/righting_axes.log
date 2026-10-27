@@ -1,0 +1,180 @@
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -0.00 upright-in-pop 0.00 t_up nans (24s)
+  horn20 it 10 best -0.00 upright-in-pop 0.00 t_up nans (42s)
+  horn20 it 15 best -0.19 upright-in-pop 0.00 t_up nans (60s)
+  horn20 it 20 best -0.35 upright-in-pop 0.00 t_up nans (78s)
+  horn20 it 25 best -0.26 upright-in-pop 0.00 t_up nans (95s)
+  horn20 it 30 best -0.26 upright-in-pop 0.00 t_up nans (114s)
+  horn20 it 35 best -0.12 upright-in-pop 0.00 t_up nans (130s)
+  horn20 it 40 best -0.12 upright-in-pop 0.00 t_up nans (147s)
+  horn20 it 45 best -0.00 upright-in-pop 0.00 t_up nans (165s)
+  horn20 it 49 best -0.00 upright-in-pop 0.00 t_up nans (180s)
+  horn20_side: flip axis at 0 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.00, alignment with target 0.00
+  median peak floor force (N): limbs 17, feet 0, shell 24, sensors 0, horn 40
+  horn20_side: best plan rights 0/32 perturbed starts, median time to upright None
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -0.00 upright-in-pop 0.00 t_up nans (23s)
+  horn20 it 10 best -0.00 upright-in-pop 0.00 t_up nans (41s)
+  horn20 it 15 best -0.03 upright-in-pop 0.00 t_up nans (57s)
+  horn20 it 20 best -0.00 upright-in-pop 0.00 t_up nans (74s)
+  horn20 it 25 best -0.00 upright-in-pop 0.00 t_up nans (92s)
+  horn20 it 30 best -0.00 upright-in-pop 0.00 t_up nans (108s)
+  horn20 it 35 best -0.00 upright-in-pop 0.00 t_up nans (124s)
+  horn20 it 40 best -0.00 upright-in-pop 0.00 t_up nans (141s)
+  horn20 it 45 best -0.00 upright-in-pop 0.00 t_up nans (157s)
+  horn20 it 49 best -0.00 upright-in-pop 0.00 t_up nans (170s)
+  horn20_side: flip axis at 0 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.00, alignment with target 0.00
+  median peak floor force (N): limbs 16, feet 0, shell 26, sensors 0, horn 40
+  horn20_side: best plan rights 0/32 perturbed starts, median time to upright None
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -0.00 upright-in-pop 0.00 t_up nans (22s)
+  horn20 it 10 best -0.00 upright-in-pop 0.00 t_up nans (40s)
+  horn20 it 15 best -0.15 upright-in-pop 0.00 t_up nans (59s)
+  horn20 it 20 best -0.25 upright-in-pop 0.00 t_up nans (78s)
+  horn20 it 25 best -0.23 upright-in-pop 0.00 t_up nans (98s)
+  horn20 it 30 best -0.00 upright-in-pop 0.00 t_up nans (115s)
+  horn20 it 35 best -0.00 upright-in-pop 0.00 t_up nans (134s)
+  horn20 it 40 best -0.00 upright-in-pop 0.00 t_up nans (150s)
+  horn20 it 45 best -0.00 upright-in-pop 0.00 t_up nans (167s)
+  horn20 it 49 best -0.00 upright-in-pop 0.00 t_up nans (180s)
+  horn20_side: flip axis at 0 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.00, alignment with target 0.00
+  median peak floor force (N): limbs 19, feet 0, shell 0, sensors 0, horn 40
+  horn20_side: best plan rights 0/32 perturbed starts, median time to upright None
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -0.00 upright-in-pop 0.00 t_up nans (21s)
+  horn20 it 10 best -0.00 upright-in-pop 0.00 t_up nans (38s)
+  horn20 it 15 best -0.03 upright-in-pop 0.00 t_up nans (54s)
+  horn20 it 20 best -0.00 upright-in-pop 0.00 t_up nans (73s)
+  horn20 it 25 best -0.00 upright-in-pop 0.00 t_up nans (91s)
+  horn20 it 30 best -0.00 upright-in-pop 0.00 t_up nans (109s)
+  horn20 it 35 best -0.00 upright-in-pop 0.00 t_up nans (129s)
+  horn20 it 40 best -0.00 upright-in-pop 0.00 t_up nans (148s)
+  horn20 it 45 best -0.00 upright-in-pop 0.00 t_up nans (165s)
+  horn20 it 49 best -0.00 upright-in-pop 0.00 t_up nans (180s)
+  horn20_diag: flip axis at 0 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.00, alignment with target 0.00
+  median peak floor force (N): limbs 19, feet 8, shell 26, sensors 0, horn 40
+  horn20_diag: best plan rights 0/32 perturbed starts, median time to upright None
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -0.00 upright-in-pop 0.00 t_up nans (22s)
+  horn20 it 10 best -0.00 upright-in-pop 0.00 t_up nans (40s)
+  horn20 it 15 best -0.16 upright-in-pop 0.00 t_up nans (57s)
+  horn20 it 20 best -0.18 upright-in-pop 0.00 t_up nans (73s)
+  horn20 it 25 best -0.04 upright-in-pop 0.00 t_up nans (92s)
+  horn20 it 30 best -0.02 upright-in-pop 0.00 t_up nans (111s)
+  horn20 it 35 best -0.00 upright-in-pop 0.00 t_up nans (129s)
+  horn20 it 40 best -0.00 upright-in-pop 0.00 t_up nans (145s)
+  horn20 it 45 best -0.00 upright-in-pop 0.00 t_up nans (163s)
+  horn20 it 49 best -0.00 upright-in-pop 0.00 t_up nans (176s)
+  horn20_diag: flip axis at 0 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.00, alignment with target 0.00
+  median peak floor force (N): limbs 20, feet 0, shell 28, sensors 0, horn 38
+  horn20_diag: best plan rights 0/32 perturbed starts, median time to upright None
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -0.00 upright-in-pop 0.00 t_up nans (3s)
+  horn20 it  5 best -0.00 upright-in-pop 0.00 t_up nans (20s)
+  horn20 it 10 best -0.00 upright-in-pop 0.00 t_up nans (36s)
+  horn20 it 15 best -0.22 upright-in-pop 0.00 t_up nans (51s)
+  horn20 it 20 best -0.11 upright-in-pop 0.00 t_up nans (66s)
+  horn20 it 25 best -0.05 upright-in-pop 0.00 t_up nans (81s)
+  horn20 it 30 best -0.02 upright-in-pop 0.00 t_up nans (96s)
+  horn20 it 35 best -0.00 upright-in-pop 0.00 t_up nans (112s)
+  horn20 it 40 best -0.00 upright-in-pop 0.00 t_up nans (127s)
+  horn20 it 45 best -0.00 upright-in-pop 0.00 t_up nans (142s)
+  horn20 it 49 best -0.00 upright-in-pop 0.00 t_up nans (154s)
+  horn20_diag: flip axis at 0 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.00, alignment with target 0.00
+  median peak floor force (N): limbs 25, feet 1, shell 24, sensors 0, horn 40
+  horn20_diag: best plan rights 0/32 perturbed starts, median time to upright None
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best 0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn30 it  5 best 0.00 upright-in-pop 0.00 t_up nans (21s)
+  horn30 it 10 best 1.94 upright-in-pop 0.00 t_up nans (39s)
+  horn30 it 15 best -0.93 upright-in-pop 0.01 t_up 0.98s (58s)
+  horn30 it 20 best -1.88 upright-in-pop 0.00 t_up nans (76s)
+  horn30 it 25 best -1.86 upright-in-pop 0.00 t_up nans (93s)
+  horn30 it 30 best -1.95 upright-in-pop 0.00 t_up nans (110s)
+  horn30 it 35 best -1.70 upright-in-pop 0.00 t_up nans (128s)
+  horn30 it 40 best -1.46 upright-in-pop 0.00 t_up nans (145s)
+  horn30 it 45 best -1.46 upright-in-pop 0.00 t_up nans (162s)
+  horn30 it 49 best -1.46 upright-in-pop 0.00 t_up nans (177s)
+  horn30_side: flip axis at -98 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.61, alignment with target 0.11
+  median peak floor force (N): limbs 36, feet 9, shell 44, sensors 0, horn 45
+  horn30_side: best plan rights 0/32 perturbed starts, median time to upright None
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best -0.00 upright-in-pop 0.00 t_up nans (3s)
+  horn30 it  5 best -0.00 upright-in-pop 0.00 t_up nans (22s)
+  horn30 it 10 best -0.00 upright-in-pop 0.00 t_up nans (41s)
+  horn30 it 15 best -0.04 upright-in-pop 0.00 t_up nans (60s)
+  horn30 it 20 best -0.00 upright-in-pop 0.00 t_up nans (80s)
+  horn30 it 25 best -0.00 upright-in-pop 0.00 t_up nans (98s)
+  horn30 it 30 best -0.00 upright-in-pop 0.00 t_up nans (115s)
+  horn30 it 35 best -0.00 upright-in-pop 0.00 t_up nans (133s)
+  horn30 it 40 best -0.00 upright-in-pop 0.00 t_up nans (151s)
+  horn30 it 45 best -0.00 upright-in-pop 0.00 t_up nans (168s)
+  horn30 it 49 best -0.00 upright-in-pop 0.00 t_up nans (181s)
+  horn30_side: flip axis at -79 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.48, alignment with target 0.17
+  median peak floor force (N): limbs 20, feet 7, shell 40, sensors 0, horn 34
+  horn30_side: best plan rights 0/32 perturbed starts, median time to upright None
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best -0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn30 it  5 best -0.00 upright-in-pop 0.00 t_up nans (20s)
+  horn30 it 10 best -0.00 upright-in-pop 0.00 t_up nans (37s)
+  horn30 it 15 best -0.46 upright-in-pop 0.00 t_up nans (53s)
+  horn30 it 20 best -0.55 upright-in-pop 0.00 t_up nans (70s)
+  horn30 it 25 best -0.50 upright-in-pop 0.00 t_up nans (88s)
+  horn30 it 30 best -0.58 upright-in-pop 0.00 t_up nans (105s)
+  horn30 it 35 best -0.40 upright-in-pop 0.00 t_up nans (122s)
+  horn30 it 40 best -0.33 upright-in-pop 0.00 t_up nans (139s)
+  horn30 it 45 best -0.28 upright-in-pop 0.00 t_up nans (156s)
+  horn30 it 49 best -0.18 upright-in-pop 0.00 t_up nans (169s)
+  horn30_side: flip axis at -87 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 1.00, alignment with target 0.01
+  median peak floor force (N): limbs 25, feet 5, shell 23, sensors 0, horn 33
+  horn30_side: best plan rights 0/32 perturbed starts, median time to upright None
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best 0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn30 it  5 best 0.00 upright-in-pop 0.00 t_up nans (22s)
+  horn30 it 10 best 0.00 upright-in-pop 0.00 t_up nans (38s)
+  horn30 it 15 best -0.48 upright-in-pop 0.00 t_up nans (55s)
+  horn30 it 20 best -0.04 upright-in-pop 0.00 t_up nans (71s)
+  horn30 it 25 best -0.00 upright-in-pop 0.00 t_up nans (88s)
+  horn30 it 30 best -0.00 upright-in-pop 0.00 t_up nans (104s)
+  horn30 it 35 best -0.00 upright-in-pop 0.00 t_up nans (120s)
+  horn30 it 40 best -0.00 upright-in-pop 0.00 t_up nans (135s)
+  horn30 it 45 best -0.00 upright-in-pop 0.00 t_up nans (150s)
+  horn30 it 49 best -0.00 upright-in-pop 0.00 t_up nans (162s)
+  horn30_diag: flip axis at -135 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.79, alignment with target 0.00
+  median peak floor force (N): limbs 19, feet 0, shell 29, sensors 0, horn 35
+  horn30_diag: best plan rights 0/32 perturbed starts, median time to upright None
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best -0.00 upright-in-pop 0.00 t_up nans (4s)
+  horn30 it  5 best -0.00 upright-in-pop 0.00 t_up nans (23s)
+  horn30 it 10 best -0.00 upright-in-pop 0.00 t_up nans (41s)
+  horn30 it 15 best -0.00 upright-in-pop 0.00 t_up nans (61s)
+  horn30 it 20 best -0.00 upright-in-pop 0.00 t_up nans (79s)
+  horn30 it 25 best -0.00 upright-in-pop 0.00 t_up nans (97s)
+  horn30 it 30 best -0.00 upright-in-pop 0.00 t_up nans (114s)
+  horn30 it 35 best -0.00 upright-in-pop 0.00 t_up nans (135s)
+  horn30 it 40 best -0.00 upright-in-pop 0.00 t_up nans (154s)
+  horn30 it 45 best -0.00 upright-in-pop 0.00 t_up nans (172s)
+  horn30 it 49 best -0.00 upright-in-pop 0.00 t_up nans (189s)
+  horn30_diag: flip axis at 45 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.80, alignment with target 0.01
+  median peak floor force (N): limbs 10, feet 0, shell 39, sensors 0, horn 28
+  horn30_diag: best plan rights 0/32 perturbed starts, median time to upright None
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best -0.00 upright-in-pop 0.00 t_up nans (5s)
+  horn30 it  5 best -0.00 upright-in-pop 0.00 t_up nans (26s)
+  horn30 it 10 best 0.00 upright-in-pop 0.00 t_up nans (47s)
+  horn30 it 15 best -0.67 upright-in-pop 0.00 t_up nans (64s)
+  horn30 it 20 best -0.58 upright-in-pop 0.00 t_up nans (81s)
+  horn30 it 25 best -0.50 upright-in-pop 0.00 t_up nans (98s)
+  horn30 it 30 best -0.47 upright-in-pop 0.00 t_up nans (114s)
+  horn30 it 35 best -0.36 upright-in-pop 0.00 t_up nans (130s)
+  horn30 it 40 best -0.26 upright-in-pop 0.00 t_up nans (146s)
+  horn30 it 45 best -0.17 upright-in-pop 0.00 t_up nans (162s)
+  horn30 it 49 best -0.04 upright-in-pop 0.00 t_up nans (174s)
+  horn30_diag: flip axis at -136 deg in the body xy plane (0 = centreline, +-90 = end over end), yaw share 0.75, alignment with target 0.01
+  median peak floor force (N): limbs 21, feet 9, shell 39, sensors 0, horn 35
+  horn30_diag: best plan rights 0/32 perturbed starts, median time to upright None

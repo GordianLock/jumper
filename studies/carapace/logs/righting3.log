@@ -1,0 +1,126 @@
+stock rests at body-up -0.99, head pitch 7.8 deg, base height 0.061 m
+  stock it  0 best -7.59 upright-in-pop 0.00 t_up nans (3s)
+  stock it  5 best -7.50 upright-in-pop 0.00 t_up nans (22s)
+  stock it 10 best -7.39 upright-in-pop 0.00 t_up nans (39s)
+  stock it 15 best -9.74 upright-in-pop 0.00 t_up nans (56s)
+  stock it 20 best -10.24 upright-in-pop 0.00 t_up nans (73s)
+  stock it 25 best -10.31 upright-in-pop 0.00 t_up nans (89s)
+  stock it 30 best -10.38 upright-in-pop 0.00 t_up nans (105s)
+  stock it 35 best -9.75 upright-in-pop 0.00 t_up nans (122s)
+  stock it 40 best -9.59 upright-in-pop 0.00 t_up nans (139s)
+  stock it 45 best -9.58 upright-in-pop 0.00 t_up nans (155s)
+  stock it 49 best -9.52 upright-in-pop 0.00 t_up nans (169s)
+  median peak floor force (N): limbs 21, feet 17, shell 43, sensors 0
+  stock: best plan rights 0/32 perturbed starts, median time to upright None
+stock rests at body-up -0.99, head pitch 7.8 deg, base height 0.061 m
+  stock it  0 best -8.15 upright-in-pop 0.00 t_up nans (3s)
+  stock it  5 best -7.14 upright-in-pop 0.00 t_up nans (22s)
+  stock it 10 best -7.14 upright-in-pop 0.00 t_up nans (40s)
+  stock it 15 best -10.04 upright-in-pop 0.00 t_up nans (60s)
+  stock it 20 best -11.71 upright-in-pop 0.00 t_up nans (80s)
+  stock it 25 best -13.55 upright-in-pop 0.00 t_up nans (97s)
+  stock it 30 best -14.90 upright-in-pop 0.00 t_up nans (114s)
+  stock it 35 best -12.77 upright-in-pop 0.00 t_up nans (131s)
+  stock it 40 best -12.77 upright-in-pop 0.00 t_up nans (146s)
+  stock it 45 best -12.77 upright-in-pop 0.00 t_up nans (162s)
+  stock it 49 best -12.77 upright-in-pop 0.00 t_up nans (175s)
+  median peak floor force (N): limbs 16, feet 6, shell 62, sensors 8
+  stock: best plan rights 0/32 perturbed starts, median time to upright None
+stock rests at body-up -0.99, head pitch 7.8 deg, base height 0.061 m
+  stock it  0 best -7.55 upright-in-pop 0.00 t_up nans (3s)
+  stock it  5 best -7.28 upright-in-pop 0.00 t_up nans (21s)
+  stock it 10 best -5.38 upright-in-pop 0.00 t_up nans (37s)
+  stock it 15 best 35.55 upright-in-pop 0.14 t_up 0.54s (54s)
+  stock it 20 best 35.93 upright-in-pop 0.82 t_up 0.49s (73s)
+  stock it 25 best 35.45 upright-in-pop 0.74 t_up 0.58s (92s)
+  stock it 30 best 34.96 upright-in-pop 0.74 t_up 0.60s (110s)
+  stock it 35 best 34.96 upright-in-pop 0.81 t_up 0.60s (129s)
+  stock it 40 best 35.01 upright-in-pop 0.88 t_up 0.60s (148s)
+  stock it 45 best 35.01 upright-in-pop 0.85 t_up 0.59s (167s)
+  stock it 49 best 35.01 upright-in-pop 0.76 t_up 0.58s (182s)
+  median peak floor force (N): limbs 47, feet 33, shell 44, sensors 0
+  stock: best plan rights 32/32 perturbed starts, median time to upright 0.712
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -5.67 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -5.08 upright-in-pop 0.00 t_up nans (23s)
+  horn20 it 10 best 36.70 upright-in-pop 0.01 t_up 0.93s (39s)
+  horn20 it 15 best 35.70 upright-in-pop 0.81 t_up 0.87s (57s)
+  horn20 it 20 best 35.35 upright-in-pop 0.97 t_up 0.86s (74s)
+  horn20 it 25 best 35.11 upright-in-pop 1.00 t_up 0.86s (91s)
+  horn20 it 30 best 34.96 upright-in-pop 0.99 t_up 0.87s (108s)
+  horn20 it 35 best 35.02 upright-in-pop 0.99 t_up 0.87s (124s)
+  horn20 it 40 best 35.02 upright-in-pop 0.98 t_up 0.87s (142s)
+  horn20 it 45 best 35.13 upright-in-pop 0.97 t_up 0.87s (159s)
+  horn20 it 49 best 35.16 upright-in-pop 1.00 t_up 0.87s (173s)
+  median peak floor force (N): limbs 42, feet 34, shell 10, sensors 0, horn 46
+  horn20: best plan rights 32/32 perturbed starts, median time to upright 0.926
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -7.44 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -3.28 upright-in-pop 0.00 t_up nans (21s)
+  horn20 it 10 best 36.76 upright-in-pop 0.05 t_up 0.67s (38s)
+  horn20 it 15 best 35.96 upright-in-pop 0.32 t_up 0.70s (55s)
+  horn20 it 20 best 35.07 upright-in-pop 0.57 t_up 0.69s (73s)
+  horn20 it 25 best 34.84 upright-in-pop 0.77 t_up 0.68s (91s)
+  horn20 it 30 best 34.78 upright-in-pop 0.98 t_up 0.67s (108s)
+  horn20 it 35 best 35.20 upright-in-pop 0.95 t_up 0.67s (126s)
+  horn20 it 40 best 35.32 upright-in-pop 1.00 t_up 0.66s (142s)
+  horn20 it 45 best 35.49 upright-in-pop 0.93 t_up 0.68s (161s)
+  horn20 it 49 best 35.49 upright-in-pop 0.97 t_up 0.67s (177s)
+  median peak floor force (N): limbs 36, feet 30, shell 0, sensors 0, horn 44
+  horn20: best plan rights 32/32 perturbed starts, median time to upright 0.6920000000000001
+horn20 rests at body-up -0.93, head pitch 20.1 deg, base height 0.089 m
+  horn20 it  0 best -5.17 upright-in-pop 0.00 t_up nans (4s)
+  horn20 it  5 best -0.24 upright-in-pop 0.00 t_up nans (21s)
+  horn20 it 10 best 36.94 upright-in-pop 0.32 t_up 0.64s (39s)
+  horn20 it 15 best 35.79 upright-in-pop 0.66 t_up 0.68s (57s)
+  horn20 it 20 best 35.32 upright-in-pop 0.86 t_up 0.68s (75s)
+  horn20 it 25 best 35.06 upright-in-pop 0.90 t_up 0.69s (93s)
+  horn20 it 30 best 34.79 upright-in-pop 0.92 t_up 0.69s (110s)
+  horn20 it 35 best 34.98 upright-in-pop 0.95 t_up 0.67s (128s)
+  horn20 it 40 best 35.13 upright-in-pop 0.89 t_up 0.67s (147s)
+  horn20 it 45 best 35.27 upright-in-pop 0.96 t_up 0.67s (166s)
+  horn20 it 49 best 35.34 upright-in-pop 0.98 t_up 0.68s (180s)
+  median peak floor force (N): limbs 42, feet 35, shell 0, sensors 0, horn 43
+  horn20: best plan rights 32/32 perturbed starts, median time to upright 0.6990000000000001
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best 4.74 upright-in-pop 0.00 t_up nans (3s)
+  horn30 it  5 best 36.74 upright-in-pop 0.03 t_up 0.95s (21s)
+  horn30 it 10 best 36.97 upright-in-pop 0.49 t_up 0.78s (39s)
+  horn30 it 15 best 35.57 upright-in-pop 0.76 t_up 0.81s (57s)
+  horn30 it 20 best 34.82 upright-in-pop 0.90 t_up 0.82s (75s)
+  horn30 it 25 best 34.41 upright-in-pop 0.85 t_up 0.82s (93s)
+  horn30 it 30 best 33.50 upright-in-pop 0.77 t_up 0.83s (112s)
+  horn30 it 35 best 34.19 upright-in-pop 0.91 t_up 0.83s (130s)
+  horn30 it 40 best 34.19 upright-in-pop 1.00 t_up 0.83s (149s)
+  horn30 it 45 best 34.66 upright-in-pop 0.99 t_up 0.83s (168s)
+  horn30 it 49 best 34.66 upright-in-pop 1.00 t_up 0.83s (182s)
+  median peak floor force (N): limbs 41, feet 36, shell 52, sensors 0, horn 37
+  horn30: best plan rights 32/32 perturbed starts, median time to upright 0.856
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best -5.21 upright-in-pop 0.00 t_up nans (4s)
+  horn30 it  5 best 10.86 upright-in-pop 0.00 t_up nans (23s)
+  horn30 it 10 best 36.95 upright-in-pop 0.33 t_up 0.70s (42s)
+  horn30 it 15 best 35.99 upright-in-pop 0.72 t_up 0.66s (63s)
+  horn30 it 20 best 35.86 upright-in-pop 0.68 t_up 0.69s (82s)
+  horn30 it 25 best 35.36 upright-in-pop 0.62 t_up 0.68s (102s)
+  horn30 it 30 best 35.14 upright-in-pop 0.72 t_up 0.69s (122s)
+  horn30 it 35 best 35.56 upright-in-pop 0.77 t_up 0.69s (142s)
+  horn30 it 40 best 35.56 upright-in-pop 0.77 t_up 0.68s (161s)
+  horn30 it 45 best 35.56 upright-in-pop 0.72 t_up 0.69s (180s)
+  horn30 it 49 best 35.56 upright-in-pop 0.60 t_up 0.68s (196s)
+  median peak floor force (N): limbs 61, feet 30, shell 24, sensors 0, horn 38
+  horn30: best plan rights 31/32 perturbed starts, median time to upright 0.6900000000000001
+horn30 rests at body-up -0.86, head pitch 30.1 deg, base height 0.090 m
+  horn30 it  0 best -4.74 upright-in-pop 0.00 t_up nans (3s)
+  horn30 it  5 best 1.43 upright-in-pop 0.00 t_up nans (22s)
+  horn30 it 10 best 36.66 upright-in-pop 0.01 t_up 1.05s (41s)
+  horn30 it 15 best 35.23 upright-in-pop 0.18 t_up 0.86s (61s)
+  horn30 it 20 best 34.09 upright-in-pop 0.58 t_up 0.83s (80s)
+  horn30 it 25 best 32.89 upright-in-pop 0.94 t_up 0.86s (100s)
+  horn30 it 30 best 32.79 upright-in-pop 0.95 t_up 0.99s (118s)
+  horn30 it 35 best 33.92 upright-in-pop 0.83 t_up 1.04s (136s)
+  horn30 it 40 best 33.92 upright-in-pop 0.75 t_up 1.02s (154s)
+  horn30 it 45 best 33.92 upright-in-pop 0.90 t_up 1.02s (174s)
+  horn30 it 49 best 33.92 upright-in-pop 0.85 t_up 1.03s (187s)
+  median peak floor force (N): limbs 72, feet 50, shell 35, sensors 0, horn 41
+  horn30: best plan rights 32/32 perturbed starts, median time to upright 1.108

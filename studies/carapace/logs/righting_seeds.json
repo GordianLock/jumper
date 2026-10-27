@@ -1,0 +1,152 @@
+[
+ {
+  "variant": "stock",
+  "rest_up": -0.9907227395130584,
+  "rest_pitch": 7.8060524492207835,
+  "rest_z": 0.060785836511404304,
+  "best_score": -9.524352134596237,
+  "seed": 1,
+  "robust_peak_median": {
+   "limbs": 21.236657902833965,
+   "feet": 16.746673403064335,
+   "shell": 42.82700430057781,
+   "sensors": 0.0
+  },
+  "robust_success": 0.0,
+  "robust_t_up_median": null
+ },
+ {
+  "variant": "stock",
+  "rest_up": -0.9907227395130584,
+  "rest_pitch": 7.8060524492207835,
+  "rest_z": 0.060785836511404304,
+  "best_score": -12.771974188362835,
+  "seed": 2,
+  "robust_peak_median": {
+   "limbs": 16.129670793663227,
+   "feet": 5.62177328942741,
+   "shell": 61.6321383820239,
+   "sensors": 8.464609364281781
+  },
+  "robust_success": 0.0,
+  "robust_t_up_median": null
+ },
+ {
+  "variant": "stock",
+  "rest_up": -0.9907227395130584,
+  "rest_pitch": 7.8060524492207835,
+  "rest_z": 0.060785836511404304,
+  "best_score": 35.01353804899438,
+  "seed": 3,
+  "robust_peak_median": {
+   "limbs": 46.74103098920129,
+   "feet": 33.487609891645135,
+   "shell": 44.205144574905276,
+   "sensors": 0.0
+  },
+  "robust_success": 1.0,
+  "robust_t_up_median": 0.712
+ },
+ {
+  "variant": "horn20",
+  "rest_up": -0.9255448285070931,
+  "rest_pitch": 20.059908415728763,
+  "rest_z": 0.08860737406392746,
+  "best_score": 35.15616660884435,
+  "seed": 1,
+  "robust_peak_median": {
+   "limbs": 42.191030411636774,
+   "feet": 34.36675199442763,
+   "shell": 9.75773894233653,
+   "sensors": 0.0,
+   "horn": 45.992178116215015
+  },
+  "robust_success": 1.0,
+  "robust_t_up_median": 0.926
+ },
+ {
+  "variant": "horn20",
+  "rest_up": -0.9255448285070931,
+  "rest_pitch": 20.059908415728763,
+  "rest_z": 0.08860737406392746,
+  "best_score": 35.49094451064768,
+  "seed": 2,
+  "robust_peak_median": {
+   "limbs": 36.3898392563495,
+   "feet": 30.29933859744164,
+   "shell": 0.0,
+   "sensors": 0.0,
+   "horn": 43.800827260402286
+  },
+  "robust_success": 1.0,
+  "robust_t_up_median": 0.6920000000000001
+ },
+ {
+  "variant": "horn20",
+  "rest_up": -0.9255448285070931,
+  "rest_pitch": 20.059908415728763,
+  "rest_z": 0.08860737406392746,
+  "best_score": 35.34383944404809,
+  "seed": 3,
+  "robust_peak_median": {
+   "limbs": 41.686221191933456,
+   "feet": 35.209389225989725,
+   "shell": 0.0,
+   "sensors": 0.0,
+   "horn": 42.64792644679622
+  },
+  "robust_success": 1.0,
+  "robust_t_up_median": 0.6990000000000001
+ },
+ {
+  "variant": "horn30",
+  "rest_up": -0.8647205328681231,
+  "rest_pitch": 30.13429898785238,
+  "rest_z": 0.08981269301818319,
+  "best_score": 34.664710194883874,
+  "seed": 1,
+  "robust_peak_median": {
+   "limbs": 41.103742502176146,
+   "feet": 36.34982017761746,
+   "shell": 52.07752023834708,
+   "sensors": 0.0,
+   "horn": 37.494150626317705
+  },
+  "robust_success": 1.0,
+  "robust_t_up_median": 0.856
+ },
+ {
+  "variant": "horn30",
+  "rest_up": -0.8647205328681231,
+  "rest_pitch": 30.13429898785238,
+  "rest_z": 0.08981269301818319,
+  "best_score": 35.55945815058039,
+  "seed": 2,
+  "robust_peak_median": {
+   "limbs": 61.34622850413859,
+   "feet": 29.936103170241314,
+   "shell": 24.244800316665177,
+   "sensors": 0.0,
+   "horn": 38.45552019680237
+  },
+  "robust_success": 0.96875,
+  "robust_t_up_median": 0.6900000000000001
+ },
+ {
+  "variant": "horn30",
+  "rest_up": -0.8647205328681231,
+  "rest_pitch": 30.13429898785238,
+  "rest_z": 0.08981269301818319,
+  "best_score": 33.920497423906454,
+  "seed": 3,
+  "robust_peak_median": {
+   "limbs": 71.66296887997646,
+   "feet": 49.512811743071985,
+   "shell": 35.140085273423445,
+   "sensors": 0.0,
+   "horn": 40.610505033954176
+  },
+  "robust_success": 1.0,
+  "robust_t_up_median": 1.108
+ }
+]
