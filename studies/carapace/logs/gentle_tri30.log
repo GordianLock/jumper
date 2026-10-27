@@ -1,0 +1,13 @@
+tri30s  flip  plan_tri30s_s3         rights 32/32 | joint torque median 5.1 p90 5.2 N*m (worst at RF_J0_joint) | median peaks N: limbs 90 shell 7 horn 35 feet 80
+tri30s  side  plan_tri30s_side_s1    rights 32/32 | joint torque median 15.3 p90 15.5 N*m (worst at LF_J0_joint) | median peaks N: limbs 102 shell 27 horn 54 feet 75
+tri30s  side  plan_tri30s_side_s2    rights 32/32 | joint torque median 5.5 p90 6.0 N*m (worst at RR_J0_joint) | median peaks N: limbs 73 shell 7 horn 51 feet 70
+tri30s  side  plan_tri30s_side_s3    rights 30/32 | joint torque median 8.3 p90 9.3 N*m (worst at LF_J0_joint) | median peaks N: limbs 102 shell 12 horn 34 feet 56
+tri30s  diag  plan_tri30s_diag_s1    rights 32/32 | joint torque median 8.1 p90 9.0 N*m (worst at LF_J0_joint) | median peaks N: limbs 76 shell 38 horn 54 feet 52
+tri30s  diag  plan_tri30s_diag_s2    rights 32/32 | joint torque median 6.7 p90 6.9 N*m (worst at LR_J1_joint) | median peaks N: limbs 108 shell 28 horn 50 feet 96
+tri30s  diag  plan_tri30s_diag_s3    rights 32/32 | joint torque median 6.6 p90 7.0 N*m (worst at LR_J1_joint) | median peaks N: limbs 119 shell 40 horn 66 feet 53
+tri30m  flip  plan_tri30m_s1         rights 32/32 | joint torque median 3.6 p90 3.7 N*m (worst at LR_J0_joint) | median peaks N: limbs 85 shell 39 horn 41 feet 91
+tri30m  flip  plan_tri30m_s2         rights 32/32 | joint torque median 4.9 p90 5.1 N*m (worst at RF_J2_joint) | median peaks N: limbs 56 shell 29 horn 32 feet 38
+tri30m  flip  plan_tri30m_s3         rights 32/32 | joint torque median 3.5 p90 3.6 N*m (worst at LR_J1_joint) | median peaks N: limbs 67 shell 37 horn 28 feet 89
+tri30m  side  plan_tri30m_side_s2    rights 32/32 | joint torque median 6.5 p90 6.6 N*m (worst at LR_J1_joint) | median peaks N: limbs 67 shell 6 horn 77 feet 44
+tri30m  diag  plan_tri30m_diag_s2    rights 32/32 | joint torque median 6.9 p90 7.3 N*m (worst at LR_J0_joint) | median peaks N: limbs 85 shell 36 horn 37 feet 78
+tri30m  diag  plan_tri30m_diag_s3    rights 32/32 | joint torque median 7.5 p90 8.2 N*m (worst at RF_J0_joint) | median peaks N: limbs 66 shell 36 horn 44 feet 97

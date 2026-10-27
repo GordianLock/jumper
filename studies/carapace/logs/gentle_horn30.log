@@ -1,0 +1,6 @@
+horn30  flip  plan_horn30_s1         rights 32/32 | joint torque median 9.1 p90 9.1 N*m (worst at RR_J0_joint) | median peaks N: limbs 55 shell 51 horn 33 feet 46
+horn30  flip  plan_horn30_s2         rights 31/32 | joint torque median 4.7 p90 5.2 N*m (worst at LF_J1_joint) | median peaks N: limbs 73 shell 24 horn 37 feet 88
+horn30  flip  plan_horn30_s3         rights 32/32 | joint torque median 8.4 p90 8.5 N*m (worst at LR_J0_joint) | median peaks N: limbs 70 shell 29 horn 36 feet 78
+horn30  diag  plan_horn30_diag_s1    rights 32/32 | joint torque median 13.2 p90 14.1 N*m (worst at LF_J0_joint) | median peaks N: limbs 101 shell 27 horn 64 feet 58
+horn30  diag  plan_horn30_diag_s2    rights 32/32 | joint torque median 5.5 p90 6.0 N*m (worst at LF_J0_joint) | median peaks N: limbs 129 shell 32 horn 35 feet 88
+horn30  diag  plan_horn30_diag_s3    rights 32/32 | joint torque median 5.9 p90 6.0 N*m (worst at LF_J1_joint) | median peaks N: limbs 96 shell 41 horn 32 feet 45

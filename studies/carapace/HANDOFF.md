@@ -273,6 +273,58 @@ Takeaways:
   (tri20s_rct) lowers the flip and side reliability and adds no gentleness. Its one gain
   is that the side roll no longer hits the shell (0 N against rct20's 95 N).
 
+### The 30° horn, with and without front corner horns (session 2)
+
+`tri30s` and `tri30m` are the 30° centre horn plus the low (2.5 cm) or tall (3.5 cm) front
+corners; `righting.build()` takes `tri<20|30><s|m>`. Both rest exactly like horn30: 30°
+head-up on the centre horn and the shell's rear edge, with the corners off the floor.
+horn30's first-session plans were reused and only load-measured
+(`logs/gentle_horn30.log`). The new searches are in `logs/righting_tri30.log` and their
+loads in `logs/gentle_tri30.log`. Every reliable side and diagonal plan was checked to roll
+about its target axis (alignment 1.00).
+
+Searches that worked (29/32 or better), out of 3:
+
+| Shell | Flip | Side | Diagonal |
+|---|---|---|---|
+| horn30 | 3 | 0 (best 15/32) | 3 |
+| tri30s | 1 (17, 12, 32) | **3** | **3** |
+| tri30m | **3** | 1 (0, 32, 7) | 2 (0, 31, 32) |
+
+Loads of the reliable plans:
+
+| Roll | Plan | Joint torque (p90) | Limbs | Shell | Horn | Feet |
+|---|---|---|---|---|---|---|
+| flip | `plan_horn30_s1` | 9.1 (9.1) | 55 | 51 | 33 | 46 |
+| flip | `plan_horn30_s2` | 4.7 (5.2) | 73 | 24 | 37 | 88 |
+| flip | `plan_horn30_s3` | 8.4 (8.5) | 70 | 29 | 36 | 78 |
+| diag | `plan_horn30_diag_s1` | 13.2 (14.1) | 101 | 27 | 64 | 58 |
+| diag | `plan_horn30_diag_s2` | 5.5 (6.0) | 129 | 32 | 35 | 88 |
+| diag | `plan_horn30_diag_s3` | 5.9 (6.0) | 96 | 41 | 32 | 45 |
+| flip | `plan_tri30s_s3` | 5.1 (5.2) | 90 | 7 | 35 | 80 |
+| side | `plan_tri30s_side_s1` | 15.3 (15.5) | 102 | 27 | 54 | 75 |
+| side | `plan_tri30s_side_s2` | 5.5 (6.0) | 73 | 7 | 51 | 70 |
+| side | `plan_tri30s_side_s3` | 8.3 (9.3) | 102 | 12 | 34 | 56 |
+| diag | `plan_tri30s_diag_s1` | 8.1 (9.0) | 76 | 38 | 54 | 52 |
+| diag | `plan_tri30s_diag_s2` | 6.7 (6.9) | 108 | 28 | 50 | 96 |
+| diag | `plan_tri30s_diag_s3` | 6.6 (7.0) | 119 | 40 | 66 | 53 |
+| flip | `plan_tri30m_s1` | 3.6 (3.7) | 85 | 39 | 41 | 91 |
+| flip | `plan_tri30m_s2` | 4.9 (5.1) | 56 | 29 | 32 | 38 |
+| flip | `plan_tri30m_s3` | **3.5 (3.6)** | 67 | 37 | 28 | 89 |
+| side | `plan_tri30m_side_s2` | 6.5 (6.6) | 67 | 6 | 77 | 44 |
+| diag | `plan_tri30m_diag_s2` | 6.9 (7.3) | 85 | 36 | 37 | 78 |
+| diag | `plan_tri30m_diag_s3` | 7.5 (8.2) | 66 | 36 | 44 | 97 |
+
+Takeaways:
+
+- **tri30m's flip, `plan_tri30m_s3` at 3.5 N·m, has the lowest joint torque of any roll
+  measured.**
+- tri30s is the most dependable side-and-diagonal shell: 3/3 on both. Its gentlest side
+  roll, `_side_s2` at 5.5 N·m, is good, but its diagonals run 6.6–8.1.
+- The 30° family always touches the shell (6–51 N), unlike the gentlest 20° plans.
+- Plans that beat the stock high jump on joint torque, p90, limbs and feet (5.9, 7.0, 76,
+  175): `horn30_s2`, `tri30m_s2`, `tri30m_s3` and `tri30s_side_s2`.
+
 ## Next steps the user has asked about or hinted at
 
 - Combine the **front corner horns with the rear horns**. tri20s is done (session 2,
