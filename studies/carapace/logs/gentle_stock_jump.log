@@ -1,0 +1,4 @@
+floor geoms: ['terrain']
+jump  32 attempts, 3450 physics steps | joint torque median 5.8 p90 6.7 max 7.3 N*m (worst joint, most often: RF_J1_joint) | median peaks N: limbs 57 shell 0 sensors 0 feet 199
+jump @200 Hz physics  32 attempts, 690 physics steps | joint torque median 6.4 p90 7.0 max 7.9 N*m (worst joint, most often: RF_J1_joint) | median peaks N: limbs 113 shell 0 sensors 0 feet 178
+jump @400 Hz physics  32 attempts, 1380 physics steps | joint torque median 5.9 p90 7.0 max 7.4 N*m (worst joint, most often: LF_J1_joint) | median peaks N: limbs 76 shell 0 sensors 0 feet 175

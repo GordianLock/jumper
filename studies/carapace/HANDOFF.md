@@ -82,7 +82,15 @@ pip packages needed: `shapely scikit-image trimesh mediapy pillow`.
   (J^T f for every floor contact) and peak floor force by part group; the summary prints
   medians. This is the gentleness measure; quote the median joint torque.
   - Baselines for that torque (KingKong's own motions, measured the same way):
-    walking about 2.0 N·m, dance 1.2, **jump 4.8**.
+    walking about 2.0 N·m, dance 1.2, jump 4.8. The jump figure could not be reproduced.
+    `jump_loads.py` runs the trained jumper.jump policy (`out/example/model_3100.pt`)
+    for 32 attempts and measures every physics step (`logs/gentle_stock_jump.log`):
+    - 200 Hz physics, the rolls' own step: median **6.4 N·m** (p90 7.0), limbs 113 N,
+      shell 0, feet 178 N.
+    - 400 Hz, the jump's training rate: 5.9 N·m.
+    - 1000 Hz, play's default: 5.8 N·m.
+
+    Compare rolls against **6.4**.
 - **`grid.py ROLL OUT.mp4`**: labelled grid video. Rows are shells (set with the
   `SHELLS=` environment variable); columns are searches 1–3. A green label means the plan
   worked from 30 or more of the 32 starts.
