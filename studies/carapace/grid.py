@@ -19,12 +19,14 @@ NAMES = {"horn20": "20 deg horn", "horn30": "30 deg horn",
          "rct20": "front + rear corners + tail",
          "tri20s_rc": "3 front horns + rear corners", "tri20s_rt": "3 front horns + tail",
          "tri20s_rct": "3 front + rear corners + tail",
-         "tri30s": "30 deg + 2.5 cm corner horns", "tri30m": "30 deg + 3.5 cm corner horns"}
+         "tri30s": "30 deg + 2.5 cm corner horns", "tri30m": "30 deg + 3.5 cm corner horns",
+         "tri30s_rc": "30 deg + 2.5 cm corners + rear corners",
+         "tri30m_rc": "30 deg + 3.5 cm corners + rear corners"}
 W, H, FPS_STEP, SECONDS = 320, 240, 10, 3.2
 
 rates = {}
 for log in ["righting3.log", "righting_axes2.log", "righting_tri.log", "righting_rear.log",
-            "righting_rear2.log", "righting_tri20s_rear.log", "righting_tri30.log"]:
+            "righting_rear2.log", "righting_tri20s_rear.log", "righting_tri30.log", "righting_tri30_rc.log"]:
     seen = {}
     if not os.path.exists(HERE + "logs/" + log):
         continue
