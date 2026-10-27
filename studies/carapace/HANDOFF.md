@@ -325,6 +325,57 @@ Takeaways:
 - Plans that beat the stock high jump on joint torque, p90, limbs and feet (5.9, 7.0, 76,
   175): `horn30_s2`, `tri30m_s2`, `tri30m_s3` and `tri30s_side_s2`.
 
+### The 30° horn with front and rear corner horns (session 2)
+
+`tri30s_rc` and `tri30m_rc` are horn30, the low or tall front corners, and rc20's rear
+corners, with no tail. With the 30° horn, the shell will not rest on the centre horn and
+the rear corners together.
+
+- **Two rest poses.** Most drops end at 55° head-up, sitting on both rear corner horns
+  and both rear lower legs with the centre horn in the air (12.6 cm). The rest end at 16°.
+- In each search's 32 retry starts, the number in the 55° pose is exactly the success
+  count: 20, 28 and 24 for seeds 1, 2 and 3. **Every plan, searched from the 55° pose,
+  works from every 55° start and fails from every 16° start.** So the 29/32 bar
+  misreads these shells. Their plans were load-measured anyway. gentle.py's seed-7
+  starts have 30 of 32 in the 55° pose.
+- Exceptions: tri30m_rc's side plans 1 and 3 reached only 6/32 and 7/32, and side 2
+  reached 26/32 (27/32 in gentle.py), short of the 28 starts in the sitting pose.
+- Seed 1's flip produced the same plan on both shells (identical loads): the front
+  corners never touched the floor in that search.
+- The diagonals go over the opposite shoulder from the other shells (axis 133–135°,
+  alignment 1.00).
+
+Searches in `logs/righting_tri30_rc.log`, loads in `logs/gentle_tri30_rc.log`:
+
+| Roll | Plan | Joint torque (p90) | Limbs | Shell | Horn | Feet |
+|---|---|---|---|---|---|---|
+| flip | `plan_tri30s_rc_s1` (= `tri30m_rc_s1`) | 3.7 (3.7) | 61 | 36 | 47 | 44 |
+| flip | `plan_tri30s_rc_s2` | 5.0 (5.0) | 46 | 33 | 33 | 35 |
+| flip | `plan_tri30s_rc_s3` | 4.2 (4.3) | **36** | 30 | 65 | 32 |
+| side | `plan_tri30s_rc_side_s1` | 7.2 (7.3) | 103 | 29 | 36 | 52 |
+| side | `plan_tri30s_rc_side_s2` | 7.0 (7.1) | 124 | 37 | 37 | 42 |
+| side | `plan_tri30s_rc_side_s3` | 6.5 (6.6) | 131 | 33 | 60 | 54 |
+| diag | `plan_tri30s_rc_diag_s1` | 7.7 (7.8) | 67 | 35 | 49 | 52 |
+| diag | `plan_tri30s_rc_diag_s2` | 7.0 (7.0) | 58 | 34 | 39 | 95 |
+| diag | `plan_tri30s_rc_diag_s3` | 5.6 (5.6) | 67 | **0** | 52 | 100 |
+| flip | `plan_tri30m_rc_s2` | 4.5 (4.5) | 57 | 42 | 42 | 37 |
+| flip | `plan_tri30m_rc_s3` | **3.3 (3.4)** | 50 | 36 | 42 | 35 |
+| side | `plan_tri30m_rc_side_s2` | 12.0 (12.4) | 83 | 66 | 45 | 57 |
+| diag | `plan_tri30m_rc_diag_s1` | 7.4 (7.4) | 53 | 38 | 37 | 46 |
+| diag | `plan_tri30m_rc_diag_s2` | 5.3 (5.3) | 64 | 38 | 40 | 67 |
+| diag | `plan_tri30m_rc_diag_s3` | 6.6 (6.7) | 68 | **111** | 44 | 83 |
+
+Takeaways:
+
+- **`plan_tri30m_rc_s3`, a flip at 3.3 N·m, has the lowest joint torque measured.**
+  `plan_tri30s_rc_s3` has the lowest limb force (36 N).
+- Rear corners make the 30° flip and diagonal gentle, but not the side roll: every side
+  plan is above 6.5 N·m with limbs over 100 N, except the tall shell's, which is harsher.
+- Plans that beat the stock high jump on all four measures (from the sitting pose): every
+  flip on both shells, `tri30s_rc_diag_s3` (no shell contact) and `tri30m_rc_diag_s2`.
+- The open question is the 16° pose. A trained policy would have to handle it, or a
+  second plan could be searched from it.
+
 ## Next steps the user has asked about or hinted at
 
 - Combine the **front corner horns with the rear horns**. tri20s is done (session 2,

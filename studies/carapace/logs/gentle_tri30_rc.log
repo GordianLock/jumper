@@ -1,0 +1,16 @@
+tri30s_rc flip  plan_tri30s_rc_s1      rights 30/32 | joint torque median 3.7 p90 3.7 N*m (worst at RR_J0_joint) | median peaks N: limbs 61 shell 36 horn 47 feet 44
+tri30s_rc side  plan_tri30s_rc_side_s1 rights 30/32 | joint torque median 7.2 p90 7.3 N*m (worst at RM_J0_joint) | median peaks N: limbs 103 shell 29 horn 36 feet 52
+tri30s_rc diag  plan_tri30s_rc_diag_s1 rights 30/32 | joint torque median 7.7 p90 7.8 N*m (worst at RR_J0_joint) | median peaks N: limbs 67 shell 35 horn 49 feet 52
+tri30s_rc flip  plan_tri30s_rc_s2      rights 30/32 | joint torque median 5.0 p90 5.0 N*m (worst at RF_J1_joint) | median peaks N: limbs 46 shell 33 horn 33 feet 35
+tri30s_rc side  plan_tri30s_rc_side_s2 rights 30/32 | joint torque median 7.0 p90 7.1 N*m (worst at RR_J1_joint) | median peaks N: limbs 124 shell 37 horn 37 feet 42
+tri30s_rc diag  plan_tri30s_rc_diag_s2 rights 30/32 | joint torque median 7.0 p90 7.0 N*m (worst at LR_J0_joint) | median peaks N: limbs 58 shell 34 horn 39 feet 95
+tri30s_rc flip  plan_tri30s_rc_s3      rights 30/32 | joint torque median 4.2 p90 4.3 N*m (worst at RF_J0_joint) | median peaks N: limbs 36 shell 30 horn 65 feet 32
+tri30s_rc side  plan_tri30s_rc_side_s3 rights 30/32 | joint torque median 6.5 p90 6.6 N*m (worst at LM_J1_joint) | median peaks N: limbs 131 shell 33 horn 60 feet 54
+tri30s_rc diag  plan_tri30s_rc_diag_s3 rights 30/32 | joint torque median 5.6 p90 5.6 N*m (worst at LR_J1_joint) | median peaks N: limbs 67 shell 0 horn 52 feet 100
+tri30m_rc flip  plan_tri30m_rc_s1      rights 30/32 | joint torque median 3.7 p90 3.7 N*m (worst at RR_J0_joint) | median peaks N: limbs 61 shell 36 horn 47 feet 44
+tri30m_rc flip  plan_tri30m_rc_s2      rights 30/32 | joint torque median 4.5 p90 4.5 N*m (worst at RR_J0_joint) | median peaks N: limbs 57 shell 42 horn 42 feet 37
+tri30m_rc flip  plan_tri30m_rc_s3      rights 30/32 | joint torque median 3.3 p90 3.4 N*m (worst at LM_J2_joint) | median peaks N: limbs 50 shell 36 horn 42 feet 35
+tri30m_rc side  plan_tri30m_rc_side_s2 rights 27/32 | joint torque median 12.0 p90 12.4 N*m (worst at RM_J0_joint) | median peaks N: limbs 83 shell 66 horn 45 feet 57
+tri30m_rc diag  plan_tri30m_rc_diag_s1 rights 30/32 | joint torque median 7.4 p90 7.4 N*m (worst at LR_J0_joint) | median peaks N: limbs 53 shell 38 horn 37 feet 46
+tri30m_rc diag  plan_tri30m_rc_diag_s2 rights 30/32 | joint torque median 5.3 p90 5.3 N*m (worst at LR_J1_joint) | median peaks N: limbs 64 shell 38 horn 40 feet 67
+tri30m_rc diag  plan_tri30m_rc_diag_s3 rights 30/32 | joint torque median 6.6 p90 6.7 N*m (worst at LR_J0_joint) | median peaks N: limbs 68 shell 111 horn 44 feet 83
