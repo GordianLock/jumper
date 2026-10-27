@@ -82,15 +82,21 @@ pip packages needed: `shapely scikit-image trimesh mediapy pillow`.
   (J^T f for every floor contact) and peak floor force by part group; the summary prints
   medians. This is the gentleness measure; quote the median joint torque.
   - Baselines for that torque (KingKong's own motions, measured the same way):
-    walking about 2.0 N·m, dance 1.2, jump 4.8. The jump figure could not be reproduced.
-    `jump_loads.py` runs the trained jumper.jump policy (`out/example/model_3100.pt`)
-    for 32 attempts and measures every physics step (`logs/gentle_stock_jump.log`):
-    - 200 Hz physics, the rolls' own step: median **6.4 N·m** (p90 7.0), limbs 113 N,
-      shell 0, feet 178 N.
-    - 400 Hz, the jump's training rate: 5.9 N·m.
-    - 1000 Hz, play's default: 5.8 N·m.
+    walking about 2.0 N·m, dance 1.2, jump 4.8, all from `baseline_loads.py` (run from the
+    repo root).
 
-    Compare rolls against **6.4**.
+    There are two jump baselines, and they measure **different jumps**:
+    - **4.8 N·m** is `jumper.ref_free_jump`'s example policy: 8 envs, 250 control steps,
+      noise and pushes off. The run was re-simulated in plain MuJoCo at 5 ms. The worst
+      env reached 5.6.
+    - **6.4 N·m** (p90 7.0, limbs 113 N, shell 0, feet 178 N) is the `jumper.jump`
+      reference-guided high jump, the policy in the example bundle
+      (`out/example/model_3100.pt`). It comes from `jump_loads.py`: 32 attempts,
+      observation noise on, read live every 5 ms physics step
+      (`logs/gentle_stock_jump.log`). At 400 Hz physics it reads 5.9, and at 1000 Hz 5.8.
+
+    The metric is the same for both: floor-contact torque only, each env's worst moment,
+    then the median. Quote both baselines when comparing a roll.
 - **`grid.py ROLL OUT.mp4`**: labelled grid video. Rows are shells (set with the
   `SHELLS=` environment variable); columns are searches 1–3. A green label means the plan
   worked from 30 or more of the 32 starts.
