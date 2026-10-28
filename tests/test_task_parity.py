@@ -97,6 +97,9 @@ NOT_LOCOMOTION = {
     "jumper.flourish_roll",
     # jumper.flourish_roll with its completion bonus scaled by duration and hits.
     "jumper.showcase_roll",
+    # jumper.momentum_roll on a carapace model, its bonus paid at a 1 s window's end
+    # and scaled by the hardest hits: one-shot, no command, symmetry off.
+    "jumper.gentle_momentum_roll",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of
     # its own, symmetry off, and a reward ladder for a manipulation job.
