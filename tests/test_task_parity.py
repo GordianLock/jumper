@@ -100,6 +100,9 @@ NOT_LOCOMOTION = {
     # jumper.momentum_roll on a carapace model, its bonus paid at a 1 s window's end
     # and scaled by the hardest hits: one-shot, no command, symmetry off.
     "jumper.gentle_momentum_roll",
+    # jumper.gentle_momentum_roll's roll with the carapace charged by region and
+    # landings and airtime charged whatever touches down: one-shot, symmetry off.
+    "jumper.horned_roll",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of
     # its own, symmetry off, and a reward ladder for a manipulation job.
