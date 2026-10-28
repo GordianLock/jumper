@@ -1,0 +1,92 @@
+[
+ {
+  "seed": 1,
+  "best_score": 27.88525050654273,
+  "success": 12,
+  "roll_seconds_median": 1.1075,
+  "roll_seconds_max": 1.315,
+  "axis_error_deg_median": 54.382245307589784,
+  "joint_torque_median": 6.394836134282753,
+  "joint_torque_p90": 6.896214181317038,
+  "joint_torque_max": 7.184671423796598,
+  "worst_joint_most_often": "LF_J0_joint",
+  "peak_median": {
+   "feet": 99.31690765388934,
+   "limbs": 97.05812398472757,
+   "sensors": 0.0,
+   "shell": 83.01739651656531,
+   "carapace": 134.07320132252025,
+   "ground": 166.30187464933502,
+   "flight": 0.08
+  },
+  "peak_max": {
+   "feet": 147.3428302370436,
+   "limbs": 140.219992924112,
+   "sensors": 0.0,
+   "shell": 133.38323129208737,
+   "carapace": 152.89925177530003,
+   "ground": 206.6811567378163,
+   "flight": 0.1
+  }
+ },
+ {
+  "seed": 2,
+  "best_score": 47.70027938103873,
+  "success": 32,
+  "roll_seconds_median": 0.775,
+  "roll_seconds_max": 0.78,
+  "axis_error_deg_median": 7.756462537896992,
+  "joint_torque_median": 3.7986867331136724,
+  "joint_torque_p90": 4.6634221044428195,
+  "joint_torque_max": 4.987456022969969,
+  "worst_joint_most_often": "RR_J1_joint",
+  "peak_median": {
+   "feet": 71.97440792015126,
+   "limbs": 82.91047199200858,
+   "sensors": 0.0,
+   "shell": 61.04518888762581,
+   "carapace": 0.0,
+   "ground": 87.7581530208559,
+   "flight": 0.045
+  },
+  "peak_max": {
+   "feet": 73.64195051634672,
+   "limbs": 123.0842742935508,
+   "sensors": 0.0,
+   "shell": 71.05390848357905,
+   "carapace": 0.0,
+   "ground": 123.0842742935508,
+   "flight": 0.05
+  }
+ },
+ {
+  "seed": 3,
+  "best_score": 47.15856164407202,
+  "success": 32,
+  "roll_seconds_median": 0.655,
+  "roll_seconds_max": 0.78,
+  "axis_error_deg_median": 5.308416032400197,
+  "joint_torque_median": 7.206717090732662,
+  "joint_torque_p90": 8.124275193713684,
+  "joint_torque_max": 8.699319931699785,
+  "worst_joint_most_often": "LR_J0_joint",
+  "peak_median": {
+   "feet": 50.1024628555049,
+   "limbs": 80.67749058760248,
+   "sensors": 0.0,
+   "shell": 59.70156997372824,
+   "carapace": 3.10190926237221,
+   "ground": 103.41431054643235,
+   "flight": 0.02
+  },
+  "peak_max": {
+   "feet": 85.9163261869635,
+   "limbs": 101.90946835878765,
+   "sensors": 0.0,
+   "shell": 105.56202927552312,
+   "carapace": 48.8626889166875,
+   "ground": 117.71075057803071,
+   "flight": 0.04
+  }
+ }
+]
