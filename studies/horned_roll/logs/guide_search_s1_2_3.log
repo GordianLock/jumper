@@ -1,0 +1,27 @@
+  seed 1: reusing /home/claude/jumper/studies/horned_roll/plans/plan_horned_s1.npy
+seed 1: rolls 32/32, roll time median 1.0 s (max 1.04), axis error 4 deg | joint torque median 8.3 p90 8.6 max 8.7 N*m (most often LF_J2_joint) | median peaks: feet 80 limbs 94 sensors 0 shell 37 carapace 163 ground 201 flight 0.06
+  seed 2 it  0 best 31.42 rolled-in-pop 0.01 fastest 0.88s (4s)
+  seed 2 it  5 best 46.92 rolled-in-pop 0.01 fastest 0.58s (22s)
+  seed 2 it 10 best 52.63 rolled-in-pop 0.17 fastest 0.53s (38s)
+  seed 2 it 15 best 48.19 rolled-in-pop 0.40 fastest 0.59s (54s)
+  seed 2 it 20 best 47.75 rolled-in-pop 0.62 fastest 0.48s (70s)
+  seed 2 it 25 best 45.44 rolled-in-pop 0.69 fastest 0.58s (88s)
+  seed 2 it 30 best 45.07 rolled-in-pop 0.89 fastest 0.70s (105s)
+  seed 2 it 35 best 45.39 rolled-in-pop 0.78 fastest 0.57s (121s)
+  seed 2 it 40 best 46.72 rolled-in-pop 0.78 fastest 0.74s (139s)
+  seed 2 it 45 best 46.92 rolled-in-pop 0.80 fastest 0.74s (157s)
+  seed 2 it 49 best 47.94 rolled-in-pop 0.79 fastest 0.58s (171s)
+seed 2: rolls 32/32, roll time median 0.77 s (max 0.775), axis error 2 deg | joint torque median 6.1 p90 6.1 max 6.2 N*m (most often LR_J0_joint) | median peaks: feet 72 limbs 72 sensors 0 shell 74 carapace 0 ground 86 flight 0.04
+  seed 3 it  0 best 19.06 rolled-in-pop 0.00 fastest nans (4s)
+  seed 3 it  5 best 26.64 rolled-in-pop 0.00 fastest nans (21s)
+  seed 3 it 10 best 31.79 rolled-in-pop 0.04 fastest 0.78s (38s)
+  seed 3 it 15 best 47.33 rolled-in-pop 0.09 fastest 0.58s (54s)
+  seed 3 it 20 best 48.25 rolled-in-pop 0.48 fastest 0.48s (73s)
+  seed 3 it 25 best 46.22 rolled-in-pop 0.56 fastest 0.51s (90s)
+  seed 3 it 30 best 42.44 rolled-in-pop 0.71 fastest 0.49s (106s)
+  seed 3 it 35 best 46.91 rolled-in-pop 0.78 fastest 0.47s (124s)
+  seed 3 it 40 best 47.14 rolled-in-pop 0.79 fastest 0.51s (142s)
+  seed 3 it 45 best 47.58 rolled-in-pop 0.73 fastest 0.52s (159s)
+  seed 3 it 49 best 48.66 rolled-in-pop 0.71 fastest 0.50s (173s)
+seed 3: rolls 32/32, roll time median 0.61 s (max 0.645), axis error 5 deg | joint torque median 16.1 p90 17.3 max 17.9 N*m (most often LR_J0_joint) | median peaks: feet 55 limbs 84 sensors 0 shell 0 carapace 51 ground 109 flight 0.06
+exit 0
