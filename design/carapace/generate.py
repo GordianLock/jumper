@@ -55,6 +55,9 @@ DEFAULTS = dict(
     dome_rise=0.0,                  # optional dome over the shell top (0: none)
     dome_xc=-0.012, dome_ax=0.105, dome_ay=0.088, dome_p=0.7, dome_edge_blend=0.018,
     bumps=[],                       # optional low mounds: dict(c=(x, y), h=height, r=radius)
+    spheres=[],                     # bumpers set into the shell: dict(c=(x, y), r=radius,
+                                    # submerge=share of the sphere's height below the shell
+                                    # surface under its centre)
     flank_width=0.032,              # wide flanks: half-width beyond the spine at flank_depth
     flank_depth=0.05,               # below the axis,
     flank_power=2.0,                # growing as depth**power (concave)
@@ -66,6 +69,10 @@ DEFAULTS = dict(
     junction_angle_deg=10.0,        # walls leave the spine this far above its widest line
     under_flare=0.008,              # walls land on the shell this much wider per side
     base_fillet_radius=0.015,       # where a spine runs low, the wall is an arc this radius
+    root_dive_len=0.04,             # a root extension that stops before its top meets the
+    root_end_margin=None,           # shell (legs' path, shell edge) ends this far short of the
+                                    # stop (None: the spine radius) and curves down onto the
+                                    # shell over its last root_dive_len
     tip_round_len=1.5,              # junction and flare fade in over this many tip radii
     display_gap=0.002,              # material keeps this far from the display module
     edge_round=0.004,               # rounding where the carapace meets a boundary
@@ -166,9 +173,20 @@ def build(P):
         slope = (b[2] - a[2]) / run
         th = np.arctan(slope)
         axis3 = (b - a) / np.linalg.norm(b - a)
-        ext = root_ext[c["name"]][0]
-        a_ext = a - axis3 * ext
+        ext, why = root_ext[c["name"]]
         u_end = -(run + ext * np.cos(th))
+        dive = None
+        if why != "top meets the shell" and ext > 0:
+            margin = c["r"] if P["root_end_margin"] is None else P["root_end_margin"]
+            u_end = min(u_end + margin, -run)
+            ext = (-u_end - run) / np.cos(th)
+            u_s = min(u_end + P["root_dive_len"], -run)
+            ie = grid_at(*(b[:2] + u_end * hd))
+            z_shell = float(Zs[ie]) if np.isfinite(Zs[ie]) else a[2] - c["r"]
+            drop = (b[2] + slope * u_end) + c["r"] / np.cos(th) - z_shell
+            if drop > 0 and u_s > u_end:
+                dive = (u_s, u_end, drop)
+        a_ext = a - axis3 * ext
         # the strut's foot lands on the shell's upper surface, front face included
         z_F = a[2]
         for _ in range(3):
@@ -183,7 +201,7 @@ def build(P):
             z_F = float(zf) if np.isfinite(zf) else 0.072
         reach = -u_F
         z_C = max(b[2] + slope * u_F, z_F + 1e-4)
-        return dict(a=a, b=b, hd=hd, slope=slope, a_ext=a_ext, u_end=u_end,
+        return dict(a=a, b=b, hd=hd, slope=slope, a_ext=a_ext, u_end=u_end, dive=dive,
                     u_F=u_F, z_F=z_F, z_C=z_C, reach=reach)
 
     def junction_depth(c, f, fade=1.0):
@@ -262,14 +280,22 @@ def build(P):
         w = -(X - b[0]) * hd[1] + (Y - b[1]) * hd[0]
         ball = np.sqrt((X - b[0]) ** 2 + (Y - b[1]) ** 2 + (Z - b[2]) ** 2) - c["r_tip"]
         if not tip_zone:
+            # a diving root extension: the spine and its walls lowered smoothly by up to
+            # `drop` over the dive stretch
+            Zw = Z
+            if f["dive"] is not None:
+                u_s, u_e, drop = f["dive"]
+                kd = np.clip((u_s - u) / (u_s - u_e), 0, 1)
+                Zw = Z + drop * kd * kd
+                del kd
             ae = f["a_ext"]
             e = b - ae
-            t = np.clip(((X - ae[0]) * e[0] + (Y - ae[1]) * e[1] + (Z - ae[2]) * e[2])
+            t = np.clip(((X - ae[0]) * e[0] + (Y - ae[1]) * e[1] + (Zw - ae[2]) * e[2])
                         / e.dot(e), 0, 1)
             cap = np.sqrt((X - ae[0] - t * e[0]) ** 2 + (Y - ae[1] - t * e[1]) ** 2
-                          + (Z - ae[2] - t * e[2]) ** 2) - r
+                          + (Zw - ae[2] - t * e[2]) ** 2) - r
             del t
-            hs, h_J, W, dW = wall_profile(c, f, u, Z)
+            hs, h_J, W, dW = wall_profile(c, f, u, Zw)
             h = np.clip(hs, 0, None)
             k = np.clip((f["u_F"] - u) / (P["flank_taper"] * f["reach"]), 0, 1)
             tau = k * k * (3 - 2 * k)
@@ -320,6 +346,10 @@ def build(P):
     sdf = Z - Ztop[:, :, None]
     for c in P["crests"]:
         sdf = smin(sdf, crest_sdf(c), P["valley_blend"])
+    for s in P["spheres"]:
+        zc = float(Zs[grid_at(s["c"][0], s["c"][1])]) + s["r"] - 2 * s["r"] * s["submerge"]
+        sdf = np.minimum(sdf, np.sqrt((X - s["c"][0]) ** 2 + (Y - s["c"][1]) ** 2
+                                      + (Z - zc) ** 2) - s["r"])
     ed = (distance_transform_edt(top) - distance_transform_edt(~top)) * v
     sdf = smax(sdf, -ed[:, :, None], P["edge_round"])
     sdf = np.maximum(sdf, Zbase[:, :, None] - Z)
