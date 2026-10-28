@@ -14,13 +14,18 @@ The default model is `CF1-tri30m-rc-v2` (`common/assets.py`,
 on the top shell, its estimated mass in the shell's inertial. `--model jumper`
 runs the same task on the bare robot.
 
-Measured before this task was written (2026-10-28, this workspace, native CPU,
-one env, jumper.momentum_roll's replay settings): the demonstration's recorded
-targets, sent unchanged on v2, still complete the roll -- 360 degrees, ending
-level on its feet -- with a peak of 123 N of shell and carapace on the floor and
-0.26 s with nothing touching it. On the stock robot it had measured a median 108 N
-over 64 randomised starts (`momentum_roll/mdp/reference.py`); one nominal start is
-not that measurement, so read it as about the same.
+**The carapace pieces collide only since `common/constants.py`'s
+`CARAPACE_COLLISION`.** Before it, the collision config switched every piece off,
+and the first two Colab runs (2026-10-28) trained on the stock shell carrying the
+carapace's mass. Measured after the fix (2026-10-28, this workspace, native CPU,
+this task's own environment with play=True):
+
+- dropped belly-up from eight tilts of up to 8 degrees, it rests at 23.3 degrees
+  head-up, no side lean, on three carapace pieces, the stock shell clear;
+- the demonstration's recorded targets, sent unchanged on v2 (one env), still
+  complete the roll -- 360 degrees, ending level on its feet -- with a hardest
+  single shell or carapace contact of 73 N and 0.24 s with nothing touching the
+  floor.
 
 ## Time: within `ROLL_WINDOW`, and close to indifferent to faster
 

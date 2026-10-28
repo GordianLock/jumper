@@ -54,7 +54,9 @@ python scripts/train.py --task jumper.roll --model assets/jumper/jumper_CF1-tri3
 
 Every roll task takes `--model`. What carries over automatically:
 
-- The carapace's collision pieces are named `upper_shell_carapace_NN_meshcol` on
+- The carapace's collision pieces collide because `tasks/jumper/common/constants.py`
+  adds them for any model that has them (`CARAPACE_COLLISION`); until 2026-10-28 they
+  were switched off and passed through the floor. They are named `upper_shell_carapace_NN_meshcol` on
   `upper_shell_link`. The roll tasks select collision geoms by the `_meshcol` ending, so their
   shell-impact sensor (`body_ground_contact`) and the rolled-start reset include the carapace
   without any change. `studies/carapace/gentle.py` groups names starting `upper_shell` as

@@ -438,6 +438,19 @@ CHASSIS_LINKS: tuple[str, ...] = (
     "display_module_link",
 )
 
+#: A printed carapace's convex collision pieces, on `upper_shell_link`, as
+#: `design/carapace/build_version.py` names them. Matches nothing on the stock
+#: model. **Without this every piece passed through the ground**: the collision
+#: config zeroes the contype of any geom it is not given, so jumper.gentle_momentum_roll's
+#: first two Colab runs on CF1-tri30m-rc-v2 (2026-10-28) trained on the stock shell
+#: carrying the carapace's mass -- in 32 replayed rolls, all 868 shell contacts were
+#: on `upper_shell_link_meshcol`, none on a horn.
+#:
+#: Added only for a model that has them (`get_jumper_robot_cfg`): a pattern that
+#: matches no geom is an error in mjlab's matching, which jumper.five_foot's jaw
+#: collision relies on to catch an undecomposed claw (`five_foot/jaws.py`).
+CARAPACE_MESH_RE = r"^upper_shell_carapace_\d+_meshcol$"
+
 _LINK_MESH = tuple(
     f"{link}_meshcol" for link in CHASSIS_LINKS + LIMB_LINKS + TIP_LINKS
 )
@@ -686,6 +699,18 @@ def _collision_cfg(foot_names: tuple[str, ...], other_names: tuple[str, ...]) ->
 #: `_LINK_MESH`.
 HYBRID_COLLISION = _collision_cfg(_FOOT_MESH, _LINK_MESH)
 
+#: HYBRID_COLLISION plus a printed carapace's pieces, for a model that carries one.
+CARAPACE_COLLISION = _collision_cfg(_FOOT_MESH, _LINK_MESH + (CARAPACE_MESH_RE,))
+
+
+def _has_carapace(asset: Path | None) -> bool:
+    """Whether the model XML has carapace collision pieces (`CARAPACE_MESH_RE`)."""
+    if asset is None:
+        return False
+    import re
+
+    return re.search(r'name="upper_shell_carapace_\d+_meshcol"', Path(asset).read_text()) is not None
+
 #: The names of the colliding foot geoms; the contact sensor needs them.
 FOOT_GEOMS: tuple[str, ...] = _FOOT_MESH
 
@@ -712,7 +737,7 @@ def get_jumper_robot_cfg(
             joint_pos=dict(HOME),
             joint_vel={".*": 0.0},
         ),
-        collisions=(HYBRID_COLLISION,),
+        collisions=(CARAPACE_COLLISION if _has_carapace(asset) else HYBRID_COLLISION,),
         spec_fn=partial(get_spec, asset),
         articulation=EntityArticulationInfoCfg(
             actuators=(make_actuator_cfg(effort_limit),),
