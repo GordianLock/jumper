@@ -249,6 +249,44 @@ def joint_loads(m, d, start, u, names):
     return jt.max(), names[int(jt.argmax())], pk
 
 
+#: Joint torque in the search: worst floor-contact torque on any joint above
+#: TORQUE_FREE N*m costs TORQUE_COST per N*m, phased in with the other costs. Every
+#: plan of a round is re-simulated to measure it: about 0.1 s each, and on seeds 2 and
+#: 3 of the first searches it matched joint_loads() exactly (6.05 and 16.24 N*m).
+TORQUE_FREE = 5.0
+#: File tag: "_torque" for these runs; the first three searches (no torque) are untagged.
+TAG = "_torque"
+TORQUE_COST = 3.0
+TORQUE_TOP = 96
+TORQUE_STRIDE = 1
+
+
+def floor_torque(m, d, start, u, dofs, floor, stride=TORQUE_STRIDE):
+    """Worst |J^T f| over floor contacts on any of `dofs` for one plan from `start`:
+    the floor contacts' constraint forces mapped to joint space in one call
+    (mj_mulJacTVec), the same quantity joint_loads() sums contact by contact."""
+    mujoco.mj_setState(m, d, start, mujoco.mjtState.mjSTATE_FULLPHYSICS)
+    worst = 0.0
+    tau = np.zeros(m.nv)
+    for i in range(len(u)):
+        d.ctrl[:] = u[i]; mujoco.mj_step(m, d)
+        if i % stride or d.ncon == 0:
+            continue
+        g = d.contact.geom[:d.ncon]
+        on = (g[:, 0] == floor) | (g[:, 1] == floor)
+        if not on.any():
+            continue
+        f = np.zeros(d.nefc)
+        for adr, dim in zip(d.contact.efc_address[:d.ncon][on], d.contact.dim[:d.ncon][on]):
+            if adr < 0:
+                continue
+            n = 2 * (dim - 1) if m.opt.cone == mujoco.mjtCone.mjCONE_PYRAMIDAL else dim
+            f[adr:adr + max(n, 1)] = d.efc_force[adr:adr + max(n, 1)]
+        mujoco.mj_mulJacTVec(m, d, tau, f)
+        worst = max(worst, float(np.abs(tau[dofs]).max()))
+    return worst
+
+
 def search(seed, iters=50, pop=96, elite=12):
     m = build(); d, names, home, lo, hi, drive, qadr = setup(m)
     half = (hi - lo) / 2
@@ -258,7 +296,10 @@ def search(seed, iters=50, pop=96, elite=12):
     mu = np.zeros((K, nd)); sd = np.full((K, nd), 0.6)
     datas = [mujoco.MjData(m) for _ in range(2)]
     best = (-1e9, None)
-    saved = HERE + f"plans/plan_horned_s{seed}.npy"
+    dt_data = mujoco.MjData(m)
+    dofs = [m.jnt_dofadr[m.joint("robot/" + n).id] for n in names]
+    floor = m.geom("terrain").id
+    saved = HERE + f"plans/plan_horned{TAG}_s{seed}.npy"
     if os.environ.get("REUSE") and os.path.exists(saved):
         best = (float("nan"), np.load(saved)); iters = 0
         print(f"  seed {seed}: reusing {saved}", flush=True)
@@ -267,9 +308,16 @@ def search(seed, iters=50, pop=96, elite=12):
         P = np.clip(mu + sd * rng.standard_normal((pop, K, nd)), -1.5, 1.5)
         P[0] = mu
         if best[1] is not None: P[1] = best[1]
-        st, se = rollout.rollout(m, datas, st0[None], controls(P, home, lo, hi, drive, half))
+        u_all = controls(P, home, lo, hi, drive, half)
+        st, se = rollout.rollout(m, datas, st0[None], u_all)
         pen = min(1.0, max(0.0, (it - 10) / 20))
         s, ok, secs = score(st, m, se, pen)
+        if pen > 0:
+            top = np.argsort(-s)[:TORQUE_TOP]
+            for j in top:
+                jt = floor_torque(m, dt_data, st0, u_all[j], dofs, floor)
+                s[j] -= pen * TORQUE_COST * max(0.0, jt - TORQUE_FREE)
+            s[np.setdiff1d(np.arange(len(s)), top)] = -1e9
         if best[1] is not None and it in (10, 30):
             best = (-1e9, best[1])
         idx = np.argsort(-s)[:elite]
@@ -280,7 +328,7 @@ def search(seed, iters=50, pop=96, elite=12):
                   f"fastest {np.nanmin(secs) if np.isfinite(secs).any() else float('nan'):.2f}s "
                   f"({time.time() - t0:.0f}s)", flush=True)
     plan = best[1]
-    np.save(HERE + f"plans/plan_horned_s{seed}.npy", plan)
+    np.save(HERE + f"plans/plan_horned{TAG}_s{seed}.npy", plan)
 
     # 32 perturbed standing starts
     starts = []
@@ -322,5 +370,5 @@ def search(seed, iters=50, pop=96, elite=12):
 if __name__ == "__main__":
     seeds = [int(a) for a in sys.argv[1:]] or [1, 2, 3]
     out = [search(s) for s in seeds]
-    json.dump(out, open(HERE + "logs/guide_search_s" + "_".join(map(str, seeds)) + ".json", "w"),
+    json.dump(out, open(HERE + f"logs/guide_search{TAG}_s" + "_".join(map(str, seeds)) + ".json", "w"),
               indent=1)
