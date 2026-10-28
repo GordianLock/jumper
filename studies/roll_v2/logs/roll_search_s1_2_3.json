@@ -1,0 +1,80 @@
+[
+ {
+  "seed": 1,
+  "best_score": 39.52272519693673,
+  "success": 26,
+  "roll_seconds_median": 0.7324999999999999,
+  "roll_seconds_max": 1.27,
+  "axis_error_deg_median": 9.594480030251344,
+  "joint_torque_median": 7.686861815281286,
+  "joint_torque_p90": 8.501549125609973,
+  "joint_torque_max": 9.229914810443889,
+  "worst_joint_most_often": "RF_J1_joint",
+  "peak_median": {
+   "feet": 87.58796268012814,
+   "limbs": 107.94399816518535,
+   "shell": 59.30050712877011,
+   "carapace": 132.14809159124655,
+   "sensors": 0.0
+  },
+  "peak_max": {
+   "feet": 104.05429350083813,
+   "limbs": 130.8102983574683,
+   "shell": 111.88610310204113,
+   "carapace": 179.0436353817959,
+   "sensors": 0.0
+  }
+ },
+ {
+  "seed": 2,
+  "best_score": 45.72597800536313,
+  "success": 18,
+  "roll_seconds_median": 0.785,
+  "roll_seconds_max": 0.79,
+  "axis_error_deg_median": 2.768397867056584,
+  "joint_torque_median": 9.164925469802796,
+  "joint_torque_p90": 9.318878493224855,
+  "joint_torque_max": 9.977373165592569,
+  "worst_joint_most_often": "LR_J0_joint",
+  "peak_median": {
+   "feet": 73.7301195368962,
+   "limbs": 95.6427012023891,
+   "shell": 61.463326552120996,
+   "carapace": 0.0,
+   "sensors": 0.0
+  },
+  "peak_max": {
+   "feet": 73.95061797794989,
+   "limbs": 103.560372209309,
+   "shell": 82.58874739278527,
+   "carapace": 0.0,
+   "sensors": 0.0
+  }
+ },
+ {
+  "seed": 3,
+  "best_score": 48.94344103901783,
+  "success": 30,
+  "roll_seconds_median": 0.53,
+  "roll_seconds_max": 0.585,
+  "axis_error_deg_median": 3.0559829329117427,
+  "joint_torque_median": 14.484596441992034,
+  "joint_torque_p90": 15.7132961008775,
+  "joint_torque_max": 16.061712525572855,
+  "worst_joint_most_often": "LR_J0_joint",
+  "peak_median": {
+   "feet": 47.56704591355841,
+   "limbs": 75.40752591140443,
+   "shell": 0.0,
+   "carapace": 0.0,
+   "sensors": 0.0
+  },
+  "peak_max": {
+   "feet": 80.61557567437148,
+   "limbs": 79.69869376834606,
+   "shell": 0.0,
+   "carapace": 0.0,
+   "sensors": 0.0
+  }
+ }
+]
