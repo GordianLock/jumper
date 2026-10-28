@@ -22,18 +22,18 @@ level on its feet -- with a peak of 123 N of shell and carapace on the floor and
 over 64 randomised starts (`momentum_roll/mdp/reference.py`); one nominal start is
 not that measurement, so read it as about the same.
 
-## Time: within `ROLL_WINDOW`, and indifferent to faster
+## Time: within `ROLL_WINDOW`, and close to indifferent to faster
 
 The roll is timed from the step the body has turned `START_TURN` (the crouch is not
 counted) to standing. The completion bonus is full for any roll that stands by
-`ROLL_WINDOW` seconds and falls to nothing by `ZERO_SECONDS`. **Nothing pays a roll
-for finishing sooner than the window**, and making that true needs care
-(`mdp/rewards.py` has the reasoning): the bonus is paid at the window's end
-whatever the time of standing, so a quick roll holds its stance until then; the
-progress reward is potential-based shaping, which guides without paying for
-when; and jumper.momentum_roll's per-step finishing rewards, which paid whoever
-reached the end first, are folded into the bonus instead. Its turn-rate cap,
-which charged a spin faster than 6 rad/s, is gone too.
+`ROLL_WINDOW` seconds and falls to nothing by `ZERO_SECONDS`, and is paid at the
+window's end whatever the time of standing, so a quick roll holds its stance
+until then. Progress is jumper.momentum_roll's, capped at one full turn per
+window (`MAX_RATE`), with gamma 0.998, so a quicker roll gains only about 5% in
+discounted progress (`mdp/rewards.py` has the reasoning, and why the first
+version's exactly-neutral shaping was dropped). jumper.momentum_roll's per-step
+finishing rewards, which paid whoever reached the end first, are folded into the
+bonus instead.
 
 The demonstration itself takes about 1.5 s from turning to standing (turning
 starts at 0.42 s, standing still comes after its landing teeter and hop, 1.96 s
@@ -46,13 +46,17 @@ Two layers, both on floor contact by kind (`jumper.flourish_roll`'s division:
 limbs other than the feet, the sensors, the feet, and the shell -- here the stock
 shell, base and every carapace piece):
 
-- **The bonus is scaled by the hardest single contact of the episode** of each
-  kind but the feet, falling from full at `*_FREE` to nothing at `*_ZERO` newtons
-  (jumper.showcase_roll's scheme, the shell added). A slam lasts one control step,
-  so a per-step charge alone barely sees it; through the bonus it costs the roll.
+- **Part of the bonus is scaled by the hardest single contact of the episode** of
+  each kind but the feet, falling from full at `*_FREE` to nothing at `*_ZERO`
+  newtons (jumper.showcase_roll's scheme, the shell added). A slam lasts one
+  control step, so a per-step charge alone barely sees it; through the bonus it
+  costs the roll. `GENTLE_FLOOR` of the bonus is paid for standing however hard
+  the roll landed, so that finishing is always worth more than not trying -- the
+  first run, without it, learnt to stand still (`mdp/rewards.py`).
 - **Per-step charges** above a threshold, for a gradient between slams; and the
   servos' own: holding over 1.5 N*m (`torque_strain`) and arriving at a joint stop
-  at speed (`stop_strike`).
+  at speed (`stop_strike`). The limb charge starts light and reaches its full
+  weight as the guide fades out (`LIMB_WEIGHT_START`).
 
 What this task cannot charge directly is the measure the horn study judged
 gentleness by: the torque floor contact puts on each joint (J^T f per contact).
@@ -65,17 +69,19 @@ that measure on replay, against the stock jumps' 5.9 and 4.8 N*m.
 
 Taken from jumper.momentum_roll, jumper.flourish_roll and jumper.showcase_roll
 where they exist, and said so. The new ones -- the window, the shell's bonus
-factor, the finish factor -- are **first guesses**, set by reasoning about scale,
+factor, the finish factor, the gentle floor, the limb ramp -- are **first guesses**, set by reasoning about scale,
 not against a trained policy.
 """
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 
 from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.envs import mdp as envs_mdp
 from mjlab.managers import TerminationTermCfg
+from mjlab.managers.curriculum_manager import CurriculumTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.tasks.velocity import mdp
@@ -86,10 +92,11 @@ from ..flourish_roll.mdp import rewards as fr
 from ..momentum_roll import env_cfg as momentum
 from ..momentum_roll import mdp as mr
 from ..momentum_roll.mdp.reference import REF_NPZ
+from ..ref_free_jump.mdp import curriculum as fade
 from ..ref_free_jump.mdp.rewards import leg_collision
 from ..roll.mdp import rewards as roll_rewards
 from . import mdp as gm
-from .rl_cfg import GAMMA, NUM_STEPS_PER_ENV
+from .rl_cfg import NUM_STEPS_PER_ENV
 
 STEP_DT = momentum.STEP_DT
 
@@ -116,10 +123,14 @@ ROLL_WINDOW = 1.0
 ZERO_SECONDS = 2.0
 
 # ── The objective ──────────────────────────────────────────────────────────────
-#: Per radian of the roll's furthest point; shaping, so it adds no net reward over
-#: an episode (`mdp/rewards.py`). jumper.momentum_roll's progress paid 2 per radian.
-PROGRESS_WEIGHT = 1.0
-#: jumper.showcase_roll's 20. Over shaping worth 2 pi per roll at most.
+#: Per radian of new ground: jumper.momentum_roll's 2. The first version's
+#: potential-based shaping averaged -0.4 to -0.8 per episode and taught nothing
+#: (`mdp/rewards.py`).
+PROGRESS_WEIGHT = 2.0
+#: Turn rate, rad/s, above which progress pays nothing more: one full turn per
+#: window, so a roll faster than ROLL_WINDOW earns no more progress for its speed.
+MAX_RATE = 2.0 * math.pi / ROLL_WINDOW
+#: jumper.showcase_roll's 20, against progress worth 2 x 2 pi = 12.6 per roll.
 COMPLETE_BONUS = 20.0
 #: Standing earns this share of the bonus; the rest rises with the legs' closeness
 #: to HOME, at jumper.momentum_roll's finish_home width.
@@ -127,6 +138,10 @@ HOME_FLOOR = 0.5
 HOME_SIGMA_SQ = 0.10
 
 # ── Gentle: the bonus, by the hardest contact of the episode ───────────────────
+#: Share of the bonus paid for standing after the roll whatever the hits; the rest
+#: is scaled by them. The first run had none: its early rolls kept about 0.05 of the
+#: bonus, 0.02-0.06 per episode, against about -0.45 of limb contact alone.
+GENTLE_FLOOR = 0.5
 #: Limbs and sensors: jumper.showcase_roll's.
 LIMB_FREE = 20.0
 LIMB_ZERO = 100.0
@@ -144,6 +159,11 @@ SHELL_ZERO = 150.0
 #: than flourish's 60, because here the shell is what was asked to land softly.
 LIMB_THRESHOLD = flourish.LIMB_THRESHOLD
 LIMB_WEIGHT = -0.5
+#: The limb charge's weight while the guide is held, rising to LIMB_WEIGHT as it
+#: fades (PRIOR_HOLD_ITERATIONS to PRIOR_END_ITERATIONS). In the first run limb
+#: contact was the largest cost while the guide faded (-0.34 to -0.45 per episode,
+#: iterations 100-500), so trying a roll was a loss before the policy could land one.
+LIMB_WEIGHT_START = -0.1
 SENSOR_THRESHOLD = flourish.SENSOR_THRESHOLD
 SENSOR_WEIGHT = flourish.SENSOR_WEIGHT
 FOOT_THRESHOLD = flourish.FOOT_THRESHOLD
@@ -211,12 +231,12 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
         ),
         # The objective
         "progress": RewardTermCfg(
-            func=gm.rewards.shaped_progress, weight=PROGRESS_WEIGHT,
-            params={**done, "gamma": GAMMA},
+            func=mr.rewards.progress, weight=PROGRESS_WEIGHT,
+            params={"command_name": "roll", "max_rate": MAX_RATE},
         ),
         "complete": RewardTermCfg(
             func=gm.rewards.gentle_complete, weight=COMPLETE_BONUS / STEP_DT,
-            params={**done, "zero_seconds": ZERO_SECONDS,
+            params={**done, "zero_seconds": ZERO_SECONDS, "gentle_floor": GENTLE_FLOOR,
                     "limb_free": LIMB_FREE, "limb_zero": LIMB_ZERO,
                     "sensor_free": SENSOR_FREE, "sensor_zero": SENSOR_ZERO,
                     "shell_free": SHELL_FREE, "shell_zero": SHELL_ZERO,
@@ -225,7 +245,7 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
         ),
         # Gentle, per step
         "limb_contact": RewardTermCfg(
-            func=fr.contact_overload, weight=LIMB_WEIGHT,
+            func=fr.contact_overload, weight=LIMB_WEIGHT_START,
             params={"sensor_name": "limb_ground_contact", "threshold": LIMB_THRESHOLD},
         ),
         "sensor_contact": RewardTermCfg(
@@ -276,6 +296,17 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
             p = cfg.curriculum[term].params
             p["start_step"] = NUM_STEPS_PER_ENV * PRIOR_HOLD_ITERATIONS
             p["end_step"] = NUM_STEPS_PER_ENV * PRIOR_END_ITERATIONS
+    # The limb charge rises to its full weight as the guide fades.
+    if play:
+        cfg.rewards["limb_contact"].weight = LIMB_WEIGHT
+    else:
+        cfg.curriculum["limb_contact_weight"] = CurriculumTermCfg(
+            func=fade.anneal_reward_weight,
+            params={"term_name": "limb_contact", "start_weight": LIMB_WEIGHT_START,
+                    "end_weight": LIMB_WEIGHT,
+                    "start_step": NUM_STEPS_PER_ENV * PRIOR_HOLD_ITERATIONS,
+                    "end_step": NUM_STEPS_PER_ENV * PRIOR_END_ITERATIONS},
+        )
     return cfg
 
 

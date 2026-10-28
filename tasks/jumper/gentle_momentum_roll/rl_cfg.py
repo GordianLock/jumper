@@ -11,9 +11,11 @@ from ..common.ppo import jumper_ppo_baseline
 #: counts (jumper.momentum_roll's reason).
 NUM_STEPS_PER_ENV = 24
 
-#: The discount. A module constant because the progress shaping in `env_cfg.py`
-#: must use the same one, or it stops being neutral about time (`mdp/rewards.py`).
-GAMMA = 0.99
+#: The discount: jumper.showcase_roll's 0.998, a 10 s horizon at 50 Hz, so that
+#: progress paid as the roll is made barely favours a quicker roll -- 0.5 s sooner
+#: is worth about 5% more, where jumper.momentum_roll's 0.99 made it 22%
+#: (`mdp/rewards.py`).
+GAMMA = 0.998
 
 
 def agent_cfg() -> RslRlOnPolicyRunnerCfg:
