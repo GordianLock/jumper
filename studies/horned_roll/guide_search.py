@@ -65,6 +65,8 @@ def part_group(name):
     n = name.split("/")[-1]
     if n in FEET: return "feet"
     if n.startswith("upper_shell_carapace"):
+        if not n.endswith("_meshcol"):
+            return "visual"                     # the display mesh; it never collides
         return "carapace:" + _REGION_OF[int(n.split("_")[3])]
     if n.startswith(("base_link", "upper_shell")): return "shell"
     if n.startswith(("display", "tof", "camera")): return "sensors"
@@ -256,6 +258,10 @@ def search(seed, iters=50, pop=96, elite=12):
     mu = np.zeros((K, nd)); sd = np.full((K, nd), 0.6)
     datas = [mujoco.MjData(m) for _ in range(2)]
     best = (-1e9, None)
+    saved = HERE + f"plans/plan_horned_s{seed}.npy"
+    if os.environ.get("REUSE") and os.path.exists(saved):
+        best = (float("nan"), np.load(saved)); iters = 0
+        print(f"  seed {seed}: reusing {saved}", flush=True)
     t0 = time.time()
     for it in range(iters):
         P = np.clip(mu + sd * rng.standard_normal((pop, K, nd)), -1.5, 1.5)
