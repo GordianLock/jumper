@@ -8,7 +8,13 @@ for roll training. `HANDOFF.md` is the design brief; this file is how to use wha
 
 | Version | What it is | Model for training |
 |---|---|---|
-| `CF1-tri30m-rc-v1` | First roll-training prototype. Horns on the horn study's `tri30m_rc` lines: 30° centre horn, tall front corners, rear corners, each shortened just enough to clear the legs' path (3.5 / 4.5 / 5 mm). No dome. | `assets/jumper/jumper_CF1-tri30m-rc-v1.xml` |
+| `CF1-tri30m-rc-v1` | First roll-training prototype. Horns on the horn study's `tri30m_rc` lines: 30° centre horn, tall front corners, rear corners, each shortened just enough to clear the legs' path (3.5 / 4.5 / 5 mm). No dome. Belly-up rest poses: ≈52° head-up sitting on the rear horns and rear legs, or ≈17° lying back. | `assets/jumper/jumper_CF1-tri30m-rc-v1.xml` |
+| `CF1-tri30m-rc-v2` | Second prototype: v1 with the rear corner horns lowered from 28.5° to 5° elevation (roots and tip x/y unchanged; tips 75.6 mm high, 41.9 mm long). One belly-up rest pose, ≈23° head-up: the sitting pose disappears below about 10°. | `assets/jumper/jumper_CF1-tri30m-rc-v2.xml` |
+
+The rest poses are static, not simulated: the stable faces of the convex hull of the training
+model's collision geometry (legs at `HOME`), tested against its centre of mass. The same
+calculation on the horn study's shapes reproduces its dropped rest poses (55° / 16°) within a
+few degrees.
 
 Names are `CF<family>-<study horn layout>-v<n>`; every number a version was built with is in its
 `params.json`, so the name does not have to carry them.
