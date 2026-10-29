@@ -27,8 +27,9 @@ The training scene, plus:
 
 ## Plan, start, roll
 
-Five keyframes of the 20 driven joints (offsets from HOME in half-range units), on a
-fixed 50 Hz schedule (`SCHED`), HOME from 2.0 s to 3.5 s.
+Eight keyframes of the 20 driven joints (offsets from HOME in half-range units), on a
+fixed 50 Hz schedule over 3.0 s, HOME from 3.0 s to 4.5 s (`SCHEDS`; the first runs
+used five over 2.0 s, HOME to 3.5 s).
 
 - `belly`: dropped belly-up and settled 2 s, as in the horn study; needs half a turn.
 - `stand`: settled standing 1 s; needs a full turn.
@@ -74,9 +75,17 @@ from tasks.jumper.common import constants as C  # noqa: E402
 
 KP, KD, TAU = 10.0, 0.5, 1.7464
 SUB = 4                                   # 4 x 5 ms = 50 Hz
-SCHED = [(0, 15, 0), (15, 30, 1), (30, 50, 2), (50, 75, 3), (75, 100, 4), (100, 175, -1)]
-STEPS = SCHED[-1][1]
-K = 5
+#: Keyframe schedules by keyframe count, in control steps: (start, end, keyframe), -1
+#: is HOME. Five keyframes over 2.0 s then HOME to 3.5 s was the first schedule; eight
+#: over 3.0 s then HOME to 4.5 s leaves room for slower lean-and-push movements. A plan
+#: replays on the schedule matching its keyframe count.
+SCHEDS = {
+    5: [(0, 15, 0), (15, 30, 1), (30, 50, 2), (50, 75, 3), (75, 100, 4), (100, 175, -1)],
+    8: [(0, 15, 0), (15, 30, 1), (30, 45, 2), (45, 65, 3), (65, 85, 4), (85, 105, 5),
+        (105, 125, 6), (125, 150, 7), (150, 225, -1)],
+}
+#: Keyframes in a new search (KEYFRAMES in the environment; default 8).
+K = int(os.environ.get("KEYFRAMES", "8"))
 TURN_TOL = 0.5                            # rad short of the requirement still counts
 CARAPACE_CONDIM = 3
 CARAPACE_FRICTION = [0.6, 0.005, 0.0001]
@@ -115,10 +124,14 @@ FEET = set(C.FOOT_GEOMS)
 #: is charged is how sharply force arrives (`IMPACT_WINDOW`). "carapace_impact" is the
 #: hardest region's, "ground_impact" every part's summed. The impact levels are first
 #: guesses, set by scale: the robot weighs 25.8 N.
+#: Flight: free to 0.04 s, then 200 per second, so 0.10 s in the air costs 12 (more
+#: than half the finishing bonus of 20) and 0.2 s more than all of it. At 0.06 s and
+#: 40 per second, the search kept choosing an aerial back-flip (0.10-0.14 s in the air,
+#: no carapace contact), whose airtime cost it under 2.
 FREE = {"limbs": 20.0, "sensors": 2.0, "shell": 30.0, "carapace_impact": 50.0,
-        "ground_impact": 60.0, "flight": 0.06}
+        "ground_impact": 60.0, "flight": 0.04}
 COST = {"limbs": 0.08, "sensors": 0.5, "shell": 0.04, "carapace_impact": 0.03,
-        "ground_impact": 0.04, "flight": 40.0}
+        "ground_impact": 0.04, "flight": 200.0}
 #: Impact is the largest rise in force within this many physics steps: 4 x 5 ms, one
 #: control step. A slam rises within it; leaning the weight onto a horn does not.
 IMPACT_WINDOW = 4
@@ -207,9 +220,10 @@ def settle(m, d, home, qadr, start, tilt=(0.0, 0.0), jitter=None):
 
 
 def controls(params, home, lo, hi, drive, half):
-    n = params.shape[0]
-    u = np.empty((n, STEPS * SUB, len(home)))
-    for a, b, k in SCHED:
+    n, nk = params.shape[0], params.shape[1]
+    sched = SCHEDS[nk]
+    u = np.empty((n, sched[-1][1] * SUB, len(home)))
+    for a, b, k in sched:
         if k < 0:
             tgt = np.broadcast_to(home, (n, len(home)))
         else:
