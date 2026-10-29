@@ -4,7 +4,8 @@ jumper.momentum_roll's reference format plus the axis it rolled about.
 
     python studies/proto3/record_demo.py plans/stand_any_impact_s1.npy
 
-`TASK` (default jumper.horn_roll) picks the environment, `OUT` the file written.
+`TASK` (default jumper.horn_roll) picks the environment, `MODEL` the carapace
+(default CF1-tri30m-rb-v3), `OUT` the file written.
 
 The plan is played from standing at HOME with nothing else acting: the feedforward
 guide off, play mode (no observation noise, no pushes), one environment. Each control
@@ -47,7 +48,8 @@ TASK = os.environ.get("TASK", "jumper.horn_roll")
 #: Where the recording goes: OUT=<path> overrides the task's default demonstration.
 OUT = Path(os.environ["OUT"]) if os.environ.get("OUT") else \
     ROOT / "tasks" / "jumper" / "horn_roll" / "ref" / "horn_roll.npz"
-MODEL = ROOT / "assets" / "jumper" / "jumper_CF1-tri30m-rb-v3.xml"
+MODEL = ROOT / "assets" / "jumper" / \
+    f"jumper_{os.environ.get('MODEL', 'CF1-tri30m-rb-v3')}.xml"
 HOLD = 0.3
 ACTION_SCALE = 0.75
 

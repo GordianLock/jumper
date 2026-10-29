@@ -17,6 +17,7 @@ Environment variables:
   `jumper.tuck_roll` the score also charges the face's floor force (stock shell, base,
   sensors ahead of the base origin) and the worst floor-contact joint torque |J^T f|
   (both from that task's tracker), and the claws collide with the body.
+- `MODEL` (default `CF1-tri30m-rb-v3`): the carapace model, `assets/jumper/jumper_<MODEL>.xml`.
 - `MODE` (default `any`): `diagonal` keeps only rolls about either diagonal --
   right shoulder to left rear hip or its mirror, `search.py`'s axes -- scoring the
   finish by how close the measured axis is (`search.py`'s on-axis factor, 15 deg).
@@ -57,8 +58,9 @@ if not TUCK:
     tmp = Path(tempfile.mkdtemp()) / "bootstrap.npz"     # the tracker needs a reference
     np.savez(tmp, **dict(np.load(REF_NPZ)), axis=np.array([0.0, 1.0, 0.0]))
     H.REF_NPZ = tmp
+MODEL = os.environ.get("MODEL", "CF1-tri30m-rb-v3")
 cfg = tasks.load_env_cfg(TASK,
-                         asset=ROOT / "assets/jumper/jumper_CF1-tri30m-rb-v3.xml", play=True)
+                         asset=ROOT / f"assets/jumper/jumper_{MODEL}.xml", play=True)
 cfg.scene.num_envs = POP
 cfg.events.pop("push_robot", None)
 cfg.terminations = {}

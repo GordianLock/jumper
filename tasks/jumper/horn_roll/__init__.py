@@ -22,6 +22,22 @@ HORN_ROLL_ASSETS = (
         path=ASSETS_DIR / "jumper" / "jumper_CF1-tri30m-rb-v3b.xml",
         description="prototype 3 with the front corner horns at 20 deg",
     ),
+    AssetSpec(
+        name="CF1-tri30m-rb-v4",
+        path=ASSETS_DIR / "jumper" / "jumper_CF1-tri30m-rb-v4.xml",
+        description="carapace prototype 4: prototype 3b with the centre horn at 15 deg "
+                    "ending in a rocker, the spine scalloped",
+    ),
+    AssetSpec(
+        name="CF1-tri30m-rb-v4b",
+        path=ASSETS_DIR / "jumper" / "jumper_CF1-tri30m-rb-v4b.xml",
+        description="prototype 4 with the spine's back end eased onto the shell",
+    ),
+    AssetSpec(
+        name="CF1-tri30m-rb-v4c",
+        path=ASSETS_DIR / "jumper" / "jumper_CF1-tri30m-rb-v4c.xml",
+        description="prototype 4b with the faces beside the spine's end eased",
+    ),
     *JUMPER_ASSETS,
 )
 
