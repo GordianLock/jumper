@@ -73,6 +73,9 @@ DEFAULTS = dict(
     root_end_margin=None,           # shell (legs' path, shell edge) ends this far short of the
                                     # stop (None: the spine radius) and curves down onto the
                                     # shell over its last root_dive_len
+    root_dive_shape="quadratic",    # how it curves down: "quadratic" steepens to the end;
+                                    # "ease" leaves the spine and settles onto the shell
+                                    # smoothly (smoothstep)
     tip_round_len=1.5,              # junction and flare fade in over this many tip radii
     display_gap=0.002,              # material keeps this far from the display module
     edge_round=0.004,               # rounding where the carapace meets a boundary
@@ -94,6 +97,14 @@ def smin(a, b, k):
 def smax(a, b, k):
     """Smooth maximum (intersection with a rounded edge of about k)."""
     return -smin(-a, -b, k)
+
+
+def dive_shape(P, k):
+    """Share of the drop a diving root extension has made at k (0 where the dive starts, 1 at
+    the spine's end)."""
+    if P.get("root_dive_shape", "quadratic") == "ease":
+        return k * k * (3 - 2 * k)
+    return k * k
 
 
 def build(P):
@@ -293,7 +304,7 @@ def build(P):
             if f["dive"] is not None:
                 u_s, u_e, drop = f["dive"]
                 kd = np.clip((u_s - u) / (u_s - u_e), 0, 1)
-                Zw = Z + drop * kd * kd
+                Zw = Z + drop * dive_shape(P, kd)
                 del kd
             ae = f["a_ext"]
             # a rocker horn's spine ends at the rocker's centre, inside it
@@ -386,6 +397,9 @@ def build(P):
         b, hd, r, slope = f["b"], f["hd"], c["r"], f["slope"]
         th = np.arctan(slope)
         u_stop = f["dive"][0] if f["dive"] is not None else f["u_end"] + r
+        # top scallops may run on down the diving end of the spine (`to_end`)
+        if sc["mode"] == "top" and sc.get("to_end", False) and f["dive"] is not None:
+            u_stop = f["u_end"]
         if sc["mode"] == "side":
             u_start = f["u_F"] - r
         else:
@@ -399,6 +413,13 @@ def build(P):
         L = (u_start - u_stop) / n
         u = (X - b[0]) * hd[0] + (Y - b[1]) * hd[1]
         w = -(X - b[0]) * hd[1] + (Y - b[1]) * hd[0]
+        Zw = Z
+        if sc["mode"] == "top" and f["dive"] is not None:
+            # where the spine's end dives onto the shell, the cut is lowered with it
+            u_s, u_e, drop = f["dive"]
+            kd = np.clip((u_s - u) / (u_s - u_e), 0, 1)
+            Zw = Z + drop * dive_shape(P, kd)
+            del kd
         cut = np.full(X.shape, np.inf)
         for i in range(n):
             uc = u_start - (i + 0.5) * L
@@ -420,7 +441,7 @@ def build(P):
                 R = (half ** 2 + depth ** 2) / (2 * depth)
                 nu = np.array([-np.sin(th) * hd[0], -np.sin(th) * hd[1], np.cos(th)])
                 cen = np.array([px, py, z_ax]) + nu * (r - depth + R)
-                one = np.sqrt((X - cen[0]) ** 2 + (Y - cen[1]) ** 2 + (Z - cen[2]) ** 2) - R
+                one = np.sqrt((X - cen[0]) ** 2 + (Y - cen[1]) ** 2 + (Zw - cen[2]) ** 2) - R
                 cut = one if i == 0 else smin(cut, one, P["scallop_ridge_blend"])
         return cut
 
