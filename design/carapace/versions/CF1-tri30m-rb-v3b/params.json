@@ -1,0 +1,121 @@
+{
+  "version": "CF1-tri30m-rb-v3b",
+  "description": "Prototype 3 with the front corner horns lowered from 28 to 20 deg elevation (roots (20, +-35, 62) mm and tip x/y unchanged; tips 80.3 mm high, 53.6 mm long). Everything else as CF1-tri30m-rb-v3. Static belly-up rest about 24 deg head-up.",
+  "vox": 0.001,
+  "top_min_z": 0.035,
+  "top_max_slope": 0.6,
+  "dome_rise": 0.0,
+  "bumps": [],
+  "flank_width": 0.032,
+  "flank_depth": 0.05,
+  "flank_power": 2.0,
+  "flank_taper": 1.0,
+  "valley_blend": 0.012,
+  "support_fillet": 0.012,
+  "support_reach": 0.37,
+  "junction_angle_deg": 10.0,
+  "under_flare": 0.008,
+  "base_fillet_radius": 0.015,
+  "tip_round_len": 1.5,
+  "display_gap": 0.002,
+  "edge_round": 0.004,
+  "crests": [
+    {
+      "name": "centre",
+      "a": [
+        -0.03,
+        0.0,
+        0.067
+      ],
+      "b": [
+        0.082,
+        0.0,
+        0.1192
+      ],
+      "r": 0.012,
+      "r_tip": 0.012
+    },
+    {
+      "name": "front_left",
+      "a": [
+        0.02,
+        0.035,
+        0.062
+      ],
+      "b": [
+        0.0619,
+        0.0629,
+        0.0803
+      ],
+      "r": 0.009,
+      "r_tip": 0.009
+    },
+    {
+      "name": "front_right",
+      "a": [
+        0.02,
+        -0.035,
+        0.062
+      ],
+      "b": [
+        0.0619,
+        -0.0629,
+        0.0803
+      ],
+      "r": 0.009,
+      "r_tip": 0.009
+    }
+  ],
+  "root_dive_len": 0.04,
+  "root_end_margin": null,
+  "spheres": [
+    {
+      "c": [
+        -0.094,
+        0.0385
+      ],
+      "r": 0.009,
+      "submerge": 0.666667
+    },
+    {
+      "c": [
+        -0.094,
+        -0.0385
+      ],
+      "r": 0.009,
+      "submerge": 0.666667
+    },
+    {
+      "c": [
+        -0.0681,
+        0.0628
+      ],
+      "r": 0.009,
+      "submerge": 0.666667
+    },
+    {
+      "c": [
+        -0.0681,
+        -0.0628
+      ],
+      "r": 0.009,
+      "submerge": 0.666667
+    },
+    {
+      "c": [
+        -0.0328,
+        0.067
+      ],
+      "r": 0.009,
+      "submerge": 0.666667
+    },
+    {
+      "c": [
+        -0.0328,
+        -0.067
+      ],
+      "r": 0.009,
+      "submerge": 0.666667
+    }
+  ]
+}
