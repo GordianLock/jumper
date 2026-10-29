@@ -16,7 +16,18 @@ MODE=diagonal`): kept only if it rolls about either diagonal -- right shoulder t
 rear hip or its mirror -- within 20 deg, scored for the face, the claws' and limbs'
 load, impacts, air time and joint torque. Which diagonal is the search's choice.
 
-**Not recorded yet.** Until it is, this task does not build.
+Found 2026-10-29 (`plans/diag_env_s1.npy`, `logs/diag_env_s1.log`): seeded from
+`plans/stand_diagonal_s1.npy` (ideal servos, 32/32 there), 12 rounds of 48; the plan
+kept rolls diagonally on 32 of 48 randomised robots. Recorded on the nominal robot:
+axis 47 deg off the centreline, 381 deg, standing after 1.68 s; face 0 N, stock shell
+0 N, carapace impact 0 N, floor impact 154 N, limbs and claws 101 N, 0.10 s in the
+air, worst floor-contact joint torque 8.4 N*m -- the last one is what training charges
+down.
+
+Its recorded poses have the claws pressed up to 1 cm into the body (0.1-0.6 s, as
+they brace against it) and up to 1.9 cm into each other (214-259 deg). Those are
+states the recording reached with the claws colliding, contact under load in this same
+environment, so mid-demonstration spawns keep jumper.momentum_roll's 290 deg.
 """
 
 from __future__ import annotations
@@ -28,8 +39,7 @@ from ..tuck_roll import env_cfg as tuck
 
 REF_NPZ = Path(__file__).resolve().parent / "ref" / "diag_roll.npz"
 
-#: Last turn a mid-demonstration spawn may start at; lowered if the recorded poses
-#: put a claw inside the body or the other claw past some turn.
+#: Last turn a mid-demonstration spawn may start at (module docstring).
 MAX_SPAWN_TURN = math.radians(290.0)
 
 
