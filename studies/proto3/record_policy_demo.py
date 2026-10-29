@@ -2,10 +2,11 @@
 jumper.momentum_roll's reference format plus the axis it rolled about -- the format
 `record_demo.py` writes from a keyframe plan.
 
-    python studies/proto3/record_policy_demo.py <actor.onnx> <out.npz>
+    python studies/proto3/record_policy_demo.py <actor.onnx> <out.npz> [task]
 
 The policy is the exported actor (`scripts/export.py`'s `actor.onnx`, observation
-normalisation inside it). It is played in jumper.horn_roll's own environment on
+normalisation inside it). It is played in its task's own environment (`task`,
+jumper.horn_roll by default) on
 prototype 3: the nominal robot (no randomised friction, centre of mass or encoder
 bias), play mode (no pushes, no feedforward guide), one environment, from standing,
 with the standing termination off so the recording runs past it.
@@ -35,11 +36,12 @@ from mjlab.envs import ManagerBasedRlEnv  # noqa: E402
 from mjlab.utils.lab_api.math import quat_apply_inverse  # noqa: E402
 
 ACTOR, OUT = Path(sys.argv[1]), Path(sys.argv[2])
+TASK = sys.argv[3] if len(sys.argv) > 3 else "jumper.horn_roll"
 MODEL = ROOT / "assets" / "jumper" / "jumper_CF1-tri30m-rb-v3.xml"
 HOLD = 0.3
 MAX_S = 4.0
 
-cfg = tasks.load_env_cfg("jumper.horn_roll", asset=MODEL, play=True)
+cfg = tasks.load_env_cfg(TASK, asset=MODEL, play=True)
 cfg.scene.num_envs = 1
 cfg.events.pop("push_robot", None)
 for k in [k for k, e in cfg.events.items() if e.mode == "startup"]:

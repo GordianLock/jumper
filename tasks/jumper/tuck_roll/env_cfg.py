@@ -16,21 +16,19 @@ side under the face, so the forearms carry it over instead.
 
 ## The demonstration
 
-`ref/tuck_roll.npz`, a hybrid built by `studies/proto3/tuck_hybrid.py`: that
-policy's own roll, recorded on the nominal robot by
-`studies/proto3/record_policy_demo.py` (smoother and far gentler than
-jumper.horn_roll's keyframe demonstration), with only the arms' fed-forward commands
-changed to the tuck from 0.14 to 0.40 s. Its body motion, turn and joint positions are
-the splayed roll's, which completes; the tuck played back open-loop did not (see that
-script). So the joint prior covers the 12 walking-leg joints only
-(`prior_joint_pos_legs`), the arms are pushed toward the tuck while the guide lasts,
-and `tuck` pays them to hold it.
+`ref/tuck_roll.npz`: the first run's own roll (see below), recorded on the nominal
+robot in this environment by `studies/proto3/record_policy_demo.py`
+(`plans/tuck_roll_run1_model_2499.npz`): over the nose on its claws, the face off the
+floor, nothing inside anything -- a roll that completes and fits together, arms
+included. So the joint prior covers all 20 driven joints again.
 
-**Mid-demonstration spawns stop at `MAX_SPAWN_TURN` (210 deg).** That policy's right
-arm swings through the shell, base, display and front-right horn at 0.48-0.52 s
-(214-233 deg; up to 4.6 cm deep, measured on the recorded states) -- jumper.horn_roll
-lets legs pass through the body. A spawn there would start with the arm inside the
-body.
+**Mid-demonstration spawns stop at `MAX_SPAWN_TURN` (270 deg).** At 274-305 deg
+(frames 30-33) the claws press into each other up to 1.8 cm (measured on the recorded
+states); a spawn there would start with them overlapping.
+
+The first run trained on a hybrid (`studies/proto3/tuck_hybrid.py`): jumper.horn_roll's
+policy's roll with only the fed-forward arm commands changed to the tuck, spawns
+stopped at 210 deg because that policy's right arm swings through the body.
 
 ## The first run, and what changed after it
 
@@ -89,11 +87,10 @@ DECIMATION = horn.DECIMATION
 
 ARMS = bc.ARMS
 ARM_JOINTS = tuple(j for j in GAIT_JOINTS if j.startswith(ARMS))
-LEG_JOINTS = tuple(j for j in GAIT_JOINTS if not j.startswith(ARMS))
 PALM_BODIES = ("LF_palm_link", "RF_palm_link")
 
 #: Last turn a mid-demonstration spawn may start at (module docstring).
-MAX_SPAWN_TURN = math.radians(210.0)
+MAX_SPAWN_TURN = math.radians(270.0)
 
 # ── Tuck ───────────────────────────────────────────────────────────────────────
 TUCK_WEIGHT = 3.0
@@ -163,13 +160,6 @@ def env_cfg(asset: Path | None = None, play: bool = False):
 
     # ── Rewards ───────────────────────────────────────────────────────────────
     r = dict(cfg.rewards)
-    legs_cfg = SceneEntityCfg("robot", joint_names=list(LEG_JOINTS), preserve_order=True)
-    cols = tuple(GAIT_JOINTS.index(j) for j in LEG_JOINTS)
-    r["prior_joint_pos"] = RewardTermCfg(
-        func=tr.rewards.prior_joint_pos_legs, weight=momentum.PRIOR_POS_WEIGHT,
-        params={"asset_cfg": legs_cfg, "columns": cols,
-                "sigma_sq": momentum.PRIOR_POS_SIGMA_SQ},
-    )
     stand = {"command_name": "roll", "min_own_turn": momentum.MIN_OWN_TURN}
     r["complete"] = RewardTermCfg(
         func=tr.rewards.gentle_complete, weight=momentum.COMPLETE_BONUS / STEP_DT,
@@ -199,7 +189,7 @@ def env_cfg(asset: Path | None = None, play: bool = False):
     )
     cfg.rewards = r
 
-    # ── Spawns: none from the recorded states with an arm inside the body ─────
+    # ── Spawns: none from the recorded states with the claws overlapping ──────
     cfg.events["reset_momentum"].params["max_spawn_turn"] = MAX_SPAWN_TURN
 
     # The prior's fading curriculum names the term; it is still "prior_joint_pos".

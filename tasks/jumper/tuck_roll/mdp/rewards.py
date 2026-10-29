@@ -7,8 +7,6 @@
   threshold.
 - `gentle_complete`: jumper.horn_roll's scaled finishing bonus with two more factors,
   the arms' load and the front of the body's.
-- `prior_joint_pos_legs`: jumper.momentum_roll's joint prior on the six walking legs'
-  joints only; the arms are free to leave the demonstration.
 """
 
 from __future__ import annotations
@@ -114,18 +112,5 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
     return done * (gentle_floor + (1.0 - gentle_floor) * g)
 
 
-def prior_joint_pos_legs(env, asset_cfg: SceneEntityCfg, columns: tuple[int, ...],
-                         command_name: str = "roll", sigma_sq: float = 0.2) -> torch.Tensor:
-    """jumper.momentum_roll's `prior_joint_pos` over the demonstration's `columns` only
-    (`asset_cfg` the same joints, in the same order)."""
-    cmd = _cmd(env, command_name)
-    ref = cmd.reference
-    robot: Entity = env.scene[asset_cfg.name]
-    want = ref.q[ref.index(cmd.demo_t.clamp(min=0.0))][:, list(columns)]
-    have = robot.data.joint_pos[:, asset_cfg.joint_ids]
-    e = ((have - want) ** 2).mean(dim=1)
-    return torch.exp(-e / sigma_sq) * cmd.in_demo.float() * (~cmd.settling).float()
-
-
 __all__ = ["arm_contact", "front_contact", "gentle_complete", "joint_load",
-           "nose_down", "prior_joint_pos_legs", "tuck"]
+           "nose_down", "tuck"]
