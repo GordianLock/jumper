@@ -5,8 +5,6 @@
 - `arm_contact`: per step, floor force on the arms over a (higher) threshold.
 - `gentle_complete`: jumper.horn_roll's scaled finishing bonus with two more factors,
   the arms' load and the front of the body's.
-- `leg_collision_pairs`: jumper.roll's leg-against-leg charge, read from one sensor
-  per pair of legs so that the two arms may rest against each other.
 - `prior_joint_pos_legs`: jumper.momentum_roll's joint prior on the six walking legs'
   joints only; the arms are free to leave the demonstration.
 """
@@ -99,19 +97,6 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
     return done * (gentle_floor + (1.0 - gentle_floor) * g)
 
 
-def leg_collision_pairs(env, sensor_names: tuple[str, ...],
-                        force_threshold: float = 1.0) -> torch.Tensor:
-    """1 in a step in which any charged pair of legs pushed on each other harder than
-    `force_threshold` in any substep (jumper.ref_free_jump's `leg_collision`, over
-    several sensors)."""
-    hit = torch.zeros(env.num_envs, dtype=torch.bool, device=env.device)
-    for name in sensor_names:
-        h = env.scene[name].data.force_history
-        assert h is not None, f"{name} keeps no force history"
-        hit |= (h.norm(dim=-1) > force_threshold).flatten(1).any(dim=1)
-    return hit.float()
-
-
 def prior_joint_pos_legs(env, asset_cfg: SceneEntityCfg, columns: tuple[int, ...],
                          command_name: str = "roll", sigma_sq: float = 0.2) -> torch.Tensor:
     """jumper.momentum_roll's `prior_joint_pos` over the demonstration's `columns` only
@@ -125,5 +110,5 @@ def prior_joint_pos_legs(env, asset_cfg: SceneEntityCfg, columns: tuple[int, ...
     return torch.exp(-e / sigma_sq) * cmd.in_demo.float() * (~cmd.settling).float()
 
 
-__all__ = ["arm_contact", "front_contact", "gentle_complete", "leg_collision_pairs",
+__all__ = ["arm_contact", "front_contact", "gentle_complete",
            "nose_down", "prior_joint_pos_legs", "tuck"]

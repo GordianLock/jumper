@@ -41,6 +41,15 @@ rise in force within a control step -- is charged. A landing costs the same what
 part takes it, so hopping onto the feet gains nothing. The bands are
 jumper.horn_roll's, which are judgement, not hardware limits.
 
+## The claws meet the body
+
+`common/body_collision.py`: the claws collide with the shell, base and sensors, which
+the repository's masks let every leg pass through. The first policy trained without
+it (Colab, 2500 iterations, 2026-10-29) put its left claw up to 1.6 cm into the base,
+its right 0.7 cm, for about 0.1 s of every righting (checked on the replay's joint
+angles). A claw resting on the body is free; leg against leg is charged pair by pair
+(`body_collision.leg_collision_pairs`), as before.
+
 Joint torque (J^T f) is not trained on; judge a trained policy by it on replay,
 against KingKong's reference-free jump, 4.8 N*m.
 """
@@ -58,10 +67,10 @@ from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.tasks.velocity import mdp
 
+from ..common import body_collision as bc
 from ..common.constants import FOOT_GEOMS, GAIT_JOINTS
 from ..flourish_roll import env_cfg as flourish
 from ..flourish_roll.mdp import rewards as fr
-from ..ref_free_jump.mdp.rewards import leg_collision
 from ..roll import env_cfg as roll_env
 from . import mdp as sr
 
@@ -120,8 +129,13 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
     gait_cfg = SceneEntityCfg("robot", joint_names=list(GAIT_JOINTS))
     gait_act = SceneEntityCfg("robot", actuator_names=list(GAIT_JOINTS))
 
+    # ── The claws meet the body ───────────────────────────────────────────────
+    robot = cfg.scene.entities["robot"]
+    robot.collisions = tuple(robot.collisions) + bc.arm_body_collision()
+    pairs = bc.leg_pair_sensors(DECIMATION)
+
     # ── Sensors ───────────────────────────────────────────────────────────────
-    cfg.scene.sensors = tuple(cfg.scene.sensors) + (
+    cfg.scene.sensors = tuple(cfg.scene.sensors) + pairs + (
         _ground("limb_ground_contact", flourish._LEG, exclude=tuple(FOOT_GEOMS)),
         _ground("sensor_ground_contact", flourish.SENSOR_PARTS),
         _ground("shell_ground_contact", SHELL_PARTS, history=DECIMATION),
@@ -172,8 +186,8 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
         "torque_strain": RewardTermCfg(func=fr.torque_strain, weight=TORQUE_STRAIN_WEIGHT,
                                        params={"asset_cfg": gait_act}),
         "leg_collision": RewardTermCfg(
-            func=leg_collision, weight=LEG_COLLISION_WEIGHT,
-            params={"sensor_name": "self_collision", "force_threshold": 1.0},
+            func=bc.leg_collision_pairs, weight=LEG_COLLISION_WEIGHT,
+            params={"sensor_names": tuple(s.name for s in pairs), "force_threshold": 1.0},
         ),
         "dof_pos_limits": RewardTermCfg(func=mdp.joint_pos_limits, weight=JOINT_LIMIT_WEIGHT),
         "action_rate_l2": RewardTermCfg(func=mdp.action_rate_l2, weight=ACTION_RATE_WEIGHT),
