@@ -1,0 +1,24 @@
+{
+  "legs_path_overlap_mm3": 0,
+  "study_capsules_in_legs_path_mm3": 549,
+  "trimmed_for_legs_mm3": 549,
+  "overhang_past_stock_outline_mm": 0.0,
+  "volume_cm3": 150.8,
+  "mass_g_solid_pla": 187,
+  "mass_g_typical_print": 84,
+  "watertight": true,
+  "root_extension_mm": {
+    "centre": [
+      82,
+      "stops at the legs' path"
+    ],
+    "front_left": [
+      5,
+      "top meets the shell"
+    ],
+    "front_right": [
+      5,
+      "top meets the shell"
+    ]
+  }
+}

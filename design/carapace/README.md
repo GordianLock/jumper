@@ -12,9 +12,10 @@ for roll training. `HANDOFF.md` is the design brief; this file is how to use wha
 | `CF1-tri30m-rc-v2` | Second prototype: v1 with the rear corner horns lowered from 28.5° to 5° elevation (roots and tip x/y unchanged; tips 75.6 mm high, 41.9 mm long). One belly-up rest pose, ≈23° head-up: the sitting pose disappears below about 10°. | `assets/jumper/jumper_CF1-tri30m-rc-v2.xml` |
 
 | `CF1-tri30m-rb-v3` | Third prototype: no rear horns, three bumpers per side instead (9 mm-radius spheres two-thirds below the shell, each as close to the rear edge as the legs' path allows, 35.5 mm apart). Centre horn 25°, sunk 5 mm, its root extension diving onto the shell short of the legs' path; front corner horns 28°, sunk 10 mm. One belly-up rest pose, ≈24° head-up. | `assets/jumper/jumper_CF1-tri30m-rb-v3.xml` |
+| `CF1-tri30m-rb-v3b` | Prototype 3 with the front corner horns lowered from 28° to 20° (roots and tip x/y unchanged; tips 80.3 mm high, 53.6 mm long). One belly-up rest pose, ≈24° head-up. | `assets/jumper/jumper_CF1-tri30m-rb-v3b.xml` |
 
 Body-only centre of mass (body, top shell, display, sensors and carapace; no limbs), resting
-on its underside / on its back: stock 2.9 / 3.8 cm, `CF1-tri30m-rb-v3` 3.3 / 6.2 cm.
+on its underside / on its back: stock 2.9 / 3.8 cm, `CF1-tri30m-rb-v3` and `-v3b` 3.3 / 6.2 cm.
 
 The rest poses are static, not simulated: the stable faces of the convex hull of the training
 model's collision geometry (legs at `HOME`), tested against its centre of mass. The same
