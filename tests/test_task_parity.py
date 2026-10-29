@@ -105,6 +105,8 @@ NOT_LOCOMOTION = {
     # jumper.horn_roll with the arms tucked under the face: arms collide with the
     # body, front-of-body floor contact charged, a tuck term.
     "jumper.tuck_roll",
+    # jumper.tuck_roll about a diagonal: its own demonstration, nothing else.
+    "jumper.diag_roll",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of
     # its own, symmetry off, and a reward ladder for a manipulation job.

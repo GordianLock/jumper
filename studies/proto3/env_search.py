@@ -10,6 +10,16 @@ force, carapace and floor impact (the task's own tracker) and air time. Joint to
 not in the score here; the recording and replay measure it.
 
     python -u studies/proto3/env_search.py ROUNDS POP START_PLAN OUT_PLAN [STD]
+
+Environment variables:
+
+- `TASK` (default `jumper.horn_roll`): the environment searched in. With
+  `jumper.tuck_roll` the score also charges the face's floor force (stock shell, base,
+  sensors ahead of the base origin) and the worst floor-contact joint torque |J^T f|
+  (both from that task's tracker), and the claws collide with the body.
+- `MODE` (default `any`): `diagonal` keeps only rolls about either diagonal --
+  right shoulder to left rear hip or its mirror, `search.py`'s axes -- scoring the
+  finish by how close the measured axis is (`search.py`'s on-axis factor, 15 deg).
 """
 import math
 import sys
@@ -35,13 +45,19 @@ STD = float(sys.argv[5]) if len(sys.argv) > 5 else 0.3
 ELITE = max(4, POP // 8)
 use_backend(resolve("native", "cpu", num_envs=POP, training=False))
 from mjlab.envs import ManagerBasedRlEnv  # noqa: E402
+import os  # noqa: E402
+
 from tasks.jumper.horn_roll import env_cfg as H  # noqa: E402
 from tasks.jumper.momentum_roll.mdp.reference import REF_NPZ  # noqa: E402
 
-tmp = Path(tempfile.mkdtemp()) / "bootstrap.npz"     # the tracker needs a reference
-np.savez(tmp, **dict(np.load(REF_NPZ)), axis=np.array([0.0, 1.0, 0.0]))
-H.REF_NPZ = tmp
-cfg = tasks.load_env_cfg("jumper.horn_roll",
+TASK = os.environ.get("TASK", "jumper.horn_roll")
+MODE = os.environ.get("MODE", "any")
+TUCK = TASK == "jumper.tuck_roll"
+if not TUCK:
+    tmp = Path(tempfile.mkdtemp()) / "bootstrap.npz"     # the tracker needs a reference
+    np.savez(tmp, **dict(np.load(REF_NPZ)), axis=np.array([0.0, 1.0, 0.0]))
+    H.REF_NPZ = tmp
+cfg = tasks.load_env_cfg(TASK,
                          asset=ROOT / "assets/jumper/jumper_CF1-tri30m-rb-v3.xml", play=True)
 cfg.scene.num_envs = POP
 cfg.events.pop("push_robot", None)
@@ -63,6 +79,11 @@ FREE = {"limbs": 20.0, "sensors": 2.0, "shell": 30.0, "carapace_impact": 50.0,
         "ground_impact": 60.0, "flight": 0.06}
 COST = {"limbs": 0.08, "sensors": 0.5, "shell": 0.04, "carapace_impact": 0.03,
         "ground_impact": 0.04, "flight": 40.0}
+if TUCK:
+    # The claws are the arms the roll goes over: their load has its own band there
+    # (60 N); the face and the joint torque are what that task protects.
+    FREE.update(limbs=60.0, face=5.0, load=4.0)
+    COST.update(face=0.3, load=1.5)
 
 
 def play(P):
@@ -70,7 +91,8 @@ def play(P):
     targets = S.controls(P, shome, lo, hi, drive, half)[:, ::S.SUB][:, :, idx]   # [n, T, 20]
     env.reset()
     n, T = targets.shape[0], targets.shape[1]
-    w = np.zeros((n, T, 3)); up = np.zeros((n, T))
+    w = np.zeros((n, T, 3))
+    up = np.zeros((n, T))
     pk = {k: np.zeros(n) for k in FREE}
     run = np.zeros(n)
     for t in range(T):
@@ -78,7 +100,10 @@ def play(P):
         env.step(a)
         w[:, t] = robot.data.root_link_ang_vel_b.numpy()
         up[:, t] = -robot.data.projected_gravity_b[:, 2].numpy()
-        pk["limbs"] = np.maximum(pk["limbs"], cmd.force("limb_ground_contact").numpy())
+        limbs = cmd.force("limb_ground_contact")
+        if TUCK:
+            limbs = torch.maximum(limbs, cmd.force("arm_ground_contact"))
+        pk["limbs"] = np.maximum(pk["limbs"], limbs.numpy())
         pk["sensors"] = np.maximum(pk["sensors"], cmd.force("sensor_ground_contact").numpy())
         pk["shell"] = np.maximum(pk["shell"], cmd.force("stock_shell_ground_contact").numpy())
         pk["carapace_impact"] = np.maximum(pk["carapace_impact"], cmd.carapace_impact().numpy())
@@ -91,10 +116,14 @@ def play(P):
         air = cmd.in_air().numpy()
         run = np.where(air, run + 1, 0)
         pk["flight"] = np.maximum(pk["flight"], run * dt)
+    if TUCK:
+        pk["face"] = cmd.peak_front.numpy().copy()
+        pk["load"] = cmd.peak_load.numpy().copy()
     mid = ((up > -0.9) & (up < 0.9))[..., None]
     th = np.where((((w * mid).sum(1)[:, :2]) ** 2).sum(1, keepdims=True) > 0.09,
                   (w * mid).sum(1), w.sum(1)) * dt
-    ax = th.copy(); ax[:, 2] = 0
+    ax = th.copy()
+    ax[:, 2] = 0
     ax /= np.maximum(np.linalg.norm(ax, axis=1, keepdims=True), 1e-6)
     cum = np.cumsum((w * ax[:, None]).sum(-1), axis=1) * dt
     sign = np.where(cum.max(1) >= -cum.min(1), 1.0, -1.0)
@@ -103,13 +132,20 @@ def play(P):
     prog = np.clip(signed.max(1), 0, need)
     tail = slice(-30, None)
     ok = (signed[:, -1] >= need - 0.5) & (up[:, tail].min(1) > 0.9)
+    if MODE == "diagonal":
+        cosd = np.abs(ax[:, :2] @ S._DIAGS[:, :2].T).max(1)
+        err = np.degrees(np.arccos(np.clip(cosd, -1.0, 1.0)))
+        pk["on_axis"] = np.exp(-(err / 15.0) ** 2)
+        ok = ok & (err < 20.0)
     return prog, ok, signed[:, -1], up, pk
 
 
 def score(prog, ok, up, pk, pen):
-    sc = 5 * prog + 20 * ok + 3 * (up[:, -30:].min(1) > 0.9)
+    on = pk.get("on_axis", np.ones_like(prog))
+    sc = 5 * prog + on * (20 * ok + 3 * (up[:, -30:].min(1) > 0.9))
     for k, v in pk.items():
-        sc = sc - pen * COST[k] * np.maximum(0.0, v - FREE[k])
+        if k in COST:
+            sc = sc - pen * COST[k] * np.maximum(0.0, v - FREE[k])
     return sc
 
 

@@ -4,6 +4,8 @@ jumper.momentum_roll's reference format plus the axis it rolled about.
 
     python studies/proto3/record_demo.py plans/stand_any_impact_s1.npy
 
+`TASK` (default jumper.horn_roll) picks the environment, `OUT` the file written.
+
 The plan is played from standing at HOME with nothing else acting: the feedforward
 guide off, play mode (no observation noise, no pushes), one environment. Each control
 step's targets are the plan's (`search.controls`, read every 4th physics step).
@@ -41,7 +43,10 @@ from mjlab.envs import ManagerBasedRlEnv  # noqa: E402
 from mjlab.utils.lab_api.math import quat_apply_inverse  # noqa: E402
 
 PLAN = HERE / sys.argv[1]
-OUT = ROOT / "tasks" / "jumper" / "horn_roll" / "ref" / "horn_roll.npz"
+TASK = os.environ.get("TASK", "jumper.horn_roll")
+#: Where the recording goes: OUT=<path> overrides the task's default demonstration.
+OUT = Path(os.environ["OUT"]) if os.environ.get("OUT") else \
+    ROOT / "tasks" / "jumper" / "horn_roll" / "ref" / "horn_roll.npz"
 MODEL = ROOT / "assets" / "jumper" / "jumper_CF1-tri30m-rb-v3.xml"
 HOLD = 0.3
 ACTION_SCALE = 0.75
@@ -51,10 +56,11 @@ ACTION_SCALE = 0.75
 from tasks.jumper.horn_roll import env_cfg as H  # noqa: E402
 from tasks.jumper.momentum_roll.mdp.reference import REF_NPZ  # noqa: E402
 
-tmp = Path(tempfile.mkdtemp()) / "bootstrap.npz"
-np.savez(tmp, **dict(np.load(REF_NPZ)), axis=np.array([0.0, 1.0, 0.0]))
-H.REF_NPZ = tmp
-cfg = tasks.load_env_cfg("jumper.horn_roll", asset=MODEL, play=True)
+if TASK == "jumper.horn_roll":
+    tmp = Path(tempfile.mkdtemp()) / "bootstrap.npz"
+    np.savez(tmp, **dict(np.load(REF_NPZ)), axis=np.array([0.0, 1.0, 0.0]))
+    H.REF_NPZ = tmp
+cfg = tasks.load_env_cfg(TASK, asset=MODEL, play=True)
 cfg.scene.num_envs = 1
 cfg.events.pop("push_robot", None)
 if os.environ.get("NOMINAL"):
@@ -124,11 +130,14 @@ print(f"hardest hits over the recording: limbs {float(cmd.peak_limb):.0f} N, sto
       f"{float(cmd.peak_shell):.0f} N, carapace impact {float(cmd.peak_carapace_impact):.0f} N, "
       f"floor impact {float(cmd.peak_ground_impact):.0f} N, longest flight "
       f"{float(cmd.longest_flight) * dt:.2f} s")
+if hasattr(cmd, "peak_load"):
+    print(f"face {float(cmd.peak_front):.0f} N, worst floor-contact joint torque "
+          f"{float(cmd.peak_load):.2f} N*m")
 if not done.any():
     sys.exit("the plan does not complete the roll in jumper.horn_roll's environment; "
              "nothing written")
 OUT.parent.mkdir(parents=True, exist_ok=True)
 np.savez(OUT, dt=np.float32(dt), joint_names=np.array(names), total=total.astype(np.float32),
          axis=axis.astype(np.float32), source=str(PLAN.relative_to(ROOT)), **rec)
-print("wrote", OUT.relative_to(ROOT))
+print("wrote", OUT)
 env.close()
