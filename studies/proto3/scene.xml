@@ -1,0 +1,570 @@
+<mujoco model="mjlab scene">
+  <compiler angle="radian"/>
+
+  <size nkey="1"/>
+
+  <visual>
+    <global azimuth="135" elevation="-25" offwidth="1920" offheight="1080"/>
+    <quality shadowsize="8192"/>
+    <headlight ambient="0.3 0.3 0.3" diffuse="0.6 0.6 0.6" specular="0 0 0"/>
+    <scale forcewidth="0.25" contactwidth="0.4" contactheight="0.15" framelength="5" framewidth="0.3"/>
+    <rgba haze="0.15 0.25 0.35 1" force="1 0 0 1"/>
+  </visual>
+
+  <statistic meansize="0.03" extent="2"/>
+
+  <default>
+    <default class="robot/main">
+      <default class="robot/robot">
+        <default class="robot/motor">
+          <joint armature="0.0015" damping="0.017" frictionloss="0.011"/>
+        </default>
+        <default class="robot/visual">
+          <geom contype="0" conaffinity="0" group="2"/>
+        </default>
+        <default class="robot/collision">
+          <geom group="1" priority="1" friction="1 0.01 0.01" solref="0.008" solimp="0.99 0.999 1e-05"/>
+        </default>
+      </default>
+    </default>
+  </default>
+
+  <asset>
+    <texture type="2d" colorspace="auto" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="4 4" reflectance="0.2"/>
+    <mesh name="robot/carapace_hull_00" file="carapace/CF1-tri30m-rb-v3/hull_00.stl"/>
+    <mesh name="robot/carapace_hull_01" file="carapace/CF1-tri30m-rb-v3/hull_01.stl"/>
+    <mesh name="robot/carapace_hull_02" file="carapace/CF1-tri30m-rb-v3/hull_02.stl"/>
+    <mesh name="robot/carapace_hull_03" file="carapace/CF1-tri30m-rb-v3/hull_03.stl"/>
+    <mesh name="robot/carapace_hull_04" file="carapace/CF1-tri30m-rb-v3/hull_04.stl"/>
+    <mesh name="robot/carapace_hull_05" file="carapace/CF1-tri30m-rb-v3/hull_05.stl"/>
+    <mesh name="robot/carapace_hull_06" file="carapace/CF1-tri30m-rb-v3/hull_06.stl"/>
+    <mesh name="robot/carapace_hull_07" file="carapace/CF1-tri30m-rb-v3/hull_07.stl"/>
+    <mesh name="robot/carapace_hull_08" file="carapace/CF1-tri30m-rb-v3/hull_08.stl"/>
+    <mesh name="robot/carapace_hull_09" file="carapace/CF1-tri30m-rb-v3/hull_09.stl"/>
+    <mesh name="robot/carapace_hull_10" file="carapace/CF1-tri30m-rb-v3/hull_10.stl"/>
+    <mesh name="robot/carapace_hull_11" file="carapace/CF1-tri30m-rb-v3/hull_11.stl"/>
+    <mesh name="robot/carapace_hull_12" file="carapace/CF1-tri30m-rb-v3/hull_12.stl"/>
+    <mesh name="robot/carapace_hull_13" file="carapace/CF1-tri30m-rb-v3/hull_13.stl"/>
+    <mesh name="robot/carapace_hull_14" file="carapace/CF1-tri30m-rb-v3/hull_14.stl"/>
+    <mesh name="robot/carapace_hull_15" file="carapace/CF1-tri30m-rb-v3/hull_15.stl"/>
+    <mesh name="robot/carapace_hull_16" file="carapace/CF1-tri30m-rb-v3/hull_16.stl"/>
+    <mesh name="robot/carapace_hull_17" file="carapace/CF1-tri30m-rb-v3/hull_17.stl"/>
+    <mesh name="robot/carapace_hull_18" file="carapace/CF1-tri30m-rb-v3/hull_18.stl"/>
+    <mesh name="robot/carapace_hull_19" file="carapace/CF1-tri30m-rb-v3/hull_19.stl"/>
+    <mesh name="robot/carapace_hull_20" file="carapace/CF1-tri30m-rb-v3/hull_20.stl"/>
+    <mesh name="robot/carapace_hull_21" file="carapace/CF1-tri30m-rb-v3/hull_21.stl"/>
+    <mesh name="robot/carapace_hull_22" file="carapace/CF1-tri30m-rb-v3/hull_22.stl"/>
+    <mesh name="robot/carapace_hull_23" file="carapace/CF1-tri30m-rb-v3/hull_23.stl"/>
+    <mesh name="robot/carapace_hull_24" file="carapace/CF1-tri30m-rb-v3/hull_24.stl"/>
+    <mesh name="robot/carapace_hull_25" file="carapace/CF1-tri30m-rb-v3/hull_25.stl"/>
+    <mesh name="robot/carapace_hull_26" file="carapace/CF1-tri30m-rb-v3/hull_26.stl"/>
+    <mesh name="robot/carapace_hull_27" file="carapace/CF1-tri30m-rb-v3/hull_27.stl"/>
+    <mesh name="robot/carapace_hull_28" file="carapace/CF1-tri30m-rb-v3/hull_28.stl"/>
+    <mesh name="robot/carapace_hull_29" file="carapace/CF1-tri30m-rb-v3/hull_29.stl"/>
+    <mesh name="robot/carapace_hull_30" file="carapace/CF1-tri30m-rb-v3/hull_30.stl"/>
+    <mesh name="robot/carapace_hull_31" file="carapace/CF1-tri30m-rb-v3/hull_31.stl"/>
+    <mesh name="robot/carapace_hull_32" file="carapace/CF1-tri30m-rb-v3/hull_32.stl"/>
+    <mesh name="robot/carapace_hull_33" file="carapace/CF1-tri30m-rb-v3/hull_33.stl"/>
+    <mesh name="robot/carapace_hull_34" file="carapace/CF1-tri30m-rb-v3/hull_34.stl"/>
+    <mesh name="robot/carapace_hull_35" file="carapace/CF1-tri30m-rb-v3/hull_35.stl"/>
+    <mesh name="robot/carapace_hull_36" file="carapace/CF1-tri30m-rb-v3/hull_36.stl"/>
+    <mesh name="robot/carapace_hull_37" file="carapace/CF1-tri30m-rb-v3/hull_37.stl"/>
+    <mesh name="robot/carapace_hull_38" file="carapace/CF1-tri30m-rb-v3/hull_38.stl"/>
+    <mesh name="robot/carapace_hull_39" file="carapace/CF1-tri30m-rb-v3/hull_39.stl"/>
+    <mesh name="robot/carapace_hull_40" file="carapace/CF1-tri30m-rb-v3/hull_40.stl"/>
+    <mesh name="robot/carapace_hull_41" file="carapace/CF1-tri30m-rb-v3/hull_41.stl"/>
+    <mesh name="robot/carapace_visual" file="carapace/CF1-tri30m-rb-v3/visual.stl"/>
+    <mesh name="robot/base_link" file="urdf/jumper/meshes/visual/base_link.stl"/>
+    <mesh name="robot/upper_shell_link" file="urdf/jumper/meshes/visual/upper_shell_link.stl"/>
+    <mesh name="robot/display_module_link" file="urdf/jumper/meshes/visual/display_module_link.stl"/>
+    <mesh name="robot/tof_sensor_link" file="urdf/jumper/meshes/visual/tof_sensor_link.stl"/>
+    <mesh name="robot/camera_link" file="urdf/jumper/meshes/visual/camera_link.stl"/>
+    <mesh name="robot/LF_shoulder_link" file="urdf/jumper/meshes/visual/LF_shoulder_link.stl"/>
+    <mesh name="robot/LF_upper_arm_link" file="urdf/jumper/meshes/visual/LF_upper_arm_link.stl"/>
+    <mesh name="robot/LF_forearm_link" file="urdf/jumper/meshes/visual/LF_forearm_link.stl"/>
+    <mesh name="robot/LF_palm_link" file="urdf/jumper/meshes/visual/LF_palm_link.stl"/>
+    <mesh name="robot/LF_palm_pad_f_link" file="urdf/jumper/meshes/visual/LF_palm_pad_f_link.stl"/>
+    <mesh name="robot/LF_palm_pad_b_link" file="urdf/jumper/meshes/visual/LF_palm_pad_b_link.stl"/>
+    <mesh name="robot/LF_finger_link" file="urdf/jumper/meshes/visual/LF_finger_link.stl"/>
+    <mesh name="robot/LF_finger_tip_link" file="urdf/jumper/meshes/visual/LF_finger_tip_link.stl"/>
+    <mesh name="robot/LF_finger_grip_insert_link" file="urdf/jumper/meshes/visual/LF_finger_grip_insert_link.stl"/>
+    <mesh name="robot/LF_palm_grip_insert_link" file="urdf/jumper/meshes/visual/LF_palm_grip_insert_link.stl"/>
+    <mesh name="robot/RF_shoulder_link" file="urdf/jumper/meshes/visual/RF_shoulder_link.stl"/>
+    <mesh name="robot/RF_upper_arm_link" file="urdf/jumper/meshes/visual/RF_upper_arm_link.stl"/>
+    <mesh name="robot/RF_forearm_link" file="urdf/jumper/meshes/visual/RF_forearm_link.stl"/>
+    <mesh name="robot/RF_palm_link" file="urdf/jumper/meshes/visual/RF_palm_link.stl"/>
+    <mesh name="robot/RF_palm_pad_f_link" file="urdf/jumper/meshes/visual/RF_palm_pad_f_link.stl"/>
+    <mesh name="robot/RF_palm_pad_b_link" file="urdf/jumper/meshes/visual/RF_palm_pad_b_link.stl"/>
+    <mesh name="robot/RF_palm_grip_insert_link" file="urdf/jumper/meshes/visual/RF_palm_grip_insert_link.stl"/>
+    <mesh name="robot/RF_finger_link" file="urdf/jumper/meshes/visual/RF_finger_link.stl"/>
+    <mesh name="robot/RF_finger_grip_insert_link" file="urdf/jumper/meshes/visual/RF_finger_grip_insert_link.stl"/>
+    <mesh name="robot/RF_finger_tip_link" file="urdf/jumper/meshes/visual/RF_finger_tip_link.stl"/>
+    <mesh name="robot/LM_hip_link" file="urdf/jumper/meshes/visual/LM_hip_link.stl"/>
+    <mesh name="robot/LM_thigh_link" file="urdf/jumper/meshes/visual/LM_thigh_link.stl"/>
+    <mesh name="robot/LM_calf_link" file="urdf/jumper/meshes/visual/LM_calf_link.stl"/>
+    <mesh name="robot/LM_foot_tip_link" file="urdf/jumper/meshes/visual/LM_foot_tip_link.stl"/>
+    <mesh name="robot/RM_hip_link" file="urdf/jumper/meshes/visual/RM_hip_link.stl"/>
+    <mesh name="robot/RM_thigh_link" file="urdf/jumper/meshes/visual/RM_thigh_link.stl"/>
+    <mesh name="robot/RM_calf_link" file="urdf/jumper/meshes/visual/RM_calf_link.stl"/>
+    <mesh name="robot/RM_foot_tip_link" file="urdf/jumper/meshes/visual/RM_foot_tip_link.stl"/>
+    <mesh name="robot/LR_hip_link" file="urdf/jumper/meshes/visual/LR_hip_link.stl"/>
+    <mesh name="robot/LR_thigh_link" file="urdf/jumper/meshes/visual/LR_thigh_link.stl"/>
+    <mesh name="robot/LR_calf_link" file="urdf/jumper/meshes/visual/LR_calf_link.stl"/>
+    <mesh name="robot/LR_foot_tip_link" file="urdf/jumper/meshes/visual/LR_foot_tip_link.stl"/>
+    <mesh name="robot/RR_hip_link" file="urdf/jumper/meshes/visual/RR_hip_link.stl"/>
+    <mesh name="robot/RR_thigh_link" file="urdf/jumper/meshes/visual/RR_thigh_link.stl"/>
+    <mesh name="robot/RR_calf_link" file="urdf/jumper/meshes/visual/RR_calf_link.stl"/>
+    <mesh name="robot/RR_foot_tip_link" file="urdf/jumper/meshes/visual/RR_foot_tip_link.stl"/>
+    <mesh name="robot/base_link_col" file="meshes/base_link_col.STL"/>
+    <mesh name="robot/upper_shell_link_col" file="meshes/upper_shell_link_col.STL"/>
+    <mesh name="robot/display_module_link_col" file="meshes/display_module_link_col.STL"/>
+    <mesh name="robot/tof_sensor_link_col" file="meshes/tof_sensor_link_col.STL"/>
+    <mesh name="robot/camera_link_col" file="meshes/camera_link_col.STL"/>
+    <mesh name="robot/LF_shoulder_link_col" file="meshes/LF_shoulder_link_col.STL"/>
+    <mesh name="robot/LF_upper_arm_link_col" file="meshes/LF_upper_arm_link_col.STL"/>
+    <mesh name="robot/LF_forearm_link_col" file="meshes/LF_forearm_link_col.STL"/>
+    <mesh name="robot/LF_palm_link_col" file="meshes/LF_palm_link_col.STL"/>
+    <mesh name="robot/LF_palm_pad_f_link_col" file="meshes/LF_palm_pad_f_link_col.STL"/>
+    <mesh name="robot/LF_finger_link_col" file="meshes/LF_finger_link_col.STL"/>
+    <mesh name="robot/LF_finger_tip_link_col" file="meshes/LF_finger_tip_link_col.STL"/>
+    <mesh name="robot/LF_finger_grip_insert_link_col" file="meshes/LF_finger_grip_insert_link_col.STL"/>
+    <mesh name="robot/LF_palm_grip_insert_link_col" file="meshes/LF_palm_grip_insert_link_col.STL"/>
+    <mesh name="robot/RF_shoulder_link_col" file="meshes/RF_shoulder_link_col.STL"/>
+    <mesh name="robot/RF_upper_arm_link_col" file="meshes/RF_upper_arm_link_col.STL"/>
+    <mesh name="robot/RF_forearm_link_col" file="meshes/RF_forearm_link_col.STL"/>
+    <mesh name="robot/RF_palm_link_col" file="meshes/RF_palm_link_col.STL"/>
+    <mesh name="robot/RF_palm_pad_f_link_col" file="meshes/RF_palm_pad_f_link_col.STL"/>
+    <mesh name="robot/RF_palm_grip_insert_link_col" file="meshes/RF_palm_grip_insert_link_col.STL"/>
+    <mesh name="robot/RF_finger_link_col" file="meshes/RF_finger_link_col.STL"/>
+    <mesh name="robot/RF_finger_grip_insert_link_col" file="meshes/RF_finger_grip_insert_link_col.STL"/>
+    <mesh name="robot/RF_finger_tip_link_col" file="meshes/RF_finger_tip_link_col.STL"/>
+    <mesh name="robot/LM_hip_link_col" file="meshes/LM_hip_link_col.STL"/>
+    <mesh name="robot/LM_thigh_link_col" file="meshes/LM_thigh_link_col.STL"/>
+    <mesh name="robot/LM_calf_link_col" file="meshes/LM_calf_link_col.STL"/>
+    <mesh name="robot/RM_hip_link_col" file="meshes/RM_hip_link_col.STL"/>
+    <mesh name="robot/RM_thigh_link_col" file="meshes/RM_thigh_link_col.STL"/>
+    <mesh name="robot/RM_calf_link_col" file="meshes/RM_calf_link_col.STL"/>
+    <mesh name="robot/LR_hip_link_col" file="meshes/LR_hip_link_col.STL"/>
+    <mesh name="robot/LR_thigh_link_col" file="meshes/LR_thigh_link_col.STL"/>
+    <mesh name="robot/LR_calf_link_col" file="meshes/LR_calf_link_col.STL"/>
+    <mesh name="robot/RR_hip_link_col" file="meshes/RR_hip_link_col.STL"/>
+    <mesh name="robot/RR_thigh_link_col" file="meshes/RR_thigh_link_col.STL"/>
+    <mesh name="robot/RR_calf_link_col" file="meshes/RR_calf_link_col.STL"/>
+  </asset>
+
+  <worldbody>
+    <light name="sun" pos="0 0 1.5" dir="0 0 -1" type="directional"/>
+    <body name="terrain">
+      <geom name="terrain" size="0 0 0.01" type="plane" material="groundplane"/>
+    </body>
+    <body name="robot/base_link" childclass="robot/robot">
+      <inertial pos="-0.00399074 -9.06807e-06 0.0184114" quat="-0.000325926 0.713535 0.000373919 0.700619" mass="0.886006" diaginertia="0.00413005 0.00241859 0.00200253"/>
+      <joint name="robot/floating_base" type="free"/>
+      <geom name="robot/base_link_visual" class="robot/visual" type="mesh" density="0" rgba="0 0 0 1" mesh="robot/base_link"/>
+      <geom name="robot/base_link_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0 0 0 1" mesh="robot/base_link_col"/>
+      <site name="robot/imu" pos="0 0 0" size="0.006" group="4"/>
+      <body name="robot/upper_shell_link" pos="-0.0073137 0 0.0315">
+        <inertial pos="0.0138196 6.91972e-07 0.036059" quat="0.0233258 0.643006 0.00984481 0.765442" mass="0.188437" diaginertia="0.000901424 0.00059113 0.00042361"/>
+        <geom name="robot/upper_shell_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/upper_shell_link"/>
+        <geom name="robot/upper_shell_link_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/upper_shell_link_col"/>
+        <geom name="robot/upper_shell_carapace_visual" class="robot/visual" type="mesh" density="0" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_visual"/>
+        <geom name="robot/upper_shell_carapace_00_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_00"/>
+        <geom name="robot/upper_shell_carapace_01_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_01"/>
+        <geom name="robot/upper_shell_carapace_02_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_02"/>
+        <geom name="robot/upper_shell_carapace_03_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_03"/>
+        <geom name="robot/upper_shell_carapace_04_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_04"/>
+        <geom name="robot/upper_shell_carapace_05_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_05"/>
+        <geom name="robot/upper_shell_carapace_06_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_06"/>
+        <geom name="robot/upper_shell_carapace_07_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_07"/>
+        <geom name="robot/upper_shell_carapace_08_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_08"/>
+        <geom name="robot/upper_shell_carapace_09_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_09"/>
+        <geom name="robot/upper_shell_carapace_10_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_10"/>
+        <geom name="robot/upper_shell_carapace_11_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_11"/>
+        <geom name="robot/upper_shell_carapace_12_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_12"/>
+        <geom name="robot/upper_shell_carapace_13_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_13"/>
+        <geom name="robot/upper_shell_carapace_14_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_14"/>
+        <geom name="robot/upper_shell_carapace_15_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_15"/>
+        <geom name="robot/upper_shell_carapace_16_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_16"/>
+        <geom name="robot/upper_shell_carapace_17_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_17"/>
+        <geom name="robot/upper_shell_carapace_18_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_18"/>
+        <geom name="robot/upper_shell_carapace_19_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_19"/>
+        <geom name="robot/upper_shell_carapace_20_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_20"/>
+        <geom name="robot/upper_shell_carapace_21_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_21"/>
+        <geom name="robot/upper_shell_carapace_22_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_22"/>
+        <geom name="robot/upper_shell_carapace_23_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_23"/>
+        <geom name="robot/upper_shell_carapace_24_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_24"/>
+        <geom name="robot/upper_shell_carapace_25_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_25"/>
+        <geom name="robot/upper_shell_carapace_26_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_26"/>
+        <geom name="robot/upper_shell_carapace_27_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_27"/>
+        <geom name="robot/upper_shell_carapace_28_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_28"/>
+        <geom name="robot/upper_shell_carapace_29_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_29"/>
+        <geom name="robot/upper_shell_carapace_30_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_30"/>
+        <geom name="robot/upper_shell_carapace_31_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_31"/>
+        <geom name="robot/upper_shell_carapace_32_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_32"/>
+        <geom name="robot/upper_shell_carapace_33_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_33"/>
+        <geom name="robot/upper_shell_carapace_34_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_34"/>
+        <geom name="robot/upper_shell_carapace_35_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_35"/>
+        <geom name="robot/upper_shell_carapace_36_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_36"/>
+        <geom name="robot/upper_shell_carapace_37_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_37"/>
+        <geom name="robot/upper_shell_carapace_38_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_38"/>
+        <geom name="robot/upper_shell_carapace_39_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_39"/>
+        <geom name="robot/upper_shell_carapace_40_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_40"/>
+        <geom name="robot/upper_shell_carapace_41_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.95 0.65 0.25 1" mesh="robot/carapace_hull_41"/>
+      </body>
+      <body name="robot/display_module_link" pos="0.0802718 1.01591e-05 0.0495238">
+        <inertial pos="-0.00193883 4.1371e-06 -0.000785399" quat="0.674714 0.674709 -0.211542 0.21161" mass="0.0228873" diaginertia="2.0216e-05 1.78123e-05 2.44316e-06"/>
+        <geom name="robot/display_module_link_visual" class="robot/visual" type="mesh" density="0" rgba="0 0 0 1" mesh="robot/display_module_link"/>
+        <geom name="robot/display_module_link_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0 0 0 1" mesh="robot/display_module_link_col"/>
+      </body>
+      <body name="robot/tof_sensor_link" pos="0.090678 0 0.0168455">
+        <inertial pos="-0.00120005 -0.00420569 -2.19897e-05" quat="0.499886 0.500376 0.499776 0.499961" mass="0.00148539" diaginertia="1.011e-07 7.94682e-08 3.19891e-08"/>
+        <geom name="robot/tof_sensor_link_visual" class="robot/visual" type="mesh" density="0" rgba="0 0 0 1" mesh="robot/tof_sensor_link"/>
+        <geom name="robot/tof_sensor_link_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0 0 0 1" mesh="robot/tof_sensor_link_col"/>
+        <camera name="robot/tof" pos="0.004 0 0" quat="0.5 0.5 -0.5 -0.5" resolution="54 42" sensorsize="1.04113 0.767728" focal="1 1"/>
+      </body>
+      <body name="robot/camera_link" pos="0.091678 0.0141809 0.0168476">
+        <inertial pos="-0.00567172 -0.00646057 4.81171e-06" quat="0.501623 0.501533 0.498407 0.498427" mass="0.00201956" diaginertia="6.67378e-07 6.2039e-07 5.16838e-08"/>
+        <geom name="robot/camera_link_visual" class="robot/visual" type="mesh" density="0" rgba="0 0 0 1" mesh="robot/camera_link"/>
+        <geom name="robot/camera_link_meshcol" class="robot/collision" type="mesh" conaffinity="0" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0 0 0 1" mesh="robot/camera_link_col"/>
+        <camera name="robot/onboard" pos="0.007 0 0" quat="0.5 0.5 -0.5 -0.5" resolution="1920 1440" fovy="95.7"/>
+      </body>
+      <body name="robot/LF_shoulder_link" pos="0.0506761 0.0610009 0.0107">
+        <inertial pos="4.66902e-05 0.000392846 -0.0058668" quat="0.713309 -0.0173564 -0.0131114 0.700512" mass="0.047816" diaginertia="1.37161e-05 1.34775e-05 4.0358e-06"/>
+        <joint name="robot/LF_J0_joint" class="robot/motor" pos="0 0 0" axis="0 0 1" range="-2.75 0.7" actuatorfrcrange="-2 2"/>
+        <geom name="robot/LF_shoulder_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/LF_shoulder_link"/>
+        <geom name="robot/LF_shoulder_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/LF_shoulder_link_col"/>
+        <body name="robot/LF_upper_arm_link" pos="0 0.0064 -0.03116">
+          <inertial pos="-0.000856777 0.0130423 -0.00051674" quat="-0.0229767 0.719268 0.0326251 0.693586" mass="0.0602596" diaginertia="3.07315e-05 2.76404e-05 8.11503e-06"/>
+          <joint name="robot/LF_J1_joint" class="robot/motor" pos="0 0 0" axis="0 1 0" range="-4.75 1.4" actuatorfrcrange="-2 2"/>
+          <geom name="robot/LF_upper_arm_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/LF_upper_arm_link"/>
+          <geom name="robot/LF_upper_arm_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/LF_upper_arm_link_col"/>
+          <body name="robot/LF_forearm_link" pos="0.0009 0.04787 0.00011132">
+            <inertial pos="-0.000656869 0.00954327 0.000506352" quat="0.00258455 0.696006 -0.00212379 0.718028" mass="0.0585194" diaginertia="2.44035e-05 2.29615e-05 6.75132e-06"/>
+            <joint name="robot/LF_J2_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-2.2 1.65" actuatorfrcrange="-2 2"/>
+            <geom name="robot/LF_forearm_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.68 0.7 0.72 1" mesh="robot/LF_forearm_link"/>
+            <geom name="robot/LF_forearm_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.68 0.7 0.72 1" mesh="robot/LF_forearm_link_col"/>
+            <body name="robot/LF_palm_link" pos="-0.0012 0.05 0">
+              <inertial pos="0.000790839 0.0273722 0.00325025" quat="0.0033395 0.659236 0.00524711 0.75191" mass="0.0941372" diaginertia="0.00014227 0.00013571 2.52586e-05"/>
+              <joint name="robot/LF_J3_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-2.1 1.65" actuatorfrcrange="-2 2"/>
+              <geom name="robot/LF_palm_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/LF_palm_link"/>
+              <geom name="robot/LF_palm_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/LF_palm_link_col"/>
+              <body name="robot/LF_palm_pad_f_link" pos="0.00880304 0.141546 -0.000588324">
+                <inertial pos="0.00757886 -0.0305592 0.0111586" quat="0.406636 0.5189 0.600574 0.452439" mass="0.00192627" diaginertia="4.4243e-07 4.33622e-07 1.77643e-08"/>
+                <geom name="robot/LF_palm_pad_f_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/LF_palm_pad_f_link"/>
+                <geom name="robot/LF_palm_pad_f_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/LF_palm_pad_f_link_col"/>
+              </body>
+              <body name="robot/LF_palm_pad_b_link" pos="-0.00740201 0.141546 -0.00058817">
+                <inertial pos="-0.00758235 -0.030584 0.0111664" quat="0.452833 0.599914 0.51939 0.406547" mass="0.00192395" diaginertia="4.43431e-07 4.34621e-07 1.77951e-08"/>
+                <geom name="robot/LF_palm_pad_b_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/LF_palm_pad_b_link"/>
+                <geom name="robot/LF_palm_pad_b_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" friction="1.2" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/LF_palm_pad_b_link"/>
+                <site name="robot/LF" pos="-0.00647599 -0.0281137 0.0102591" group="4"/>
+              </body>
+              <body name="robot/LF_finger_link" pos="0.0021 0.037275 -0.011472">
+                <inertial pos="-0.00104532 0.0113224 -0.0027866" quat="8.60503e-05 0.763399 0.00385032 0.645915" mass="0.0588541" diaginertia="4.16827e-05 3.91086e-05 7.31905e-06"/>
+                <joint name="robot/LF_J4_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-1.6 0.1" actuatorfrcrange="-2 2"/>
+                <geom name="robot/LF_finger_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/LF_finger_link"/>
+                <geom name="robot/LF_finger_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/LF_finger_link_col"/>
+                <body name="robot/LF_finger_tip_link" pos="-0.0022 0.106219 -0.00327707">
+                  <inertial pos="0.000951722 -0.00918768 -0.00400129" quat="0.347778 0.348024 -0.615448 0.615754" mass="0.00203299" diaginertia="1.09501e-07 6.85971e-08 5.52002e-08"/>
+                  <geom name="robot/LF_finger_tip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/LF_finger_tip_link"/>
+                  <geom name="robot/LF_finger_tip_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/LF_finger_tip_link_col"/>
+                </body>
+                <body name="robot/LF_finger_grip_insert_link" pos="-0.00175893 0.0667493 -0.00277963">
+                  <inertial pos="-2.78592e-05 -0.00454102 -0.000899847" quat="0.00173625 0.666815 -0.00175866 0.745219" mass="0.0116013" diaginertia="5.7719e-06 5.33112e-06 5.812e-07"/>
+                  <geom name="robot/LF_finger_grip_insert_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/LF_finger_grip_insert_link"/>
+                  <geom name="robot/LF_finger_grip_insert_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/LF_finger_grip_insert_link_col"/>
+                </body>
+              </body>
+              <body name="robot/LF_palm_grip_insert_link" pos="0.00040632 0.10443 0.0026781">
+                <inertial pos="2.67493e-05 -0.0041126 0.00119505" quat="-0.000252506 0.766524 -0.00036821 0.642216" mass="0.0114241" diaginertia="5.95648e-06 5.54058e-06 5.90072e-07"/>
+                <geom name="robot/LF_palm_grip_insert_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/LF_palm_grip_insert_link"/>
+                <geom name="robot/LF_palm_grip_insert_link_meshcol" class="robot/collision" type="mesh" contype="3" conaffinity="124" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/LF_palm_grip_insert_link_col"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="robot/RF_shoulder_link" pos="0.050676 -0.060999 0.0107">
+        <inertial pos="-4.66903e-05 -0.000392846 -0.0058668" quat="0.713309 0.0173564 0.0131114 0.700512" mass="0.047816" diaginertia="1.37161e-05 1.34775e-05 4.0358e-06"/>
+        <joint name="robot/RF_J0_joint" class="robot/motor" pos="0 0 0" axis="0 0 1" range="-0.7 2.75" actuatorfrcrange="-2 2"/>
+        <geom name="robot/RF_shoulder_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/RF_shoulder_link"/>
+        <geom name="robot/RF_shoulder_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/RF_shoulder_link_col"/>
+        <body name="robot/RF_upper_arm_link" pos="0 -0.0064 -0.03116">
+          <inertial pos="0.000758384 -0.0130423 -0.000516742" quat="-0.0329564 0.693597 0.0226509 0.719253" mass="0.0604939" diaginertia="3.07875e-05 2.76511e-05 8.16111e-06"/>
+          <joint name="robot/RF_J1_joint" class="robot/motor" pos="0 0 0" axis="0 1 0" range="-4.75 1.4" actuatorfrcrange="-2 2"/>
+          <geom name="robot/RF_upper_arm_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/RF_upper_arm_link"/>
+          <geom name="robot/RF_upper_arm_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/RF_upper_arm_link_col"/>
+          <body name="robot/RF_forearm_link" pos="-0.0009 -0.04787 0.000111324">
+            <inertial pos="0.000656869 -0.00954327 0.000506352" quat="0.00212379 0.718028 -0.00258455 0.696006" mass="0.0585194" diaginertia="2.44035e-05 2.29615e-05 6.75132e-06"/>
+            <joint name="robot/RF_J2_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-1.65 2.2" actuatorfrcrange="-2 2"/>
+            <geom name="robot/RF_forearm_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.68 0.7 0.72 1" mesh="robot/RF_forearm_link"/>
+            <geom name="robot/RF_forearm_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.68 0.7 0.72 1" mesh="robot/RF_forearm_link_col"/>
+            <body name="robot/RF_palm_link" pos="0.0012 -0.05 0">
+              <inertial pos="-0.000790841 -0.0273721 0.00325025" quat="-0.00524711 0.75191 -0.0033395 0.659236" mass="0.0941372" diaginertia="0.00014227 0.00013571 2.52586e-05"/>
+              <joint name="robot/RF_J3_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-1.65 2.1" actuatorfrcrange="-2 2"/>
+              <geom name="robot/RF_palm_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/RF_palm_link"/>
+              <geom name="robot/RF_palm_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/RF_palm_link_col"/>
+              <body name="robot/RF_palm_pad_f_link" pos="0.00740201 -0.141546 -0.00058817">
+                <inertial pos="0.00758235 0.030584 0.0111664" quat="0.599914 0.452833 0.406547 0.51939" mass="0.00192395" diaginertia="4.43431e-07 4.34621e-07 1.77951e-08"/>
+                <geom name="robot/RF_palm_pad_f_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/RF_palm_pad_f_link"/>
+                <geom name="robot/RF_palm_pad_f_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/RF_palm_pad_f_link_col"/>
+              </body>
+              <body name="robot/RF_palm_pad_b_link" pos="-0.00880304 -0.141546 -0.000588324">
+                <inertial pos="-0.00757886 0.0305592 0.0111586" quat="0.5189 0.406636 0.452439 0.600574" mass="0.00192627" diaginertia="4.4243e-07 4.33622e-07 1.77643e-08"/>
+                <geom name="robot/RF_palm_pad_b_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/RF_palm_pad_b_link"/>
+                <geom name="robot/RF_palm_pad_b_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" friction="1.2" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/RF_palm_pad_b_link"/>
+                <site name="robot/RF" pos="-0.00647574 0.0281134 0.0102581" group="4"/>
+              </body>
+              <body name="robot/RF_palm_grip_insert_link" pos="-0.000406317 -0.104427 0.0026781">
+                <inertial pos="-2.67497e-05 0.00411267 0.00119507" quat="0.00036821 0.642216 0.000252506 0.766524" mass="0.0114241" diaginertia="5.95648e-06 5.54058e-06 5.90072e-07"/>
+                <geom name="robot/RF_palm_grip_insert_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/RF_palm_grip_insert_link"/>
+                <geom name="robot/RF_palm_grip_insert_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/RF_palm_grip_insert_link_col"/>
+              </body>
+              <body name="robot/RF_finger_link" pos="-0.0021 -0.0372747 -0.0114718">
+                <inertial pos="0.00104532 -0.0113224 -0.0027866" quat="-0.00385032 0.645915 -8.60503e-05 0.763399" mass="0.0588541" diaginertia="4.16827e-05 3.91086e-05 7.31905e-06"/>
+                <joint name="robot/RF_J4_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-0.1 1.6" actuatorfrcrange="-2 2"/>
+                <geom name="robot/RF_finger_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/RF_finger_link"/>
+                <geom name="robot/RF_finger_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/RF_finger_link_col"/>
+                <body name="robot/RF_finger_grip_insert_link" pos="0.00175893 -0.0667493 -0.00277963">
+                  <inertial pos="2.78592e-05 0.00454102 -0.000899847" quat="0.00175866 0.745219 -0.00173625 0.666815" mass="0.0116013" diaginertia="5.7719e-06 5.33112e-06 5.812e-07"/>
+                  <geom name="robot/RF_finger_grip_insert_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/RF_finger_grip_insert_link"/>
+                  <geom name="robot/RF_finger_grip_insert_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/RF_finger_grip_insert_link_col"/>
+                </body>
+                <body name="robot/RF_finger_tip_link" pos="0.0014 -0.106219 -0.00327701">
+                  <inertial pos="-0.000151722 0.00918768 -0.00400135" quat="0.615448 0.615754 -0.347778 0.348024" mass="0.00203299" diaginertia="1.09501e-07 6.85971e-08 5.52002e-08"/>
+                  <geom name="robot/RF_finger_tip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/RF_finger_tip_link"/>
+                  <geom name="robot/RF_finger_tip_link_meshcol" class="robot/collision" type="mesh" contype="5" conaffinity="122" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/RF_finger_tip_link_col"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="robot/LM_hip_link" pos="-0.0073239 0.066501 0.00745">
+        <inertial pos="0.000150772 0.0123573 -0.0100179" quat="0.338767 0.617298 0.631115 0.325383" mass="0.0651491" diaginertia="3.97203e-05 3.91587e-05 1.31776e-05"/>
+        <joint name="robot/LM_J0_joint" class="robot/motor" pos="0 0 0" axis="0 0 1" range="-0.75 1" actuatorfrcrange="-2 2"/>
+        <geom name="robot/LM_hip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/LM_hip_link"/>
+        <geom name="robot/LM_hip_link_meshcol" class="robot/collision" type="mesh" contype="9" conaffinity="118" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/LM_hip_link_col"/>
+        <body name="robot/LM_thigh_link" pos="0.0011001 0.05613 -0.02493">
+          <inertial pos="-0.000656851 0.00954327 0.000506352" quat="0.00258521 0.696006 -0.00212443 0.718028" mass="0.0585194" diaginertia="2.44035e-05 2.29615e-05 6.75132e-06"/>
+          <joint name="robot/LM_J1_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-2.4 1.5" actuatorfrcrange="-2 2"/>
+          <geom name="robot/LM_thigh_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.68 0.7 0.72 1" mesh="robot/LM_thigh_link"/>
+          <geom name="robot/LM_thigh_link_meshcol" class="robot/collision" type="mesh" contype="9" conaffinity="118" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.68 0.7 0.72 1" mesh="robot/LM_thigh_link_col"/>
+          <body name="robot/LM_calf_link" pos="-0.00119991 0.05 0">
+            <inertial pos="0.00039746 0.023317 0.00254939" quat="-0.00416545 0.684264 0.0012723 0.729222" mass="0.0776801" diaginertia="9.57753e-05 8.841e-05 1.38422e-05"/>
+            <joint name="robot/LM_J2_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-2.4 1.8" actuatorfrcrange="-2 2"/>
+            <geom name="robot/LM_calf_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/LM_calf_link"/>
+            <geom name="robot/LM_calf_link_meshcol" class="robot/collision" type="mesh" contype="9" conaffinity="118" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/LM_calf_link_col"/>
+            <body name="robot/LM_foot_tip_link" pos="0.000789315 0.120917 0.00624036">
+              <inertial pos="9.55492e-07 -0.0124584 -0.00405412" quat="0.337543 0.337542 -0.621297 0.621386" mass="0.00637705" diaginertia="6.01734e-07 5.293e-07 3.01174e-07"/>
+              <geom name="robot/LM_foot_tip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/LM_foot_tip_link"/>
+              <geom name="robot/LM_foot_tip_link_meshcol" class="robot/collision" type="mesh" contype="9" conaffinity="118" friction="1.2" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/LM_foot_tip_link"/>
+              <site name="robot/LM" pos="-2.74046e-06 -0.0104901 -0.00482261" group="4"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="robot/RM_hip_link" pos="-0.0073239 -0.066499 0.00745">
+        <inertial pos="-0.000150731 -0.0123573 -0.0100179" quat="0.617298 0.338767 0.325383 0.631115" mass="0.0651491" diaginertia="3.97203e-05 3.91587e-05 1.31776e-05"/>
+        <joint name="robot/RM_J0_joint" class="robot/motor" pos="0 0 0" axis="0 0 1" range="-1 0.75" actuatorfrcrange="-2 2"/>
+        <geom name="robot/RM_hip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/RM_hip_link"/>
+        <geom name="robot/RM_hip_link_meshcol" class="robot/collision" type="mesh" contype="17" conaffinity="110" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/RM_hip_link_col"/>
+        <body name="robot/RM_thigh_link" pos="-0.0011 -0.05613 -0.02493">
+          <inertial pos="0.000656869 -0.00954327 0.000506352" quat="0.00212379 0.718028 -0.00258455 0.696006" mass="0.0585194" diaginertia="2.44035e-05 2.29615e-05 6.75132e-06"/>
+          <joint name="robot/RM_J1_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-1.5 2.4" actuatorfrcrange="-2 2"/>
+          <geom name="robot/RM_thigh_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.68 0.7 0.72 1" mesh="robot/RM_thigh_link"/>
+          <geom name="robot/RM_thigh_link_meshcol" class="robot/collision" type="mesh" contype="17" conaffinity="110" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.68 0.7 0.72 1" mesh="robot/RM_thigh_link_col"/>
+          <body name="robot/RM_calf_link" pos="0.0012 -0.05 0">
+            <inertial pos="-0.000397416 -0.023317 0.00254939" quat="-0.00127293 0.729222 0.00416612 0.684264" mass="0.0776801" diaginertia="9.57753e-05 8.841e-05 1.38422e-05"/>
+            <joint name="robot/RM_J2_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-1.8 2.4" actuatorfrcrange="-2 2"/>
+            <geom name="robot/RM_calf_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/RM_calf_link"/>
+            <geom name="robot/RM_calf_link_meshcol" class="robot/collision" type="mesh" contype="17" conaffinity="110" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/RM_calf_link_col"/>
+            <body name="robot/RM_foot_tip_link" pos="-0.000789094 -0.120917 0.00624036">
+              <inertial pos="-9.78347e-07 0.0124584 -0.00405412" quat="0.621297 0.621386 -0.337542 0.337543" mass="0.00637705" diaginertia="6.01734e-07 5.293e-07 3.01174e-07"/>
+              <geom name="robot/RM_foot_tip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/RM_foot_tip_link"/>
+              <geom name="robot/RM_foot_tip_link_meshcol" class="robot/collision" type="mesh" contype="17" conaffinity="110" friction="1.2" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/RM_foot_tip_link"/>
+              <site name="robot/RM" pos="2.7099e-06 0.0104901 -0.00482261" group="4"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="robot/LR_hip_link" pos="-0.065324 0.055501 0.00745">
+        <inertial pos="0.000150754 0.0123573 -0.0100179" quat="0.338767 0.617298 0.631115 0.325383" mass="0.0651491" diaginertia="3.97203e-05 3.91587e-05 1.31776e-05"/>
+        <joint name="robot/LR_J0_joint" class="robot/motor" pos="0 0 0" axis="0 0 1" range="-0.6 2.75" actuatorfrcrange="-2 2"/>
+        <geom name="robot/LR_hip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/LR_hip_link"/>
+        <geom name="robot/LR_hip_link_meshcol" class="robot/collision" type="mesh" contype="33" conaffinity="94" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/LR_hip_link_col"/>
+        <body name="robot/LR_thigh_link" pos="0.0011001 0.05613 -0.02493">
+          <inertial pos="-0.000656851 0.00954327 0.000506352" quat="0.00258521 0.696006 -0.00212443 0.718028" mass="0.0585194" diaginertia="2.44035e-05 2.29615e-05 6.75132e-06"/>
+          <joint name="robot/LR_J1_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-2.4 1.6" actuatorfrcrange="-2 2"/>
+          <geom name="robot/LR_thigh_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.68 0.7 0.72 1" mesh="robot/LR_thigh_link"/>
+          <geom name="robot/LR_thigh_link_meshcol" class="robot/collision" type="mesh" contype="33" conaffinity="94" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.68 0.7 0.72 1" mesh="robot/LR_thigh_link_col"/>
+          <body name="robot/LR_calf_link" pos="-0.00119991 0.05 0">
+            <inertial pos="0.00039746 0.023317 0.00254939" quat="-0.00416545 0.684264 0.0012723 0.729222" mass="0.0776801" diaginertia="9.57753e-05 8.841e-05 1.38422e-05"/>
+            <joint name="robot/LR_J2_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-2.4 1.8" actuatorfrcrange="-2 2"/>
+            <geom name="robot/LR_calf_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/LR_calf_link"/>
+            <geom name="robot/LR_calf_link_meshcol" class="robot/collision" type="mesh" contype="33" conaffinity="94" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/LR_calf_link_col"/>
+            <body name="robot/LR_foot_tip_link" pos="0.000789315 0.120917 0.00624036">
+              <inertial pos="9.54663e-07 -0.0124584 -0.00405412" quat="0.337543 0.337542 -0.621297 0.621386" mass="0.00637705" diaginertia="6.01734e-07 5.293e-07 3.01174e-07"/>
+              <geom name="robot/LR_foot_tip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/LR_foot_tip_link"/>
+              <geom name="robot/LR_foot_tip_link_meshcol" class="robot/collision" type="mesh" contype="33" conaffinity="94" friction="1.2" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/LR_foot_tip_link"/>
+              <site name="robot/LR" pos="-2.74046e-06 -0.0104901 -0.00482261" group="4"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="robot/RR_hip_link" pos="-0.0653239 -0.0554991 0.00745">
+        <inertial pos="-0.000150729 -0.0123573 -0.0100179" quat="0.617298 0.338767 0.325383 0.631115" mass="0.0651491" diaginertia="3.97203e-05 3.91587e-05 1.31776e-05"/>
+        <joint name="robot/RR_J0_joint" class="robot/motor" pos="0 0 0" axis="0 0 1" range="-2.75 0.6" actuatorfrcrange="-2 2"/>
+        <geom name="robot/RR_hip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/RR_hip_link"/>
+        <geom name="robot/RR_hip_link_meshcol" class="robot/collision" type="mesh" contype="65" conaffinity="62" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/RR_hip_link_col"/>
+        <body name="robot/RR_thigh_link" pos="-0.0011 -0.05613 -0.02493">
+          <inertial pos="0.000656869 -0.00954327 0.000506352" quat="0.00212379 0.718028 -0.00258455 0.696006" mass="0.0585194" diaginertia="2.44035e-05 2.29615e-05 6.75132e-06"/>
+          <joint name="robot/RR_J1_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-1.6 2.4" actuatorfrcrange="-2 2"/>
+          <geom name="robot/RR_thigh_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.68 0.7 0.72 1" mesh="robot/RR_thigh_link"/>
+          <geom name="robot/RR_thigh_link_meshcol" class="robot/collision" type="mesh" contype="65" conaffinity="62" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.68 0.7 0.72 1" mesh="robot/RR_thigh_link_col"/>
+          <body name="robot/RR_calf_link" pos="0.0012 -0.05 0">
+            <inertial pos="-0.000397417 -0.023317 0.00254939" quat="-0.00127293 0.729222 0.00416612 0.684264" mass="0.0776801" diaginertia="9.57753e-05 8.841e-05 1.38422e-05"/>
+            <joint name="robot/RR_J2_joint" class="robot/motor" pos="0 0 0" axis="1 0 0" range="-1.8 2.4" actuatorfrcrange="-2 2"/>
+            <geom name="robot/RR_calf_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.85 0.08 0.05 1" mesh="robot/RR_calf_link"/>
+            <geom name="robot/RR_calf_link_meshcol" class="robot/collision" type="mesh" contype="65" conaffinity="62" condim="1" priority="0" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.85 0.08 0.05 1" mesh="robot/RR_calf_link_col"/>
+            <body name="robot/RR_foot_tip_link" pos="-0.000789094 -0.120917 0.00624036">
+              <inertial pos="-9.78347e-07 0.0124584 -0.00405412" quat="0.621297 0.621386 -0.337542 0.337543" mass="0.00637705" diaginertia="6.01734e-07 5.293e-07 3.01174e-07"/>
+              <geom name="robot/RR_foot_tip_link_visual" class="robot/visual" type="mesh" density="0" rgba="0.816 0.82 0.804 1" mesh="robot/RR_foot_tip_link"/>
+              <geom name="robot/RR_foot_tip_link_meshcol" class="robot/collision" type="mesh" contype="65" conaffinity="62" friction="1.2" solref="0.02" solimp="0.8 0.9 0.002" rgba="0.816 0.82 0.804 1" mesh="robot/RR_foot_tip_link"/>
+              <site name="robot/RR" pos="2.7099e-06 0.0104901 -0.00482261" group="4"/>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="robot/LF_J0_joint" joint="robot/LF_J0_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LF_J1_joint" joint="robot/LF_J1_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LF_J2_joint" joint="robot/LF_J2_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LF_J3_joint" joint="robot/LF_J3_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LF_J4_joint" joint="robot/LF_J4_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RF_J0_joint" joint="robot/RF_J0_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RF_J1_joint" joint="robot/RF_J1_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RF_J2_joint" joint="robot/RF_J2_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RF_J3_joint" joint="robot/RF_J3_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RF_J4_joint" joint="robot/RF_J4_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LM_J0_joint" joint="robot/LM_J0_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LM_J1_joint" joint="robot/LM_J1_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LM_J2_joint" joint="robot/LM_J2_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RM_J0_joint" joint="robot/RM_J0_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RM_J1_joint" joint="robot/RM_J1_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RM_J2_joint" joint="robot/RM_J2_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LR_J0_joint" joint="robot/LR_J0_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LR_J1_joint" joint="robot/LR_J1_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/LR_J2_joint" joint="robot/LR_J2_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RR_J0_joint" joint="robot/RR_J0_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RR_J1_joint" joint="robot/RR_J1_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+    <general name="robot/RR_J2_joint" joint="robot/RR_J2_joint" ctrllimited="true" ctrlrange="-1.7464 1.7464" forcelimited="true" forcerange="-1.7464 1.7464"/>
+  </actuator>
+
+  <sensor>
+    <gyro site="robot/imu" name="robot/imu_ang_vel"/>
+    <velocimeter site="robot/imu" name="robot/imu_lin_vel"/>
+    <accelerometer site="robot/imu" name="robot/imu_lin_acc"/>
+    <framezaxis objtype="body" objname="world" reftype="site" refname="robot/imu" name="robot/imu_upvector"/>
+    <subtreeangmom body="robot/base_link" name="robot/root_angmom"/>
+    <contact geom1="robot/LF_palm_pad_b_link_meshcol" body2="terrain" reduce="netforce" name="feet_ground_contact_LF_palm_pad_b_link_meshcol_found"/>
+    <contact geom1="robot/LF_palm_pad_b_link_meshcol" body2="terrain" data="force" reduce="netforce" name="feet_ground_contact_LF_palm_pad_b_link_meshcol_force"/>
+    <contact geom1="robot/RF_palm_pad_b_link_meshcol" body2="terrain" reduce="netforce" name="feet_ground_contact_RF_palm_pad_b_link_meshcol_found"/>
+    <contact geom1="robot/RF_palm_pad_b_link_meshcol" body2="terrain" data="force" reduce="netforce" name="feet_ground_contact_RF_palm_pad_b_link_meshcol_force"/>
+    <contact geom1="robot/LM_foot_tip_link_meshcol" body2="terrain" reduce="netforce" name="feet_ground_contact_LM_foot_tip_link_meshcol_found"/>
+    <contact geom1="robot/LM_foot_tip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="feet_ground_contact_LM_foot_tip_link_meshcol_force"/>
+    <contact geom1="robot/RM_foot_tip_link_meshcol" body2="terrain" reduce="netforce" name="feet_ground_contact_RM_foot_tip_link_meshcol_found"/>
+    <contact geom1="robot/RM_foot_tip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="feet_ground_contact_RM_foot_tip_link_meshcol_force"/>
+    <contact geom1="robot/LR_foot_tip_link_meshcol" body2="terrain" reduce="netforce" name="feet_ground_contact_LR_foot_tip_link_meshcol_found"/>
+    <contact geom1="robot/LR_foot_tip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="feet_ground_contact_LR_foot_tip_link_meshcol_force"/>
+    <contact geom1="robot/RR_foot_tip_link_meshcol" body2="terrain" reduce="netforce" name="feet_ground_contact_RR_foot_tip_link_meshcol_found"/>
+    <contact geom1="robot/RR_foot_tip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="feet_ground_contact_RR_foot_tip_link_meshcol_force"/>
+    <contact subtree1="robot/base_link" subtree2="robot/base_link" name="self_collision_base_link_found"/>
+    <contact subtree1="robot/base_link" subtree2="robot/base_link" data="force" name="self_collision_base_link_force"/>
+    <contact geom1="robot/base_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_base_link_meshcol_force"/>
+    <contact geom1="robot/upper_shell_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_link_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_00_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_00_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_01_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_01_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_02_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_02_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_03_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_03_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_04_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_04_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_05_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_05_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_06_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_06_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_07_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_07_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_08_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_08_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_09_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_09_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_10_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_10_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_11_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_11_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_12_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_12_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_13_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_13_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_14_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_14_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_15_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_15_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_16_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_16_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_17_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_17_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_18_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_18_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_19_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_19_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_20_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_20_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_21_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_21_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_22_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_22_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_23_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_23_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_24_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_24_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_25_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_25_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_26_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_26_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_27_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_27_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_28_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_28_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_29_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_29_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_30_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_30_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_31_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_31_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_32_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_32_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_33_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_33_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_34_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_34_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_35_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_35_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_36_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_36_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_37_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_37_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_38_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_38_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_39_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_39_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_40_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_40_meshcol_force"/>
+    <contact geom1="robot/upper_shell_carapace_41_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_upper_shell_carapace_41_meshcol_force"/>
+    <contact geom1="robot/display_module_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_display_module_link_meshcol_force"/>
+    <contact geom1="robot/tof_sensor_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_tof_sensor_link_meshcol_force"/>
+    <contact geom1="robot/camera_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_camera_link_meshcol_force"/>
+    <contact geom1="robot/LF_shoulder_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_shoulder_link_meshcol_force"/>
+    <contact geom1="robot/LF_upper_arm_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_upper_arm_link_meshcol_force"/>
+    <contact geom1="robot/LF_forearm_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_forearm_link_meshcol_force"/>
+    <contact geom1="robot/LF_palm_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_palm_link_meshcol_force"/>
+    <contact geom1="robot/LF_palm_pad_f_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_palm_pad_f_link_meshcol_force"/>
+    <contact geom1="robot/LF_finger_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_finger_link_meshcol_force"/>
+    <contact geom1="robot/LF_finger_tip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_finger_tip_link_meshcol_force"/>
+    <contact geom1="robot/LF_finger_grip_insert_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_finger_grip_insert_link_meshcol_force"/>
+    <contact geom1="robot/LF_palm_grip_insert_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LF_palm_grip_insert_link_meshcol_force"/>
+    <contact geom1="robot/RF_shoulder_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_shoulder_link_meshcol_force"/>
+    <contact geom1="robot/RF_upper_arm_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_upper_arm_link_meshcol_force"/>
+    <contact geom1="robot/RF_forearm_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_forearm_link_meshcol_force"/>
+    <contact geom1="robot/RF_palm_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_palm_link_meshcol_force"/>
+    <contact geom1="robot/RF_palm_pad_f_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_palm_pad_f_link_meshcol_force"/>
+    <contact geom1="robot/RF_palm_grip_insert_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_palm_grip_insert_link_meshcol_force"/>
+    <contact geom1="robot/RF_finger_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_finger_link_meshcol_force"/>
+    <contact geom1="robot/RF_finger_grip_insert_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_finger_grip_insert_link_meshcol_force"/>
+    <contact geom1="robot/RF_finger_tip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RF_finger_tip_link_meshcol_force"/>
+    <contact geom1="robot/LM_hip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LM_hip_link_meshcol_force"/>
+    <contact geom1="robot/LM_thigh_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LM_thigh_link_meshcol_force"/>
+    <contact geom1="robot/LM_calf_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LM_calf_link_meshcol_force"/>
+    <contact geom1="robot/RM_hip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RM_hip_link_meshcol_force"/>
+    <contact geom1="robot/RM_thigh_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RM_thigh_link_meshcol_force"/>
+    <contact geom1="robot/RM_calf_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RM_calf_link_meshcol_force"/>
+    <contact geom1="robot/LR_hip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LR_hip_link_meshcol_force"/>
+    <contact geom1="robot/LR_thigh_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LR_thigh_link_meshcol_force"/>
+    <contact geom1="robot/LR_calf_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_LR_calf_link_meshcol_force"/>
+    <contact geom1="robot/RR_hip_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RR_hip_link_meshcol_force"/>
+    <contact geom1="robot/RR_thigh_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RR_thigh_link_meshcol_force"/>
+    <contact geom1="robot/RR_calf_link_meshcol" body2="terrain" data="force" reduce="netforce" name="body_ground_contact_RR_calf_link_meshcol_force"/>
+  </sensor>
+
+  <keyframe>
+    <key name="init_state" qpos="0 0 0.10647 1 0 0 0 -0.5507 -1.0658 -0.4408 -1.374 0 0.5524 -1.066 0.4414 1.4173 0 0.0012 0.5356 -1.8271 -0.0012 -0.5376 1.8313 0.6313 0.5534 -1.8648 -0.6326 -0.5548 1.8678" ctrl="-0.5507 -1.0658 -0.4408 -1.374 0 0.5524 -1.066 0.4414 1.4173 0 0.0012 0.5356 -1.8271 -0.0012 -0.5376 1.8313 0.6313 0.5534 -1.8648 -0.6326 -0.5548 1.8678"/>
+  </keyframe>
+</mujoco>
