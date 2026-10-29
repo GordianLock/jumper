@@ -1,0 +1,19 @@
+round 0: rolled 1/48, best turn 360 deg, best score 54.4 (34s)
+round 1: rolled 0/48, best turn 205 deg, best score 21.0 (67s)
+round 2: rolled 1/48, best turn 346 deg, best score 48.9 (99s)
+round 3: rolled 4/48, best turn 345 deg, best score 47.1 (132s)
+round 4: rolled 5/48, best turn 343 deg, best score 46.7 (165s)
+round 5: rolled 6/48, best turn 342 deg, best score 40.2 (198s)
+round 6: rolled 10/48, best turn 335 deg, best score 43.9 (231s)
+round 7: rolled 8/48, best turn 345 deg, best score 42.5 (265s)
+round 8: rolled 8/48, best turn 343 deg, best score 43.3 (300s)
+round 9: rolled 11/48, best turn 333 deg, best score 43.9 (336s)
+round 10: rolled 11/48, best turn 335 deg, best score 43.3 (370s)
+round 11: rolled 8/48, best turn 366 deg, best score 42.6 (407s)
+candidate mean: rolls in 13/48 environments, median turn 284 deg
+candidate best: rolls in 24/48 environments, median turn 353 deg
+candidate elite0: rolls in 14/48 environments, median turn 244 deg
+candidate elite1: rolls in 11/48 environments, median turn 203 deg
+candidate elite2: rolls in 23/48 environments, median turn 332 deg
+saved studies/proto3/plans/env_trial_s1.npy: candidate best, rolls in 24/48
+exit 0

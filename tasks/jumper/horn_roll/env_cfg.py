@@ -7,15 +7,26 @@ it comes from jumper.gentle_momentum_roll, jumper.horned_roll or studies/roll_v2
 
 ## The demonstration
 
-`ref/horn_roll.npz`, recorded in this task's own environment by
-`studies/proto3/record_demo.py` from the keyframe plan
-`studies/proto3/plans/stand_any_impact_s1.npy`: a search on carapace prototype 3 in
-the training physics (`studies/proto3/search.py`, "any direction" from standing,
-carapace impact rather than load charged). In that search it rolled end over end in
-29 of 32 perturbed starts, about the body's y axis (87 deg), landing on the carapace,
-with a median worst floor-contact torque on any joint of 5.6 N*m. The recording
-stores the axis it rolled about (`axis`), and this task measures its turn about that
-axis (`mdp/tracker.py`), so the same code trains a roll about any horizontal axis.
+`ref/horn_roll.npz`, an end-over-end roll (axis 82 deg from the centreline, 361 deg,
+standing again 2.5 s after the first move), recorded in this task's own environment by
+`studies/proto3/record_demo.py` on the nominal robot (no randomised friction, centre of
+mass or encoder bias) from `studies/proto3/plans/env_trial_s1.npy`.
+
+How the plan was found, 2026-10-29: `studies/proto3/search.py` searched prototype 3
+with ideal servos and found `plans/stand_any_impact_s1.npy`; played in this task's
+environment, with the servo curve and thermal limit, it stalled on its back at 205
+deg, as did every plan from that search. `studies/proto3/env_search.py` then refined
+it inside this environment (12 rounds of 48) and kept the candidate that rolled in the
+most randomised environments: 24 of 48. So the demonstration rolls on the nominal robot
+and in about half the randomised ones; training is what has to make it reliable.
+
+**It is a rough roll**: over the recording, limbs 167 N, stock shell 98 N, carapace
+impact 175 N, floor impact 345 N, 0.08 s in the air. It is a guide to the shape of the
+motion, not to its forces; the rewards below are what ask for gentler.
+
+The recording stores the axis it rolled about (`axis`), and this task measures its
+turn about that axis (`mdp/tracker.py`), so the same code trains a roll about any
+horizontal axis.
 
 The guide is jumper.momentum_roll's: fed forward into the action and used as a prior
 on joints and turn, both holding to `PRIOR_HOLD_ITERATIONS` and fading to nothing by
@@ -53,8 +64,7 @@ demonstration; they are judgement, not measurements of hardware limits.
 
 The torque floor contact puts on each joint (J^T f) needs a Jacobian per contact per
 step. Judge a trained policy by it on replay (`studies/proto3/search.py`'s
-`floor_torque`), against KingKong's reference-free jump, 4.8 N*m, and the
-demonstration's 5.6.
+`floor_torque`), against KingKong's reference-free jump, 4.8 N*m.
 """
 
 from __future__ import annotations

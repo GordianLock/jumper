@@ -57,6 +57,10 @@ H.REF_NPZ = tmp
 cfg = tasks.load_env_cfg("jumper.horn_roll", asset=MODEL, play=True)
 cfg.scene.num_envs = 1
 cfg.events.pop("push_robot", None)
+if os.environ.get("NOMINAL"):
+    # The nominal robot: no randomised foot friction, centre of mass or encoder bias.
+    for k in [k for k, e in cfg.events.items() if e.mode == "startup"]:
+        cfg.events.pop(k)
 cfg.terminations.pop("rolled_and_standing", None)
 cfg.episode_length_s = 10.0
 env = ManagerBasedRlEnv(cfg=cfg, device="cpu")
