@@ -16,11 +16,21 @@ side under the face, so the forearms carry it over instead.
 
 ## The demonstration
 
-`ref/tuck_roll.npz`: that policy's own roll, recorded on the nominal robot by
-`studies/proto3/record_policy_demo.py` -- smoother and far gentler than
-jumper.horn_roll's keyframe demonstration. It splays the arms, so the joint prior
-covers the 12 walking-leg joints only (`prior_joint_pos_legs`); the arms are fed the
-demonstration forward but free to leave it, and `tuck` pays them to.
+`ref/tuck_roll.npz`, a hybrid built by `studies/proto3/tuck_hybrid.py`: that
+policy's own roll, recorded on the nominal robot by
+`studies/proto3/record_policy_demo.py` (smoother and far gentler than
+jumper.horn_roll's keyframe demonstration), with only the arms' fed-forward commands
+changed to the tuck from 0.14 to 0.40 s. Its body motion, turn and joint positions are
+the splayed roll's, which completes; the tuck played back open-loop did not (see that
+script). So the joint prior covers the 12 walking-leg joints only
+(`prior_joint_pos_legs`), the arms are pushed toward the tuck while the guide lasts,
+and `tuck` pays them to hold it.
+
+**Mid-demonstration spawns stop at `MAX_SPAWN_TURN` (210 deg).** That policy's right
+arm swings through the shell, base, display and front-right horn at 0.48-0.52 s
+(214-233 deg; up to 4.6 cm deep, measured on the recorded states) -- jumper.horn_roll
+lets legs pass through the body. A spawn there would start with the arm inside the
+body.
 
 ## Arms
 
@@ -46,6 +56,7 @@ be there. Everywhere else the carapace is as jumper.horn_roll has it.
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 
 from mjlab.managers.reward_manager import RewardTermCfg
@@ -67,6 +78,9 @@ ARMS = ("LF", "RF")
 ARM_JOINTS = tuple(j for j in GAIT_JOINTS if j.startswith(ARMS))
 LEG_JOINTS = tuple(j for j in GAIT_JOINTS if not j.startswith(ARMS))
 PALM_BODIES = ("LF_palm_link", "RF_palm_link")
+
+#: Last turn a mid-demonstration spawn may start at (module docstring).
+MAX_SPAWN_TURN = math.radians(210.0)
 
 # ── Tuck ───────────────────────────────────────────────────────────────────────
 TUCK_WEIGHT = 3.0
@@ -210,6 +224,9 @@ def env_cfg(asset: Path | None = None, play: bool = False):
                 "force_threshold": 1.0},
     )
     cfg.rewards = r
+
+    # ── Spawns: none from the recorded states with an arm inside the body ─────
+    cfg.events["reset_momentum"].params["max_spawn_turn"] = MAX_SPAWN_TURN
 
     # The prior's fading curriculum names the term; it is still "prior_joint_pos".
     return cfg
