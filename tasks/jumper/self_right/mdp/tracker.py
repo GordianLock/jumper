@@ -26,7 +26,8 @@ As jumper.horn_roll's tracker (`horn_roll/mdp/tracker.py`): peak force on the li
 shell and on the floor as a whole, impact being the largest rise in force within one
 control step, read from the sensors' 5 ms substeps; and the longest time in the air.
 On the stock robot the shell is what it lies on, so its load is not charged, only how
-sharply it is hit.
+sharply it is hit. And the torque floor contact puts on each driven joint, |J^T f|,
+sampled at every physics step (`common/floor_load.py`), as `peak_load`.
 """
 
 from __future__ import annotations
@@ -36,6 +37,8 @@ from typing import TYPE_CHECKING
 
 import torch
 from mjlab.managers.command_manager import CommandTerm, CommandTermCfg
+
+from ...common.floor_load import FloorJointLoad
 
 if TYPE_CHECKING:
     from mjlab.envs import ManagerBasedRlEnv
@@ -51,6 +54,9 @@ class SelfRightTrackerCfg(CommandTermCfg):
     sensor_sensor: str = "sensor_ground_contact"
     shell_sensor: str = "shell_ground_contact"
     ground_sensor: str = "all_ground_contact"
+    load_sensor: str = "leg_floor_contact"
+    #: The driven joints whose floor-contact torque is tracked (`common/floor_load.py`).
+    load_joints: tuple[str, ...] = ()
 
     def build(self, env: ManagerBasedRlEnv) -> SelfRightTracker:
         return SelfRightTracker(self, env)
@@ -71,8 +77,11 @@ class SelfRightTracker(CommandTerm):
         self.flight, self.longest_flight = z(), z()
         self._last: dict[str, torch.Tensor] = {}
         self._dummy = torch.zeros(n, 1, device=self.device)
+        self.peak_load = z()
+        self.floor_load = FloorJointLoad(env, cfg.load_sensor, cfg.load_joints,
+                                         cfg.entity_name)
         for k in ("up", "rose", "peak_limb_N", "peak_shell_impact_N",
-                  "peak_ground_impact_N", "longest_flight_s"):
+                  "peak_ground_impact_N", "longest_flight_s", "peak_joint_load_Nm"):
             self.metrics[k] = z()
 
     @property
@@ -112,8 +121,10 @@ class SelfRightTracker(CommandTerm):
         self.spawn_up[env_ids] = up
         self.best[env_ids] = up
         for buf in (self.peak_limb, self.peak_sensor, self.peak_shell_impact,
-                    self.peak_ground_impact, self.flight, self.longest_flight):
+                    self.peak_ground_impact, self.flight, self.longest_flight,
+                    self.peak_load):
             buf[env_ids] = 0.0
+        self.floor_load.reset(env_ids)
         for last in self._last.values():
             last[env_ids] = float("inf")             # no rise across the reset
 
@@ -124,6 +135,7 @@ class SelfRightTracker(CommandTerm):
         self.metrics["peak_shell_impact_N"] = self.peak_shell_impact.clone()
         self.metrics["peak_ground_impact_N"] = self.peak_ground_impact.clone()
         self.metrics["longest_flight_s"] = self.longest_flight * self._env.step_dt
+        self.metrics["peak_joint_load_Nm"] = self.peak_load.clone()
 
     def _update_command(self, env_ids: torch.Tensor | None = None) -> None:
         if env_ids is not None:
@@ -148,6 +160,8 @@ class SelfRightTracker(CommandTerm):
         for s in (self.cfg.shell_sensor, self.cfg.ground_sensor):
             h = self._env.scene[s].data.force_history
             self._last[s] = h[:, :, 0].norm(dim=-1).sum(dim=1, keepdim=True)
+        self.peak_load.copy_(torch.maximum(self.peak_load, self.floor_load.worst() * lf))
+        self.floor_load.end_step()
 
 
 __all__ = ["SelfRightTracker", "SelfRightTrackerCfg"]

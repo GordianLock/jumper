@@ -9,7 +9,8 @@
 - `gentle_complete`: on that step, a bonus of which `gentle_floor` is paid for
   standing however hard it went, and the rest scaled by the lowest of five factors
   (limb and sensor force, shell and floor impact, time in the air), each 1 at or
-  below its free level and 0 at its zero level. A bonus a hard landing could take to
+  below its free level and 0 at its zero level; with `load`, the worst floor-contact
+  joint torque is a sixth. A bonus a hard landing could take to
   nothing teaches a policy to stay down; the lowest, not the product, so one bad
   number decides and six good ones are not multiplied away.
 - `finish_home`: once upright, legs near HOME.
@@ -61,6 +62,7 @@ def gentle_complete(env, command_name: str = "roll", gentle_floor: float = 0.5,
                     shell_impact: tuple[float, float] = (50.0, 200.0),
                     ground_impact: tuple[float, float] = (60.0, 250.0),
                     flight: tuple[float, float] = (0.06, 0.20),
+                    load: tuple[float, float] | None = None,
                     **stand) -> torch.Tensor:
     cmd = _cmd(env, command_name)
     done = standing(env, command_name=command_name, **stand).float()
@@ -74,6 +76,9 @@ def gentle_complete(env, command_name: str = "roll", gentle_floor: float = 0.5,
     }
     bands = {"limb": limb, "sensor": sensor, "shell_impact": shell_impact,
              "ground_impact": ground_impact, "flight": flight}
+    if load is not None:
+        worst["load"] = torch.maximum(cmd.peak_load, cmd.floor_load.worst())
+        bands["load"] = load
     g = torch.stack([_factor(worst[k], *bands[k]) for k in bands], dim=1).min(dim=1).values
     return done * (gentle_floor + (1.0 - gentle_floor) * g)
 

@@ -3,8 +3,6 @@
 - `tuck`: while the nose points down, the claws side by side under the face.
 - `front_contact`: per step, floor force on the front of the body over a threshold.
 - `arm_contact`: per step, floor force on the arms over a (higher) threshold.
-- `joint_load`: per step, the worst joint's floor-contact torque |J^T f| over a
-  threshold.
 - `gentle_complete`: jumper.horn_roll's scaled finishing bonus with two more factors,
   the arms' load and the front of the body's.
 """
@@ -54,22 +52,6 @@ def tuck(env, asset_cfg: SceneEntityCfg, min_x: float = 0.12, max_y: float = 0.0
     return k * nose_down(env, min_down).float() * (~cmd.settling).float()
 
 
-def joint_load(env, threshold: float, cap: float = 10.0,
-               command_name: str = "roll") -> torch.Tensor:
-    """Per step: the worst driven joint's floor-contact torque |J^T f| over `threshold`
-    N*m, ((tau - threshold) / threshold)^2, capped."""
-    cmd = _cmd(env, command_name)
-    return _overload(cmd.floor_joint_load().max(dim=1).values, threshold, cap) * \
-        (~cmd.settling).float()
-
-
-def floor_load(env, command_name: str = "roll") -> torch.Tensor:
-    """Metric term, run at every physics step (`per_substep`): folds this physics
-    step's floor-contact joint torque into the tracker's control-step worst, and
-    reports its worst joint, N*m."""
-    return _cmd(env, command_name).substep_joint_load().max(dim=1).values
-
-
 def front_contact(env, threshold: float, cap: float = 10.0,
                   command_name: str = "roll") -> torch.Tensor:
     cmd = _cmd(env, command_name)
@@ -113,11 +95,11 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
              "carapace_impact": carapace_impact, "ground_impact": ground_impact,
              "flight": flight}
     if load is not None:
-        worst["load"] = torch.maximum(cmd.peak_load, cmd.floor_joint_load().max(dim=1).values)
+        worst["load"] = torch.maximum(cmd.peak_load, cmd.floor_load.worst())
         bands["load"] = load
     g = torch.stack([_factor(worst[k], *bands[k]) for k in bands], dim=1).min(dim=1).values
     return done * (gentle_floor + (1.0 - gentle_floor) * g)
 
 
-__all__ = ["arm_contact", "front_contact", "floor_load", "gentle_complete", "joint_load",
+__all__ = ["arm_contact", "front_contact", "gentle_complete",
            "nose_down", "tuck"]

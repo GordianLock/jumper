@@ -50,8 +50,15 @@ its right 0.7 cm, for about 0.1 s of every righting (checked on the replay's joi
 angles). A claw resting on the body is free; leg against leg is charged pair by pair
 (`body_collision.leg_collision_pairs`), as before.
 
-Joint torque (J^T f) is not trained on; judge a trained policy by it on replay,
-against KingKong's reference-free jump, 4.8 N*m.
+## Joint torque from the floor
+
+The first policy, replayed on CPU (2026-10-29; nominal and four randomised robots, 71
+of 71 episodes stood up, claws colliding with the body): floor-contact torque |J^T f|
+on its busiest joint 5.9-7.1 N*m median per robot, 6.6-8.4 worst, nearly always RF_J1
+at about 0.08 s into the move, the right claw's palm and pad pushing off. KingKong's
+reference-free jump: 4.8. So it is charged (`common/floor_load.py`, sampled at every
+physics step): per step over `LOAD_BAND[0]`, and in the finishing bonus, whose gentle
+half is gone at `LOAD_BAND[1]` -- jumper.tuck_roll's band.
 """
 
 from __future__ import annotations
@@ -62,12 +69,14 @@ from pathlib import Path
 from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.envs import mdp as envs_mdp
 from mjlab.managers import TerminationTermCfg
+from mjlab.managers.metrics_manager import MetricsTermCfg
 from mjlab.managers.observation_manager import ObservationTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.tasks.velocity import mdp
 
 from ..common import body_collision as bc
+from ..common import floor_load as fl
 from ..common.constants import FOOT_GEOMS, GAIT_JOINTS
 from ..flourish_roll import env_cfg as flourish
 from ..flourish_roll.mdp import rewards as fr
@@ -103,6 +112,10 @@ AIRBORNE_WEIGHT = -2.0
 STOP_STRIKE_WEIGHT = flourish.STOP_STRIKE_WEIGHT
 TORQUE_STRAIN_WEIGHT = flourish.TORQUE_STRAIN_WEIGHT
 LEG_COLLISION_WEIGHT = -1.0
+#: Floor-contact joint torque |J^T f|, N*m: free up to 4 (under KingKong's 4.8), the
+#: gentle half of the bonus gone at 8 (the first policy's worst was 8.4).
+LOAD_BAND = (4.0, 8.0)
+LOAD_WEIGHT = -2.0
 JOINT_LIMIT_WEIGHT = -1.0
 ACTION_RATE_WEIGHT = -0.01
 
@@ -136,6 +149,7 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
 
     # ── Sensors ───────────────────────────────────────────────────────────────
     cfg.scene.sensors = tuple(cfg.scene.sensors) + pairs + (
+        fl.leg_floor_sensor(DECIMATION),
         _ground("limb_ground_contact", flourish._LEG, exclude=tuple(FOOT_GEOMS)),
         _ground("sensor_ground_contact", flourish.SENSOR_PARTS),
         _ground("shell_ground_contact", SHELL_PARTS, history=DECIMATION),
@@ -143,7 +157,8 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
     )
 
     # ── Command: how upright, and the hardest hits ────────────────────────────
-    cfg.commands = {"roll": sr.tracker.SelfRightTrackerCfg(settle_steps=SETTLE_STEPS)}
+    cfg.commands = {"roll": sr.tracker.SelfRightTrackerCfg(settle_steps=SETTLE_STEPS,
+                                                           load_joints=GAIT_JOINTS)}
     critic = cfg.observations["critic"].terms
     critic.pop("roll_progress", None)
     critic["self_right"] = ObservationTermCfg(func=up_obs, params={"command_name": "roll"})
@@ -163,8 +178,11 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
             func=sr.rewards.gentle_complete, weight=COMPLETE_BONUS / STEP_DT,
             params={**stand, "gentle_floor": GENTLE_FLOOR, "limb": LIMB_BAND,
                     "sensor": SENSOR_BAND, "shell_impact": SHELL_IMPACT_BAND,
-                    "ground_impact": GROUND_IMPACT_BAND, "flight": FLIGHT_BAND},
+                    "ground_impact": GROUND_IMPACT_BAND, "flight": FLIGHT_BAND,
+                    "load": LOAD_BAND},
         ),
+        "joint_load": RewardTermCfg(func=fl.joint_load, weight=LOAD_WEIGHT,
+                                    params={"threshold": LOAD_BAND[0]}),
         "finish_home": RewardTermCfg(func=sr.rewards.finish_home, weight=FINISH_HOME_WEIGHT,
                                      params={"asset_cfg": gait_cfg}),
         "limb_contact": RewardTermCfg(
@@ -192,6 +210,12 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
         "dof_pos_limits": RewardTermCfg(func=mdp.joint_pos_limits, weight=JOINT_LIMIT_WEIGHT),
         "action_rate_l2": RewardTermCfg(func=mdp.action_rate_l2, weight=ACTION_RATE_WEIGHT),
     }
+
+    # ── The joint-load estimate, sampled at every physics step ────────────────
+    # Its own logged value is a per-step mean; read Metrics/roll/peak_joint_load_Nm.
+    cfg.metrics = {**(cfg.metrics or {}),
+                   "floor_load_sampler": MetricsTermCfg(func=fl.floor_load_sampler,
+                                                        per_substep=True, reduce="max")}
 
     # ── Terminations ──────────────────────────────────────────────────────────
     cfg.terminations = {

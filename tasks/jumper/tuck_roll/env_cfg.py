@@ -43,7 +43,7 @@ Floor-contact joint torque rose to 6.4-7.6 N*m on the left claw (horn_roll's pol
 - **The face, not the horns.** `front_force` now covers the stock shell, base and
   sensors only; the carapace, horns included, is as jumper.horn_roll has it.
 - **One claw is enough.** `tuck` pays the better-placed claw (`either`).
-- **Joint torque is charged** (`tracker.floor_joint_load`, `rewards.joint_load`): per
+- **Joint torque is charged** (`common/floor_load.py`): per
   step over `LOAD_BAND[0]`, and in the finishing bonus to nothing at `LOAD_BAND[1]`.
 
 ## The second run, and what changed after it
@@ -55,7 +55,7 @@ Joint torque did not fall: 6.7-7.9 N*m, from two knocks each inside one 20 ms co
 step -- the left palm landing at 0.12-0.14 s, the right claw's finger striking at
 0.42 s. Training's estimate, read once per control step, saw 5.5. So:
 
-- **The estimate is sampled at every 5 ms physics step** (`tracker.substep_joint_load`,
+- **The estimate is sampled at every 5 ms physics step** (`common/floor_load.py`,
   driven by the `floor_load_sampler` metric term inside the decimation loop) and keeps the
   control step's worst; the load sensor keeps four contacts per part, not two. On run
   2's nominal roll it now matches MuJoCo's `mj_mulJacTVec` at the peak (7.25 against
@@ -92,6 +92,7 @@ from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import ContactMatch, ContactSensorCfg
 
 from ..common import body_collision as bc
+from ..common import floor_load as fl
 from ..common.constants import FOOT_GEOMS, GAIT_JOINTS
 from ..horn_roll import env_cfg as horn
 from ..momentum_roll import env_cfg as momentum
@@ -155,14 +156,7 @@ def env_cfg(asset: Path | None = None, play: bool = False):
             secondary=ContactMatch(mode="body", pattern="terrain"),
             fields=("force", "pos"), reduce="maxforce", num_slots=2,
         ),
-        ContactSensorCfg(
-            name="leg_floor_contact",
-            primary=ContactMatch(mode="geom", pattern=r"(LF|RF|LM|RM|LR|RR)_.*_meshcol",
-                                 entity="robot"),
-            secondary=ContactMatch(mode="body", pattern="terrain"),
-            fields=("found", "force", "pos", "normal", "tangent"), global_frame=True,
-            reduce="maxforce", num_slots=4, history_length=DECIMATION,
-        ),
+        fl.leg_floor_sensor(DECIMATION),
     ) + bc.leg_pair_sensors(DECIMATION, FREE_PAIRS)
 
     # ── Command: jumper.horn_roll's tracker, this demonstration, two more worsts ─
@@ -186,7 +180,7 @@ def env_cfg(asset: Path | None = None, play: bool = False):
                 "ground_impact": horn.GROUND_IMPACT_BAND, "flight": horn.FLIGHT_BAND,
                 "load": LOAD_BAND},
     )
-    r["joint_load"] = RewardTermCfg(func=tr.rewards.joint_load, weight=LOAD_WEIGHT,
+    r["joint_load"] = RewardTermCfg(func=fl.joint_load, weight=LOAD_WEIGHT,
                                     params={"threshold": LOAD_BAND[0]})
     r["arm_contact"] = RewardTermCfg(func=tr.rewards.arm_contact, weight=ARM_WEIGHT,
                                      params={"threshold": ARM_BAND[0]})
@@ -210,7 +204,7 @@ def env_cfg(asset: Path | None = None, play: bool = False):
     # The metric's own logged value is a per-step mean of its physics steps; read
     # Metrics/roll/peak_joint_load_Nm (the tracker's episode worst) instead.
     cfg.metrics = {**(cfg.metrics or {}),
-                   "floor_load_sampler": MetricsTermCfg(func=tr.rewards.floor_load,
+                   "floor_load_sampler": MetricsTermCfg(func=fl.floor_load_sampler,
                                                    per_substep=True, reduce="max")}
 
     # ── Spawns: none from the recorded states with the claws overlapping ──────
