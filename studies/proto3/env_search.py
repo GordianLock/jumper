@@ -130,5 +130,18 @@ for it in range(ROUNDS):
         best = (float(s[e[0]]), P[e[0]].copy())
     print(f"round {it}: rolled {ok.sum()}/{POP}, best turn {math.degrees(final[e[0]]):.0f} deg, "
           f"best score {s[e[0]]:.1f} ({time.time() - t0:.0f}s)", flush=True)
-np.save(OUT, best[1])
-print("saved", OUT.relative_to(ROOT))
+# Choose by reliability, not by one lucky run: the environments differ in their
+# randomised foot friction, centre of mass and encoder bias, and each keeps its own
+# for the whole search. Each candidate -- the final mean, the best-scoring plan and the
+# last round's top elites -- is played in every environment; the one that rolls in the
+# most is kept.
+cands = [("mean", mu), ("best", best[1])] + [(f"elite{i}", P[e[i]]) for i in range(3)]
+results = []
+for name, plan in cands:
+    prog, ok, final, up, pk = play(np.repeat(plan[None], POP, 0))
+    results.append((int(ok.sum()), name, plan))
+    print(f"candidate {name}: rolls in {ok.sum()}/{POP} environments, median turn "
+          f"{math.degrees(float(np.median(final))):.0f} deg", flush=True)
+n_ok, name, plan = max(results, key=lambda r: r[0])
+np.save(OUT, plan)
+print(f"saved {OUT.relative_to(ROOT)}: candidate {name}, rolls in {n_ok}/{POP}")
