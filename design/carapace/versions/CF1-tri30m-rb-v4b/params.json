@@ -1,0 +1,149 @@
+{
+  "version": "CF1-tri30m-rb-v4b",
+  "description": "Prototype 4 with the back end of the centre spine smoothed: its root extension ends 24 mm short of the shell's rear edge (was 12 mm) and curves down onto the shell over 60 mm (was 40 mm), easing in and out so it settles onto the shell without a crease. The scallops, which stop where that curve starts, end about 20 mm further forward. Static belly-up rest about 19 deg head-up, 6 deg to either side.",
+  "vox": 0.001,
+  "top_min_z": 0.035,
+  "top_max_slope": 0.6,
+  "dome_rise": 0.0,
+  "bumps": [],
+  "flank_width": 0.032,
+  "flank_depth": 0.05,
+  "flank_power": 2.0,
+  "flank_taper": 1.0,
+  "valley_blend": 0.012,
+  "support_fillet": 0.012,
+  "support_reach": 0.37,
+  "junction_angle_deg": 10.0,
+  "under_flare": 0.008,
+  "base_fillet_radius": 0.015,
+  "tip_round_len": 1.5,
+  "display_gap": 0.002,
+  "edge_round": 0.004,
+  "crests": [
+    {
+      "name": "centre",
+      "a": [
+        -0.03,
+        0.0,
+        0.067
+      ],
+      "b": [
+        0.082,
+        0.0,
+        0.097
+      ],
+      "r": 0.012,
+      "r_tip": 0.012,
+      "rocker": {
+        "back": 0.016,
+        "drop": 0.009,
+        "ax": 0.016,
+        "az": 0.021,
+        "aw": 0.016,
+        "blend": 0.02,
+        "smooth": 0.0025,
+        "smooth_fade": 0.01
+      }
+    },
+    {
+      "name": "front_left",
+      "a": [
+        0.02,
+        0.035,
+        0.062
+      ],
+      "b": [
+        0.0619,
+        0.0629,
+        0.0803
+      ],
+      "r": 0.009,
+      "r_tip": 0.009
+    },
+    {
+      "name": "front_right",
+      "a": [
+        0.02,
+        -0.035,
+        0.062
+      ],
+      "b": [
+        0.0619,
+        -0.0629,
+        0.0803
+      ],
+      "r": 0.009,
+      "r_tip": 0.009
+    }
+  ],
+  "root_dive_len": 0.06,
+  "root_end_margin": 0.024,
+  "spheres": [
+    {
+      "c": [
+        -0.094,
+        0.0385
+      ],
+      "r": 0.009,
+      "submerge": 0.6666666666666666
+    },
+    {
+      "c": [
+        -0.094,
+        -0.0385
+      ],
+      "r": 0.009,
+      "submerge": 0.6666666666666666
+    },
+    {
+      "c": [
+        -0.0681,
+        0.0628
+      ],
+      "r": 0.009,
+      "submerge": 0.6666666666666666
+    },
+    {
+      "c": [
+        -0.0681,
+        -0.0628
+      ],
+      "r": 0.009,
+      "submerge": 0.6666666666666666
+    },
+    {
+      "c": [
+        -0.0328,
+        0.067
+      ],
+      "r": 0.009,
+      "submerge": 0.6666666666666666
+    },
+    {
+      "c": [
+        -0.0328,
+        -0.067
+      ],
+      "r": 0.009,
+      "submerge": 0.6666666666666666
+    }
+  ],
+  "scallops": [
+    {
+      "horn": "centre",
+      "mode": "side",
+      "count": 5
+    },
+    {
+      "horn": "centre",
+      "mode": "top",
+      "count": 2,
+      "shift": 0.01,
+      "extend_front": 0.01,
+      "depth": 0.012
+    }
+  ],
+  "scallop_blend": 0.003,
+  "scallop_ridge_blend": 0.008,
+  "root_dive_shape": "ease"
+}
