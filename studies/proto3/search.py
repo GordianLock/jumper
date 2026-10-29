@@ -34,7 +34,9 @@ fixed 50 Hz schedule (`SCHED`), HOME from 2.0 s to 3.5 s.
 - `stand`: settled standing 1 s; needs a full turn.
 
 Rolls are named by body axis: `side` (the centreline, x), `flip` (end over end, y),
-`diag` (right shoulder to left rear hip, as in the horn study).
+`diag` (right shoulder to left rear hip, as in the horn study), or `any`: whichever
+horizontal body axis the roll turns about, measured per rollout (`axes_for`); turning
+about the vertical, spinning, is off-axis in every mode.
 
 ## Turn
 
@@ -78,7 +80,10 @@ CARAPACE_CONDIM = 3
 CARAPACE_FRICTION = [0.6, 0.005, 0.0001]
 
 AXES = {"side": np.array([1.0, 0.0, 0.0]), "flip": np.array([0.0, 1.0, 0.0]),
-        "diag": np.array([-0.116, 0.117, 0.0]) / np.hypot(0.116, 0.117)}
+        "diag": np.array([-0.116, 0.117, 0.0]) / np.hypot(0.116, 0.117),
+        #: Any horizontal body axis: each rollout is measured about the axis it turned
+        #: about (`axes_for`); only turning about the vertical (spinning) is off-axis.
+        "any": None}
 NEED = {"belly": np.pi, "stand": 2 * np.pi}
 
 #: Carapace pieces by region, from assets/jumper/jumper_CF1-tri30m-rb-v3.xml and its
@@ -201,26 +206,55 @@ def up_of(q):
     return 1 - 2 * (x * x + y * y)
 
 
-def turn(states, m, axis):
-    """Per physics step, the accumulated turn about `axis` (body frame), rad."""
-    w = states[:, :, 1 + m.nq + 3:1 + m.nq + 6]
-    return np.cumsum(w @ axis, axis=1) * m.opt.timestep
+def _omega(states, m):
+    return states[:, :, 1 + m.nq + 3:1 + m.nq + 6]        # free joint: body-frame rad/s
 
 
-def axis_error_deg(states, m, axis, up):
-    """Angle between the body-frame rotation accumulated mid-roll and the axis."""
-    w = states[:, :, 1 + m.nq + 3:1 + m.nq + 6]
+def axes_for(states, m, axis, up):
+    """The axis each rollout is measured about, (n, 3). A fixed roll uses its own axis.
+    "any" uses the horizontal part (body x-y) of the rotation accumulated mid-roll (body
+    between belly-up and upright), or over the whole rollout when there is too little of
+    that to say: the axis the body actually rolled about, with spin left out."""
+    n = states.shape[0]
+    if axis is not None:
+        return np.broadcast_to(axis, (n, 3))
+    w = _omega(states, m)
+    mid = ((up > -0.9) & (up < 0.9))[..., None]
+    th_mid = (w * mid).sum(1) * m.opt.timestep
+    th_all = w.sum(1) * m.opt.timestep
+    th = np.where(np.linalg.norm(th_mid[:, :2], axis=1, keepdims=True) > 0.3, th_mid, th_all)
+    h = th.copy()
+    h[:, 2] = 0.0
+    nrm = np.linalg.norm(h, axis=1, keepdims=True)
+    return np.where(nrm > 1e-6, h / np.maximum(nrm, 1e-6), np.array([1.0, 0.0, 0.0]))
+
+
+def turn(states, m, axes):
+    """Per physics step, the accumulated turn about each rollout's axis (body frame), rad."""
+    return np.cumsum((_omega(states, m) * axes[:, None, :]).sum(-1), axis=1) * m.opt.timestep
+
+
+def axis_deg(axes):
+    """Direction of each axis in the body's x-y plane, degrees: 0 the centreline (side
+    roll), +-90 end over end, about +-45 or +-135 a diagonal."""
+    return np.degrees(np.arctan2(axes[:, 1], axes[:, 0]))
+
+
+def axis_error_deg(states, m, axes, up):
+    """Angle between the body-frame rotation accumulated mid-roll and each axis."""
+    w = _omega(states, m)
     mid = ((up > -0.9) & (up < 0.9))[..., None]
     th = (w * mid).sum(1) * m.opt.timestep
-    a = np.abs(th @ axis) / (np.linalg.norm(th, axis=1) + 1e-6)
+    a = np.abs((th * axes).sum(1)) / (np.linalg.norm(th, axis=1) + 1e-6)
     return np.degrees(np.arccos(np.clip(a, 0, 1)))
 
 
 def judge(states, m, axis, need):
-    """Progress, success, final turn and time to upright for each rollout."""
+    """Progress, success, final turn, time to upright, body-up and the axes used."""
     q = states[:, :, 1:1 + m.nq]
     up = up_of(q)
-    cum = turn(states, m, axis)
+    axes = axes_for(states, m, axis, up)
+    cum = turn(states, m, axes)
     sign = np.where(cum.max(1) >= -cum.min(1), 1.0, -1.0)
     signed = cum * sign[:, None]
     prog = np.clip(signed.max(1), 0, need)
@@ -228,7 +262,7 @@ def judge(states, m, axis, need):
     ok = (signed[:, -1] >= need - TURN_TOL) & (up[:, tail].min(1) > 0.9)
     t_up = np.where(ok, np.argmax((signed >= need - TURN_TOL) & (up > 0.9), axis=1)
                     * m.opt.timestep, np.nan)
-    return prog, ok, signed[:, -1], t_up, up
+    return prog, ok, signed[:, -1], t_up, up, axes
 
 
 def groups_of(m):
@@ -283,11 +317,11 @@ def floor_torque(m, d, start, u, dofs, floor):
 
 
 def score(states, sens, m, axis, need, pen):
-    prog, ok, _, _, up = judge(states, m, axis, need)
+    prog, ok, _, _, up, axes = judge(states, m, axis, need)
     q = states[:, :, 1:1 + m.nq]
     tail = slice(-30 * SUB, None)
     stand = np.exp(-((q[:, tail, 2].mean(1) - C.STAND_Z) / 0.03) ** 2)
-    on_axis = np.exp(-(axis_error_deg(states, m, axis, up) / 15.0) ** 2)
+    on_axis = np.exp(-(axis_error_deg(states, m, axes, up) / 15.0) ** 2)
     sc = 5 * prog + on_axis * (20 * ok + 3 * stand * (up[:, tail].min(1) > 0.9))
     for k, pk in peaks(sens, m).items():
         if k in COST:
@@ -351,8 +385,9 @@ def evaluate(m, d, plan, start, roll, seed, n=32):
     u = controls(plan[None], home, lo, hi, drive, (hi - lo) / 2)[0]
     st, se = rollout.rollout(m, [mujoco.MjData(m) for _ in range(2)], starts,
                              np.repeat(u[None], n, 0))
-    _, ok, final, t_up, up = judge(st, m, axis, need)
-    err = axis_error_deg(st, m, axis, up)
+    _, ok, final, t_up, up, axes = judge(st, m, axis, need)
+    err = axis_error_deg(st, m, axes, up)
+    direction = axis_deg(axes)
     pk = peaks(se, m)
     dofs = [m.jnt_dofadr[m.joint("robot/" + nm).id] for nm in names]
     floor = m.geom("terrain").id
@@ -361,12 +396,14 @@ def evaluate(m, d, plan, start, roll, seed, n=32):
     info = {"start": start, "roll": roll, "seed": seed, "success": int(ok.sum()),
             "turn_deg_median": float(np.degrees(np.median(final))),
             "axis_error_deg_median": float(np.median(err)),
+            "axis_direction_deg": [round(float(a), 1) for a in direction],
             "t_upright_median": float(np.nanmedian(t_up)) if ok.any() else None,
             "joint_torque_median": float(np.median(jt[sel])),
             "joint_torque_p90": float(np.percentile(jt[sel], 90)),
             "peak_median": {k: float(np.median(v[sel])) for k, v in pk.items()}}
     print(f"{start} {roll} seed {seed}: rolls {ok.sum()}/{n}, turn {info['turn_deg_median']:.0f} deg, "
-          f"axis error {info['axis_error_deg_median']:.0f} deg, upright at "
+          f"axis error {info['axis_error_deg_median']:.0f} deg, axis direction median "
+          f"{np.median(direction[sel]):.0f} deg, upright at "
           f"{info['t_upright_median']} s | joint torque median {info['joint_torque_median']:.1f} "
           f"p90 {info['joint_torque_p90']:.1f} N*m | median peaks: "
           + " ".join(f"{k} {v:.2f}" if k == "flight" else f"{k} {v:.0f}"
