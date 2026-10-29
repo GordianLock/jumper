@@ -49,9 +49,10 @@ measure is checked against the picture before any result is believed.
 
 ## Gentle
 
-As jumper.horned_roll: the stock shell and base from 30 N, the hardest carapace
-**region** from 80 N at half the shell's cost (`REGIONS`), the total floor force from
-100 N, the longest flight from 0.06 s, limbs from 20 N, sensors from 2 N; and the worst
+The stock shell and base from 30 N, limbs from 20 N, sensors from 2 N (peak force);
+the hardest carapace **region**'s **impact** from 50 N and the whole floor's impact
+from 60 N, impact being the sharpest rise in force within 20 ms (`rise`), so load the
+horns carry as pivots is not charged; the longest flight from 0.06 s; and the worst
 floor-contact torque on any joint (J^T f, computed for every plan of every round) from
 `TORQUE_FREE`. Costs phase in from round 10 to 30 (the horn study's scheme).
 
@@ -107,10 +108,20 @@ REGIONS = {
 _REGION_OF = {i: r for r, ids in REGIONS.items() for i in ids}
 
 FEET = set(C.FOOT_GEOMS)
-FREE = {"limbs": 20.0, "sensors": 2.0, "shell": 30.0, "carapace": 80.0, "ground": 100.0,
-        "flight": 0.06}
-COST = {"limbs": 0.08, "sensors": 0.5, "shell": 0.04, "carapace": 0.02, "ground": 0.04,
-        "flight": 40.0}
+#: Charged: plain peak force on the limbs, sensors and stock shell (any real force
+#: there is unwanted); **impact**, not load, on the carapace and on the floor as a
+#: whole. The carapace's horns, supports and bumpers are built to bear load and to be
+#: pivoted on, so a load that builds up as the robot leans and pushes is free; what
+#: is charged is how sharply force arrives (`IMPACT_WINDOW`). "carapace_impact" is the
+#: hardest region's, "ground_impact" every part's summed. The impact levels are first
+#: guesses, set by scale: the robot weighs 25.8 N.
+FREE = {"limbs": 20.0, "sensors": 2.0, "shell": 30.0, "carapace_impact": 50.0,
+        "ground_impact": 60.0, "flight": 0.06}
+COST = {"limbs": 0.08, "sensors": 0.5, "shell": 0.04, "carapace_impact": 0.03,
+        "ground_impact": 0.04, "flight": 40.0}
+#: Impact is the largest rise in force within this many physics steps: 4 x 5 ms, one
+#: control step. A slam rises within it; leaning the weight onto a horn does not.
+IMPACT_WINDOW = 4
 #: Worst floor-contact torque on any joint: free to 4.8 N*m (KingKong's reference-free
 #: jump, measured in the first session with baseline_loads.py), 3 per N*m above.
 TORQUE_FREE = 4.8
@@ -286,6 +297,17 @@ def groups_of(m):
     return g
 
 
+def rise(f, w=IMPACT_WINDOW):
+    """Largest increase of force `f` (time on axis 1) within `w` steps: for each step,
+    the force minus the least force of the `w` steps before it; the maximum over time.
+    Extra trailing axes (regions) are kept."""
+    lo = f.copy()
+    for k in range(1, w + 1):
+        shifted = np.concatenate([np.repeat(f[:, :1], k, axis=1), f[:, :-k]], axis=1)
+        lo = np.minimum(lo, shifted)
+    return (f - lo).max(1)
+
+
 def peaks(sens, m):
     per = {k: np.stack([np.linalg.norm(sens[..., a:a + 3], axis=-1) for a in adrs], -1).sum(-1)
            for k, adrs in groups_of(m).items()}
@@ -293,8 +315,11 @@ def peaks(sens, m):
     total = sum(per.values())
     regions = [v for k, v in per.items() if k.startswith("carapace:")]
     out = {k: per.get(k, zero).max(-1) for k in ("limbs", "sensors", "shell", "feet")}
-    out["carapace"] = np.max(np.stack(regions, -1), -1).max(-1)
+    car = np.stack(regions, -1)
+    out["carapace"] = car.max(-1).max(-1)                      # peak load, reported
+    out["carapace_impact"] = rise(car).max(-1)                  # hardest region's impact
     out["ground"] = total.max(-1)
+    out["ground_impact"] = rise(total)
     air = total < 0.5
     run = np.zeros(air.shape[:-1])
     longest = np.zeros(air.shape[:-1])
