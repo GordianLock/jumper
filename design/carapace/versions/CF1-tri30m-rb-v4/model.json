@@ -1,0 +1,17 @@
+{
+  "model": "assets/jumper/jumper_CF1-tri30m-rb-v4.xml",
+  "collision_pieces": 48,
+  "hull_volume_cm3": 182.1,
+  "carapace_volume_cm3": 120.8,
+  "carapace_mass_g": 74,
+  "upper_shell_mass_g": [
+    102.4,
+    176.4
+  ],
+  "robot_mass_kg": [
+    2.543,
+    2.617
+  ],
+  "printable": "design/carapace/versions/CF1-tri30m-rb-v4/printable_top_shell.3mf",
+  "printable_watertight": true
+}
