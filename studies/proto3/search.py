@@ -122,6 +122,9 @@ COST = {"limbs": 0.08, "sensors": 0.5, "shell": 0.04, "carapace_impact": 0.03,
 #: Impact is the largest rise in force within this many physics steps: 4 x 5 ms, one
 #: control step. A slam rises within it; leaning the weight onto a horn does not.
 IMPACT_WINDOW = 4
+#: Suffix for a run's plan and log names (RUN_TAG in the environment), so a new run
+#: does not overwrite an earlier one's plans.
+RUN_TAG = os.environ.get("RUN_TAG", "")
 #: Worst floor-contact torque on any joint: free to 4.8 N*m (KingKong's reference-free
 #: jump, measured in the first session with baseline_loads.py), 3 per N*m above.
 TORQUE_FREE = 4.8
@@ -380,7 +383,7 @@ def search(start, roll, seed, iters=50, pop=96, elite=12):
     dofs = [m.jnt_dofadr[m.joint("robot/" + n).id] for n in names]
     floor = m.geom("terrain").id
     best, t0 = (-1e9, None), time.time()
-    tag = f"{start}_{roll}_s{seed}"
+    tag = f"{start}_{roll}{RUN_TAG}_s{seed}"
     for it in range(iters):
         P = np.clip(mu + sd * rng.standard_normal((pop, K, nd)), -1.5, 1.5)
         P[0] = mu
@@ -451,5 +454,5 @@ def evaluate(m, d, plan, start, roll, seed, n=32):
 if __name__ == "__main__":
     start, roll, seeds = sys.argv[1], sys.argv[2], [int(s) for s in sys.argv[3:]] or [1, 2, 3]
     out = [search(start, roll, s) for s in seeds]
-    json.dump(out, open(HERE + f"logs/search_{start}_{roll}_s{'_'.join(map(str, seeds))}.json",
+    json.dump(out, open(HERE + f"logs/search_{start}_{roll}{RUN_TAG}_s{'_'.join(map(str, seeds))}.json",
                         "w"), indent=1)
