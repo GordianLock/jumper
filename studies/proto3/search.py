@@ -36,7 +36,8 @@ fixed 50 Hz schedule (`SCHED`), HOME from 2.0 s to 3.5 s.
 Rolls are named by body axis: `side` (the centreline, x), `flip` (end over end, y),
 `diag` (right shoulder to left rear hip, as in the horn study), or `any`: whichever
 horizontal body axis the roll turns about, measured per rollout (`axes_for`); turning
-about the vertical, spinning, is off-axis in every mode.
+about the vertical, spinning, is off-axis in every mode. `diagonal` accepts either
+diagonal, whichever each rollout's mid-roll rotation is closer to.
 
 ## Turn
 
@@ -83,7 +84,11 @@ AXES = {"side": np.array([1.0, 0.0, 0.0]), "flip": np.array([0.0, 1.0, 0.0]),
         "diag": np.array([-0.116, 0.117, 0.0]) / np.hypot(0.116, 0.117),
         #: Any horizontal body axis: each rollout is measured about the axis it turned
         #: about (`axes_for`); only turning about the vertical (spinning) is off-axis.
-        "any": None}
+        "any": None,
+        #: Either diagonal: right shoulder to left rear hip, or its mirror. Each rollout
+        #: is measured about whichever of the two its mid-roll rotation is closer to.
+        "diagonal": "either"}
+_DIAGS = np.array([[-0.116, 0.117, 0.0], [-0.116, -0.117, 0.0]]) / np.hypot(0.116, 0.117)
 NEED = {"belly": np.pi, "stand": 2 * np.pi}
 
 #: Carapace pieces by region, from assets/jumper/jumper_CF1-tri30m-rb-v3.xml and its
@@ -216,6 +221,13 @@ def axes_for(states, m, axis, up):
     between belly-up and upright), or over the whole rollout when there is too little of
     that to say: the axis the body actually rolled about, with spin left out."""
     n = states.shape[0]
+    if isinstance(axis, str):                          # "either" diagonal
+        w = _omega(states, m)
+        mid = ((up > -0.9) & (up < 0.9))[..., None]
+        th = np.where(((w * mid).sum(1)[:, :2] ** 2).sum(1, keepdims=True) > 0.09,
+                      (w * mid).sum(1), w.sum(1)) * m.opt.timestep
+        pick = np.abs(th @ _DIAGS.T).argmax(1)
+        return _DIAGS[pick]
     if axis is not None:
         return np.broadcast_to(axis, (n, 3))
     w = _omega(states, m)
