@@ -25,19 +25,30 @@ p.add_argument("rec")
 p.add_argument("out")
 p.add_argument("--speed", type=float, default=0.5)
 p.add_argument("--fps", type=int, default=30)
+p.add_argument("--model", default=None,
+               help="carapace model name (e.g. CF1-tri30m-rb-v4); default: the search scene's")
 a = p.parse_args()
 import mediapy  # noqa: E402
 from PIL import Image, ImageDraw  # noqa: E402
 
 h = np.load(a.rec)
 names = [str(n) for n in h["joint_names"]]
-m = S.build()
+if a.model:
+    spec = mujoco.MjSpec.from_file(os.path.join(HERE, "..", "..", "assets", "jumper",
+                                                f"jumper_{a.model}.xml"))
+    spec.worldbody.add_geom(name="floor", type=mujoco.mjtGeom.mjGEOM_PLANE, size=[5, 5, 0.1],
+                            rgba=[0.25, 0.35, 0.5, 1])
+    spec.worldbody.add_light(pos=[0, 0, 3], dir=[0, 0, -1], diffuse=[0.8, 0.8, 0.8])
+    m = spec.compile()
+else:
+    m = S.build()
 W, H = 480, 400
 m.vis.global_.offwidth = max(m.vis.global_.offwidth, 2 * W)
 m.vis.global_.offheight = max(m.vis.global_.offheight, H)
 d = mujoco.MjData(m)
-adr = [m.jnt_qposadr[m.joint("robot/" + n).id] for n in names]
-root = m.jnt_qposadr[m.joint("robot/floating_base").id]
+pre = "robot/" if mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_JOINT, "robot/" + names[0]) >= 0 else ""
+adr = [m.jnt_qposadr[m.joint(pre + n).id] for n in names]
+root = m.jnt_qposadr[[j for j in range(m.njnt) if m.jnt_type[j] == mujoco.mjtJoint.mjJNT_FREE][0]]
 dt = float(h["dt"])
 T = len(h["q"])
 r = mujoco.Renderer(m, H, W)

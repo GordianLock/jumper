@@ -4,7 +4,8 @@ jumper.momentum_roll's reference format plus the axis it rolled about.
 
     python studies/proto3/record_demo.py plans/stand_any_impact_s1.npy
 
-`TASK` (default jumper.horn_roll) picks the environment, `MODEL` the carapace
+`TASK` (default jumper.horn_roll) picks the environment, `KEEP_INCOMPLETE=1` writes a
+recording that does not complete (to look at, not to train from), `MODEL` the carapace
 (default CF1-tri30m-rb-v3), `OUT` the file written.
 
 The plan is played from standing at HOME with nothing else acting: the feedforward
@@ -135,9 +136,9 @@ print(f"hardest hits over the recording: limbs {float(cmd.peak_limb):.0f} N, sto
 if hasattr(cmd, "peak_load"):
     print(f"face {float(cmd.peak_front):.0f} N, worst floor-contact joint torque "
           f"{float(cmd.peak_load):.2f} N*m")
-if not done.any():
-    sys.exit("the plan does not complete the roll in jumper.horn_roll's environment; "
-             "nothing written")
+if not done.any() and not os.environ.get("KEEP_INCOMPLETE"):
+    sys.exit("the plan does not complete the roll in this environment; nothing written "
+             "(KEEP_INCOMPLETE=1 writes it anyway, to look at, never to train from)")
 OUT.parent.mkdir(parents=True, exist_ok=True)
 np.savez(OUT, dt=np.float32(dt), joint_names=np.array(names), total=total.astype(np.float32),
          axis=axis.astype(np.float32), source=str(PLAN.relative_to(ROOT)), **rec)
