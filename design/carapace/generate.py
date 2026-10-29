@@ -537,6 +537,37 @@ def build(P):
             sdf = smax(sdf, -inside_box, P["edge_round"])
             sdf = np.maximum(sdf, floor)
 
+    # ---- where a horn's root extension ends near the shell's edge, the steep faces left just
+    # inside the edge (the blend's skirt around the spine, cut off at the edge of the shell's
+    # top) are eased (`tail_ramp` on the horn): the carapace's height above the shell may rise
+    # no faster than `slope` per unit of distance in from the edge, from `start` in. Only
+    # behind the spine's end, within `half_width` of the horn's centre line, and faded out
+    # within `fade` toward the centre line (unchanged inside `keep_point`, where the end comes
+    # to a point that is kept); joined to the surface with a `blend`. ----
+    def sstep(s):
+        s = np.clip(s, 0, 1)
+        return s * s * (3 - 2 * s)
+
+    for c in P["crests"]:
+        tr = c.get("tail_ramp")
+        if not tr:
+            continue
+        f = horn_frame(c)
+        a, b = np.asarray(c["a"], float), np.asarray(c["b"], float)
+        hd = (b - a)[:2] / np.linalg.norm((b - a)[:2])
+        u2 = (X2 - b[0]) * hd[0] + (Y2 - b[1]) * hd[1]
+        w2 = np.abs(-(X2 - b[0]) * hd[1] + (Y2 - b[1]) * hd[0])
+        kp, hw, fd = tr.get("keep_point", 0.0015), tr.get("half_width", 0.016), tr.get("fade", 0.002)
+        q = (sstep((w2 - kp) / fd) * sstep((hw - w2) / fd)
+             * sstep((f["u_end"] + tr.get("u_from", 0.0) - u2) / fd))
+        q = np.where(np.isnan(Zs), 0.0, q)
+        allow = (np.where(np.isnan(Zs), 0.0, Zs)
+                 + tr.get("slope", 0.35) * np.maximum(ed - tr.get("start", 0.0015), 0)
+                 + (1 - q) * 0.004)
+        sdf = np.where((q > 0)[:, :, None],
+                       smax(sdf, Z - allow[:, :, None], tr.get("blend", 0.0015)), sdf)
+        del u2, w2, q, allow
+
     # ---- mesh ----
     sdf[[0, -1], :, :] = sdf[:, [0, -1], :] = v
     sdf[:, :, [0, -1]] = v

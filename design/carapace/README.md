@@ -15,10 +15,11 @@ for roll training. `HANDOFF.md` is the design brief; this file is how to use wha
 | `CF1-tri30m-rb-v3b` | Prototype 3 with the front corner horns lowered from 28° to 20° (roots and tip x/y unchanged; tips 80.3 mm high, 53.6 mm long). One belly-up rest pose, ≈24° head-up. | `assets/jumper/jumper_CF1-tri30m-rb-v3b.xml` |
 | `CF1-tri30m-rb-v4` | Fourth prototype, from 3b: centre horn lowered to 15° with its ball tip and support replaced by a rounded rocker (an ellipsoid blended into the horn and shell) for head-first rolls; spine scalloped (five side scoops per wall, two 12 mm top scallops). Typical print ≈74 g. Belly-up it rests ≈18° head-up, tipped ≈8° to either side. | `assets/jumper/jumper_CF1-tri30m-rb-v4.xml` |
 | `CF1-tri30m-rb-v4b` | Prototype 4 with the back end of the centre spine smoothed: it ends 24 mm short of the shell's rear edge and curves down onto the shell over 60 mm, easing in and out (`root_dive_shape: "ease"`), so it settles onto the shell without a crease; the scallops end about 20 mm further forward. Typical print ≈72 g. Belly-up it rests ≈19° head-up, tipped ≈6° to either side. | `assets/jumper/jumper_CF1-tri30m-rb-v4b.xml` |
+| `CF1-tri30m-rb-v4c` | Prototype 4 with only the steep faces at the back end of the centre spine eased (`tail_ramp`): either side of the end's point the carapace rises from the shell at no more than 0.35 per unit distance in from the edge; the point and the top behind are unchanged. Typical print ≈74 g. Belly-up it rests ≈18° head-up, tipped ≈8° to either side. | `assets/jumper/jumper_CF1-tri30m-rb-v4c.xml` |
 
 Body-only centre of mass (body, top shell, display, sensors and carapace; no limbs), resting
 on its underside / on its back: stock 2.9 / 3.8 cm, `CF1-tri30m-rb-v3` and `-v3b` 3.3 / 6.2 cm,
-`CF1-tri30m-rb-v4` 3.2 / 6.1 cm, `-v4b` 3.2 / 6.0 cm.
+`CF1-tri30m-rb-v4` 3.2 / 6.1 cm, `-v4b` 3.2 / 6.0 cm, `-v4c` 3.2 / 6.1 cm.
 
 The rest poses are static, not simulated: the stable faces of the convex hull of the training
 model's collision geometry (legs at `HOME`), tested against its centre of mass. The same
