@@ -100,6 +100,8 @@ NOT_LOCOMOTION = {
     # jumper.momentum_roll on a horned carapace, about its demonstration's own axis:
     # one-shot, no command, symmetry off, carapace contact by impact.
     "jumper.horn_roll",
+    # Self-righting from on its back, paid for rising, not turning: one-shot.
+    "jumper.self_right",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of
     # its own, symmetry off, and a reward ladder for a manipulation job.
