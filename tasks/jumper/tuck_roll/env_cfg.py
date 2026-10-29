@@ -16,19 +16,19 @@ side under the face, so the forearms carry it over instead.
 
 ## The demonstration
 
-`ref/tuck_roll.npz`: the first run's own roll (see below), recorded on the nominal
+`ref/tuck_roll.npz`: the second run's own roll (see below), recorded on the nominal
 robot in this environment by `studies/proto3/record_policy_demo.py`
-(`plans/tuck_roll_run1_model_2499.npz`): over the nose on its claws, the face off the
-floor, nothing inside anything -- a roll that completes and fits together, arms
-included. So the joint prior covers all 20 driven joints again.
+(`plans/tuck_roll_run2_model_2499.npz`; the policy itself is backed up in
+`studies/proto3/policies/tuck_roll_run2/`). Over the nose on its claws, the face off
+the floor, no arm inside the body or the other arm by more than 3 mm in any recorded
+pose, so mid-demonstration spawns go to jumper.momentum_roll's usual 290 deg. The joint
+prior covers all 20 driven joints.
 
-**Mid-demonstration spawns stop at `MAX_SPAWN_TURN` (270 deg).** At 274-305 deg
-(frames 30-33) the claws press into each other up to 1.8 cm (measured on the recorded
-states); a spawn there would start with them overlapping.
-
-The first run trained on a hybrid (`studies/proto3/tuck_hybrid.py`): jumper.horn_roll's
-policy's roll with only the fed-forward arm commands changed to the tuck, spawns
-stopped at 210 deg because that policy's right arm swings through the body.
+Earlier demonstrations: run 2 trained on run 1's roll (`plans/tuck_roll_run1_model_2499.npz`,
+spawns stopped at 270 deg where its claws pressed 1.8 cm into each other); run 1 on a
+hybrid (`studies/proto3/tuck_hybrid.py`), jumper.horn_roll's policy's roll with only
+the fed-forward arm commands changed to the tuck, spawns stopped at 210 deg because that
+policy's right arm swings through the body.
 
 ## The first run, and what changed after it
 
@@ -45,6 +45,21 @@ Floor-contact joint torque rose to 6.4-7.6 N*m on the left claw (horn_roll's pol
 - **One claw is enough.** `tuck` pays the better-placed claw (`either`).
 - **Joint torque is charged** (`tracker.floor_joint_load`, `rewards.joint_load`): per
   step over `LOAD_BAND[0]`, and in the finishing bonus to nothing at `LOAD_BAND[1]`.
+
+## The second run, and what changed after it
+
+Colab, 2500 iterations, revision 46d0de9 (2026-10-29). Replayed on CPU (nominal and
+four randomised robots): 55 of 55 rolls in 0.84-0.88 s; no floor force on the face on
+any robot; floor impact 85-137 N, carapace impact 71-121 N (run 1: 119-180, 98-180).
+Joint torque did not fall: 6.7-7.9 N*m, from two knocks each inside one 20 ms control
+step -- the left palm landing at 0.12-0.14 s, the right claw's finger striking at
+0.42 s. Training's estimate, read once per control step, saw 5.5. So:
+
+- **The estimate is sampled at every 5 ms physics step** (`tracker.substep_joint_load`,
+  driven by the `floor_load_sampler` metric term inside the decimation loop) and keeps the
+  control step's worst; the load sensor keeps four contacts per part, not two. On run
+  2's nominal roll it now matches MuJoCo's `mj_mulJacTVec` at the peak (7.25 against
+  7.25 N*m, same joint) and step by step (correlation 0.97; 0.67 before).
 
 ## Arms
 
@@ -71,6 +86,7 @@ from __future__ import annotations
 import math
 from pathlib import Path
 
+from mjlab.managers.metrics_manager import MetricsTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import ContactMatch, ContactSensorCfg
@@ -89,8 +105,9 @@ ARMS = bc.ARMS
 ARM_JOINTS = tuple(j for j in GAIT_JOINTS if j.startswith(ARMS))
 PALM_BODIES = ("LF_palm_link", "RF_palm_link")
 
-#: Last turn a mid-demonstration spawn may start at (module docstring).
-MAX_SPAWN_TURN = math.radians(270.0)
+#: Last turn a mid-demonstration spawn may start at (module docstring):
+#: jumper.momentum_roll's, stated here because earlier demonstrations needed less.
+MAX_SPAWN_TURN = math.radians(290.0)
 
 # ── Tuck ───────────────────────────────────────────────────────────────────────
 TUCK_WEIGHT = 3.0
@@ -144,7 +161,7 @@ def env_cfg(asset: Path | None = None, play: bool = False):
                                  entity="robot"),
             secondary=ContactMatch(mode="body", pattern="terrain"),
             fields=("found", "force", "pos", "normal", "tangent"), global_frame=True,
-            reduce="maxforce", num_slots=2, history_length=DECIMATION,
+            reduce="maxforce", num_slots=4, history_length=DECIMATION,
         ),
     ) + bc.leg_pair_sensors(DECIMATION, FREE_PAIRS)
 
@@ -188,6 +205,13 @@ def env_cfg(asset: Path | None = None, play: bool = False):
                 "force_threshold": 1.0},
     )
     cfg.rewards = r
+
+    # ── The joint-load estimate, sampled at every physics step ────────────────
+    # The metric's own logged value is a per-step mean of its physics steps; read
+    # Metrics/roll/peak_joint_load_Nm (the tracker's episode worst) instead.
+    cfg.metrics = {**(cfg.metrics or {}),
+                   "floor_load_sampler": MetricsTermCfg(func=tr.rewards.floor_load,
+                                                   per_substep=True, reduce="max")}
 
     # ── Spawns: none from the recorded states with the claws overlapping ──────
     cfg.events["reset_momentum"].params["max_spawn_turn"] = MAX_SPAWN_TURN
