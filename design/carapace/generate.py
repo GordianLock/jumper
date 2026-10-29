@@ -35,7 +35,7 @@ from pathlib import Path
 import numpy as np
 import trimesh
 from matplotlib.path import Path as Polygon
-from scipy.ndimage import distance_transform_edt, label, map_coordinates
+from scipy.ndimage import distance_transform_edt, gaussian_filter, label, map_coordinates
 from skimage.measure import marching_cubes
 
 REPO = Path(__file__).resolve().parents[2]
@@ -76,7 +76,12 @@ DEFAULTS = dict(
     tip_round_len=1.5,              # junction and flare fade in over this many tip radii
     display_gap=0.002,              # material keeps this far from the display module
     edge_round=0.004,               # rounding where the carapace meets a boundary
-    crests=[],                      # dict(name, a=root, b=tip, r=spine radius, r_tip)
+    crests=[],                      # dict(name, a=root, b=tip, r=spine radius, r_tip,
+                                    # optional rocker=dict(...), see rocker_sdf)
+    scallops=[],                    # along one horn's spine: dict(horn=name, mode="side" or
+                                    # "top", count, ...), see scallop_cut
+    scallop_blend=0.003,            # rounding where a scallop meets the surface
+    scallop_ridge_blend=0.008,      # rounding of the ridge between neighbouring top scallops
 )
 
 
@@ -279,6 +284,8 @@ def build(P):
         u = (X - b[0]) * hd[0] + (Y - b[1]) * hd[1]
         w = -(X - b[0]) * hd[1] + (Y - b[1]) * hd[0]
         ball = np.sqrt((X - b[0]) ** 2 + (Y - b[1]) ** 2 + (Z - b[2]) ** 2) - c["r_tip"]
+        if "rocker" in c:
+            ball = np.full(X.shape, np.inf)          # the rocker replaces the ball tip
         if not tip_zone:
             # a diving root extension: the spine and its walls lowered smoothly by up to
             # `drop` over the dive stretch
@@ -289,7 +296,9 @@ def build(P):
                 Zw = Z + drop * kd * kd
                 del kd
             ae = f["a_ext"]
-            e = b - ae
+            # a rocker horn's spine ends at the rocker's centre, inside it
+            bk = c["rocker"]["back"] if "rocker" in c else 0.0
+            e = b - np.array([hd[0] * bk, hd[1] * bk, f["slope"] * bk]) - ae
             t = np.clip(((X - ae[0]) * e[0] + (Y - ae[1]) * e[1] + (Zw - ae[2]) * e[2])
                         / e.dot(e), 0, 1)
             cap = np.sqrt((X - ae[0] - t * e[0]) ** 2 + (Y - ae[1] - t * e[1]) ** 2
@@ -334,18 +343,100 @@ def build(P):
 
     def capsule_sdf(c):
         a, b = np.asarray(c["a"]), np.asarray(c["b"])
+        if "rocker" in c:                            # the spine ends inside the rocker
+            b = b - (b - a) * c["rocker"]["back"] / np.linalg.norm((b - a)[:2])
         ab = b - a
         t = np.clip(((X - a[0]) * ab[0] + (Y - a[1]) * ab[1] + (Z - a[2]) * ab[2])
                     / ab.dot(ab), 0, 1)
         d = np.sqrt((X - a[0] - t * ab[0]) ** 2 + (Y - a[1] - t * ab[1]) ** 2
                     + (Z - a[2] - t * ab[2]) ** 2) - c["r"]
         tip = np.sqrt((X - b[0]) ** 2 + (Y - b[1]) ** 2 + (Z - b[2]) ** 2) - c["r_tip"]
+        if "rocker" in c:
+            return d
         return np.minimum(d, tip)
+
+    def rocker_sdf(c):
+        """A rounded rocker in place of a horn's ball tip and tip support, for rolling
+        head-first over: an ellipsoid centred `back` behind and `drop` below the tip, with
+        semi-axes ax along the horn, az vertical and aw across. In side view an oval rising
+        from the spine's top behind the tip, rolling over the front and down to the shell;
+        seen from the front its sides bulge, narrowing back to the spine where it meets it.
+        It joins the horn and the shell with a smooth union of radius `blend`; `smooth` (m)
+        evens out the finished surface around it (see below)."""
+        g = c["rocker"]
+        a, b = np.asarray(c["a"], float), np.asarray(c["b"], float)
+        hd = (b - a)[:2] / np.linalg.norm((b - a)[:2])
+        U = ((X - b[0]) * hd[0] + (Y - b[1]) * hd[1] + g["back"]) / g["ax"]
+        W = (-(X - b[0]) * hd[1] + (Y - b[1]) * hd[0]) / g["aw"]
+        Zc = (Z - (b[2] - g["drop"])) / g["az"]
+        k0 = np.sqrt(U * U + W * W + Zc * Zc)
+        k1 = np.sqrt((U / g["ax"]) ** 2 + (W / g["aw"]) ** 2 + (Zc / g["az"]) ** 2)
+        return k0 * (k0 - 1) / np.maximum(k1, 1e-9)     # ellipsoid distance (near exact)
+
+    def scallop_cut(sc):
+        """Distance field of the material one scallop set removes (negative inside). Both
+        modes run from behind the horn's tip (its support, or for "top" `start_tip_radii` tip
+        radii; never into a rocker) back to where the spine starts down onto the shell, in
+        `count` equal scallops; `shift` slides the set along the spine toward the tip and
+        `extend_front` moves only its front end. "side": a scoop in each wall, its deepest
+        point `keep` outside the spine. "top": notches `depth` deep in the spine's top,
+        neighbours blended into each other so the ridges between them are rounded."""
+        c = [c for c in P["crests"] if c["name"] == sc["horn"]][0]
+        f = horn_frame(c)
+        b, hd, r, slope = f["b"], f["hd"], c["r"], f["slope"]
+        th = np.arctan(slope)
+        u_stop = f["dive"][0] if f["dive"] is not None else f["u_end"] + r
+        if sc["mode"] == "side":
+            u_start = f["u_F"] - r
+        else:
+            u_start = -sc.get("start_tip_radii", 4.0) * c["r_tip"] * np.cos(th)
+            if "rocker" in c:
+                u_start = min(u_start, -(c["rocker"]["back"] + c["rocker"]["ax"]))
+        sh = sc.get("shift", 0.0) * np.cos(th)
+        u_start, u_stop = u_start + sh, u_stop + sh
+        u_start += sc.get("extend_front", 0.0) * np.cos(th)
+        n = sc["count"]
+        L = (u_start - u_stop) / n
+        u = (X - b[0]) * hd[0] + (Y - b[1]) * hd[1]
+        w = -(X - b[0]) * hd[1] + (Y - b[1]) * hd[0]
+        cut = np.full(X.shape, np.inf)
+        for i in range(n):
+            uc = u_start - (i + 0.5) * L
+            px, py = b[0] + uc * hd[0], b[1] + uc * hd[1]
+            z_ax, z_sh = b[2] + slope * uc, float(Zs[grid_at(px, py)])
+            if sc["mode"] == "side":
+                keep = sc.get("keep", 0.002)
+                ax_u = ax_w = 0.5 * L
+                ax_z = 0.5 * max(z_ax - z_sh, 0.002)
+                zc = 0.5 * (z_ax + z_sh)
+                for s in (1, -1):
+                    q = np.sqrt(((u - uc) / ax_u) ** 2
+                                + ((w - s * (r + keep + ax_w)) / ax_w) ** 2
+                                + ((Z - zc) / ax_z) ** 2)
+                    cut = np.minimum(cut, (q - 1) * min(ax_u, ax_w, ax_z))
+            else:
+                depth = sc.get("depth", 0.5 * r)
+                half = 0.5 * L / np.cos(th)
+                R = (half ** 2 + depth ** 2) / (2 * depth)
+                nu = np.array([-np.sin(th) * hd[0], -np.sin(th) * hd[1], np.cos(th)])
+                cen = np.array([px, py, z_ax]) + nu * (r - depth + R)
+                one = np.sqrt((X - cen[0]) ** 2 + (Y - cen[1]) ** 2 + (Z - cen[2]) ** 2) - R
+                cut = one if i == 0 else smin(cut, one, P["scallop_ridge_blend"])
+        return cut
 
     # ---- horns, valleys, shell ----
     sdf = Z - Ztop[:, :, None]
+    rockers, rock_keep = [], []
     for c in P["crests"]:
         sdf = smin(sdf, crest_sdf(c), P["valley_blend"])
+        if "rocker" in c:
+            rk = rocker_sdf(c)
+            kb = c["rocker"].get("blend", P["valley_blend"])
+            sdf = smin(sdf, rk, kb)
+            rockers.append(rk)
+            # the blended surface is kept as it is wherever the blend reaches, even past the
+            # shell's top, so trimming to the footprint leaves no step where it was cut
+            rock_keep.append((rk < kb, sdf.copy()))
     for s in P["spheres"]:
         zc = float(Zs[grid_at(s["c"][0], s["c"][1])]) + s["r"] - 2 * s["r"] * s["submerge"]
         sdf = np.minimum(sdf, np.sqrt((X - s["c"][0]) ** 2 + (Y - s["c"][1]) ** 2
@@ -363,6 +454,8 @@ def build(P):
     shell_face = np.where(top[:, :, None], Z - (Zs - 0.002)[:, :, None], 1.0)
     sup_all = None
     for c in P["crests"]:
+        if "rocker" in c:
+            continue                                 # the rocker reaches the shell itself
         sup = crest_sdf(c, tip_zone=True)
         sup_all = sup if sup_all is None else smin(sup_all, sup, P["valley_blend"])
     if sup_all is not None:
@@ -385,12 +478,43 @@ def build(P):
     kd = (distance_transform_edt(~occ) - distance_transform_edt(occ)) * v
     sdf = smax(sdf, -kd, P["edge_round"])
     sdf = np.minimum(sdf, caps)
+    floor = np.where(np.isnan(Zs), -1.0, Zs - 0.001)[:, :, None] - Z
+    for near, keep in rock_keep:
+        # the kept blend still never goes below the shell's top or into the legs' path
+        keep = smax(np.maximum(keep, floor), -kd, P["edge_round"])
+        sdf = np.where(near, np.minimum(sdf, keep), sdf)
+    for rk in rockers:                               # a rocker may reach past the shell top
+        sdf = np.minimum(sdf, rk)
+    # scallops last, so nothing fills them back in
+    for sc in P["scallops"]:
+        sdf = smax(sdf, -scallop_cut(sc), P["scallop_blend"])
 
     # ---- the display screen stays uncovered ----
     lo_, hi_ = display.bounds[0] - P["display_gap"], display.bounds[1] + P["display_gap"]
     inside_box = np.max(np.stack([lo_[0] - X, lo_[1] - Y, lo_[2] - Z,
                                   X - hi_[0], Y - hi_[1], Z - hi_[2]]), axis=0)
     sdf = smax(sdf, -inside_box, P["edge_round"])
+
+    # ---- around a rocker the finished surface is smoothed: a Gaussian of the distance field
+    # `smooth` wide, fading out over `smooth_fade` beyond the blend's reach and kept off the
+    # shell itself (it fades in from 2 to 5 mm above it, so the fillet there stays), which
+    # evens out the small bumps and steps where the rocker, the walls and the shell's edge
+    # meet. The legs' path, the display and the shell's top are applied again after it. ----
+    for c in P["crests"]:
+        g = c.get("rocker", {})
+        if g.get("smooth", 0) > 0:
+            fade = g.get("smooth_fade", 0.010)
+            wgt = np.clip((g.get("blend", P["valley_blend"]) + fade - rocker_sdf(c)) / fade, 0, 1)
+            above = Z - np.where(np.isnan(Zs), 0.0, Zs)[:, :, None]
+            wgt = wgt * np.clip((above - 0.002) / 0.003, 0, 1)
+            del above
+            wgt = wgt * wgt * (3 - 2 * wgt)
+            smooth = gaussian_filter(np.clip(sdf, -0.02, 0.02), g["smooth"] / v)
+            sdf = np.where(wgt > 0, wgt * smooth + (1 - wgt) * sdf, sdf)
+            del wgt, smooth
+            sdf = smax(sdf, -kd, P["edge_round"])
+            sdf = smax(sdf, -inside_box, P["edge_round"])
+            sdf = np.maximum(sdf, floor)
 
     # ---- mesh ----
     sdf[[0, -1], :, :] = sdf[:, [0, -1], :] = v
