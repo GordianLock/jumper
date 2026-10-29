@@ -32,11 +32,26 @@ arm swings through the shell, base, display and front-right horn at 0.48-0.52 s
 lets legs pass through the body. A spawn there would start with the arm inside the
 body.
 
+## The first run, and what changed after it
+
+Colab, 2500 iterations, revision 5c0145d (2026-10-29). Replayed on CPU (nominal and
+four randomised robots, 55 of 55 rolls completed, 0.86-0.90 s): over the nose the
+floor carried **only the claws** (0.12-0.34 s, 20-30 N each) -- the face no longer
+touched. The left palm came to 8-10 cm off the centreline, the right stayed 12-16 cm
+out. The front horns took up to 77 N at 0.36-0.42 s, the robot already belly-up.
+Floor-contact joint torque rose to 6.4-7.6 N*m on the left claw (horn_roll's policy:
+5.5-5.9; KingKong's reference-free jump: 4.8). Decided with the user:
+
+- **The face, not the horns.** `front_force` now covers the stock shell, base and
+  sensors only; the carapace, horns included, is as jumper.horn_roll has it.
+- **One claw is enough.** `tuck` pays the better-placed claw (`either`).
+- **Joint torque is charged** (`tracker.floor_joint_load`, `rewards.joint_load`): per
+  step over `LOAD_BAND[0]`, and in the finishing bonus to nothing at `LOAD_BAND[1]`.
+
 ## Arms
 
-- **`tuck`**: while the nose points down (`rewards.nose_down`), both palms at least
-  12 cm ahead of the base origin and within 8 cm of the centreline. Side by side, not
-  crossed.
+- **`tuck`**: while the nose points down (`rewards.nose_down`), a palm at least 12 cm
+  ahead of the base origin and within 8 cm of the centreline -- the better of the two.
 - **The arms collide with the body** (`common/body_collision.py`): the repository leaves
   every leg passing through the shell, base and carapace, and a tuck learnt that way
   could put a forearm where the face is. Arm against body is free -- bracing against
@@ -45,13 +60,12 @@ body.
 - **Their load is the point**: the arms get their own band (60 - 150 N), wider than the
   walking legs' (20 - 100 N), which jumper.horn_roll charged them under.
 
-## The front of the body
+## The face
 
-Floor force at contacts more than 4 cm ahead of the base origin, on the shell, base,
-sensors or carapace (`tracker.front_force`), is charged per step over 5 N and scales
-the finishing bonus to nothing at 40 N. This is **load**, where jumper.horn_roll
-charges only carapace impact: the front corner horns lose the pivot they were free to
-be there. Everywhere else the carapace is as jumper.horn_roll has it.
+Floor force at contacts more than 4 cm ahead of the base origin on the stock shell,
+base or sensors (`tracker.front_force`) is charged per step over 5 N and scales the
+finishing bonus to nothing at 40 N. The carapace is not part of it: its horns are free
+to pivot on.
 """
 
 from __future__ import annotations
@@ -95,6 +109,10 @@ FRONT_WEIGHT = -0.5
 ARM_BAND = (60.0, 150.0)
 ARM_WEIGHT = -0.5
 LEG_COLLISION_WEIGHT = -1.0
+#: Floor-contact joint torque |J^T f|, N*m. Free up to 4 (under KingKong's 4.8),
+#: nothing of the bonus's gentle half left at 8 (the first run peaked at 7.6).
+LOAD_BAND = (4.0, 8.0)
+LOAD_WEIGHT = -2.0
 
 #: Leg pairs free to touch: the claws, tucked side by side.
 FREE_PAIRS = (frozenset(bc.ARMS),)
@@ -113,7 +131,7 @@ def env_cfg(asset: Path | None = None, play: bool = False):
     walking = r"(LM|RM|LR|RR)_.*_meshcol.*"
     arms = r"(LF|RF)_.*_meshcol.*"
     sensors = [s for s in cfg.scene.sensors if s.name != "limb_ground_contact"]
-    front_parts = tuple(p.strip("^$") for p in bc.BODY_GEOMS) + (horn.CARAPACE_GEOMS,)
+    front_parts = tuple(p.strip("^$") for p in bc.BODY_GEOMS)
     cfg.scene.sensors = tuple(sensors) + (
         horn._ground("limb_ground_contact", walking, exclude=tuple(FOOT_GEOMS)),
         horn._ground("arm_ground_contact", arms, exclude=tuple(FOOT_GEOMS)),
@@ -123,6 +141,14 @@ def env_cfg(asset: Path | None = None, play: bool = False):
             secondary=ContactMatch(mode="body", pattern="terrain"),
             fields=("force", "pos"), reduce="maxforce", num_slots=2,
         ),
+        ContactSensorCfg(
+            name="leg_floor_contact",
+            primary=ContactMatch(mode="geom", pattern=r"(LF|RF|LM|RM|LR|RR)_.*_meshcol",
+                                 entity="robot"),
+            secondary=ContactMatch(mode="body", pattern="terrain"),
+            fields=("found", "force", "pos", "normal", "tangent"), global_frame=True,
+            reduce="maxforce", num_slots=2, history_length=DECIMATION,
+        ),
     ) + bc.leg_pair_sensors(DECIMATION, FREE_PAIRS)
 
     # ── Command: jumper.horn_roll's tracker, this demonstration, two more worsts ─
@@ -131,6 +157,7 @@ def env_cfg(asset: Path | None = None, play: bool = False):
         "roll": tr.tracker.TuckRollTrackerCfg(
             entity_name="robot", reference=str(REF_NPZ),
             region_sensors=old.region_sensors, front_x=FRONT_X,
+            load_sensor="leg_floor_contact", load_joints=GAIT_JOINTS,
         )
     }
 
@@ -149,8 +176,11 @@ def env_cfg(asset: Path | None = None, play: bool = False):
         params={**stand, "gentle_floor": horn.GENTLE_FLOOR, "limb": horn.LIMB_BAND,
                 "arm": ARM_BAND, "front": FRONT_BAND, "sensor": horn.SENSOR_BAND,
                 "shell": horn.SHELL_BAND, "carapace_impact": horn.CARAPACE_IMPACT_BAND,
-                "ground_impact": horn.GROUND_IMPACT_BAND, "flight": horn.FLIGHT_BAND},
+                "ground_impact": horn.GROUND_IMPACT_BAND, "flight": horn.FLIGHT_BAND,
+                "load": LOAD_BAND},
     )
+    r["joint_load"] = RewardTermCfg(func=tr.rewards.joint_load, weight=LOAD_WEIGHT,
+                                    params={"threshold": LOAD_BAND[0]})
     r["arm_contact"] = RewardTermCfg(func=tr.rewards.arm_contact, weight=ARM_WEIGHT,
                                      params={"threshold": ARM_BAND[0]})
     r["front_contact"] = RewardTermCfg(func=tr.rewards.front_contact, weight=FRONT_WEIGHT,
@@ -160,7 +190,7 @@ def env_cfg(asset: Path | None = None, play: bool = False):
         params={"asset_cfg": SceneEntityCfg("robot", body_names=list(PALM_BODIES),
                                             preserve_order=True),
                 "min_x": TUCK_MIN_X, "max_y": TUCK_MAX_Y, "sigma_sq": TUCK_SIGMA_SQ,
-                "min_down": NOSE_DOWN},
+                "min_down": NOSE_DOWN, "either": True},
     )
     r["leg_collision"] = RewardTermCfg(
         func=bc.leg_collision_pairs, weight=LEG_COLLISION_WEIGHT,

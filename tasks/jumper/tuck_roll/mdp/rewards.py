@@ -3,6 +3,8 @@
 - `tuck`: while the nose points down, the claws side by side under the face.
 - `front_contact`: per step, floor force on the front of the body over a threshold.
 - `arm_contact`: per step, floor force on the arms over a (higher) threshold.
+- `joint_load`: per step, the worst joint's floor-contact torque |J^T f| over a
+  threshold.
 - `gentle_complete`: jumper.horn_roll's scaled finishing bonus with two more factors,
   the arms' load and the front of the body's.
 - `prior_joint_pos_legs`: jumper.momentum_roll's joint prior on the six walking legs'
@@ -34,9 +36,10 @@ def nose_down(env, min_down: float = 0.3) -> torch.Tensor:
 
 
 def tuck(env, asset_cfg: SceneEntityCfg, min_x: float = 0.12, max_y: float = 0.08,
-         sigma_sq: float = 0.01, min_down: float = 0.3,
+         sigma_sq: float = 0.01, min_down: float = 0.3, either: bool = False,
          command_name: str = "roll") -> torch.Tensor:
-    """While `nose_down`: the mean over both claws of exp(-d^2 / sigma_sq), d how far
+    """While `nose_down`: exp(-d^2 / sigma_sq) for each claw -- the better of the two
+    with `either`, else their mean -- d how far
     the palm is from the box under the face -- at least `min_x` ahead of the base origin
     and within `max_y` of the centreline (body frame). 1 tucked; about 0.09 at
     jumper.horn_roll's splay (palms 5 cm ahead, 22 cm out). 0 otherwise."""
@@ -47,9 +50,19 @@ def tuck(env, asset_cfg: SceneEntityCfg, min_x: float = 0.12, max_y: float = 0.0
     b = quat_apply_inverse(q.reshape(-1, 4), p.reshape(-1, 3)).reshape(p.shape)
     dx = (min_x - b[..., 0]).clamp(min=0.0)
     dy = (b[..., 1].abs() - max_y).clamp(min=0.0)
-    k = torch.exp(-(dx ** 2 + dy ** 2) / sigma_sq).mean(dim=1)
+    k = torch.exp(-(dx ** 2 + dy ** 2) / sigma_sq)
+    k = k.max(dim=1).values if either else k.mean(dim=1)
     cmd = _cmd(env, command_name)
     return k * nose_down(env, min_down).float() * (~cmd.settling).float()
+
+
+def joint_load(env, threshold: float, cap: float = 10.0,
+               command_name: str = "roll") -> torch.Tensor:
+    """Per step: the worst driven joint's floor-contact torque |J^T f| over `threshold`
+    N*m, ((tau - threshold) / threshold)^2, capped."""
+    cmd = _cmd(env, command_name)
+    return _overload(cmd.floor_joint_load().max(dim=1).values, threshold, cap) * \
+        (~cmd.settling).float()
 
 
 def front_contact(env, threshold: float, cap: float = 10.0,
@@ -70,6 +83,7 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
                     limb: tuple[float, float] = (20.0, 100.0),
                     arm: tuple[float, float] = (60.0, 150.0),
                     front: tuple[float, float] = (5.0, 40.0),
+                    load: tuple[float, float] | None = None,
                     sensor: tuple[float, float] = (2.0, 20.0),
                     shell: tuple[float, float] = (30.0, 150.0),
                     carapace_impact: tuple[float, float] = (50.0, 200.0),
@@ -93,6 +107,9 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
     bands = {"limb": limb, "arm": arm, "front": front, "sensor": sensor, "shell": shell,
              "carapace_impact": carapace_impact, "ground_impact": ground_impact,
              "flight": flight}
+    if load is not None:
+        worst["load"] = torch.maximum(cmd.peak_load, cmd.floor_joint_load().max(dim=1).values)
+        bands["load"] = load
     g = torch.stack([_factor(worst[k], *bands[k]) for k in bands], dim=1).min(dim=1).values
     return done * (gentle_floor + (1.0 - gentle_floor) * g)
 
@@ -110,5 +127,5 @@ def prior_joint_pos_legs(env, asset_cfg: SceneEntityCfg, columns: tuple[int, ...
     return torch.exp(-e / sigma_sq) * cmd.in_demo.float() * (~cmd.settling).float()
 
 
-__all__ = ["arm_contact", "front_contact", "gentle_complete",
+__all__ = ["arm_contact", "front_contact", "gentle_complete", "joint_load",
            "nose_down", "prior_joint_pos_legs", "tuck"]
