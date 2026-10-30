@@ -1,0 +1,27 @@
+{
+  "name": "30 Oct E",
+  "version": "CF1-tri30m-rb-v4",
+  "sequence": "thue_morse_plus_1",
+  "unit_mm": 0.35,
+  "grow_from": "tip",
+  "colour_rule": "n_mod_k",
+  "k": 4,
+  "accent_below_mm": 1.4,
+  "stock_tolerance_mm": 0.001,
+  "min_band_mm": 0.2,
+  "stock_fade": {
+    "mode": "wall",
+    "from_pct": 0,
+    "to_pct": 100,
+    "steps": 4,
+    "low": "#171616"
+  },
+  "colours": {
+    "stock": "#427321",
+    "accent": "#000000",
+    "c0": "#382E2E",
+    "c1": "#606354",
+    "c2": "#6B2424",
+    "c3": "#050505"
+  }
+}
