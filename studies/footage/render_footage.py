@@ -193,9 +193,14 @@ m = spec.compile()
 # The camera's near/far planes and the shadow map scale with the model's extent, which
 # a ground plane drawn out to the horizon makes hundreds of metres: the near plane then
 # cuts into the robot. Set it to the action's scale, and the far plane past the horizon.
+# The far plane also sets the depth range of the sun's shadow map: at 800 m the floor
+# shadowed itself in streaks and triangles (shadow acne) near the robot. Checked
+# 2026-10-30 on the tuck-roll close-up's last frame, 1920x1080, with the light over the
+# robot: 800 m streaks, 100 m clean, 40 m clean but the grass band nearly gone from the
+# front view, 6 m no horizon at all. 200 m (zfar 100 x extent 2) it is.
 m.stat.extent = 2.0
 m.vis.map.znear = 0.01
-m.vis.map.zfar = 400.0
+m.vis.map.zfar = 100.0
 # No mirror in the ground: MuJoCo's reflectance mirrors the whole scene under the floor.
 for g in range(m.ngeom):
     if m.geom_type[g] in (mujoco.mjtGeom.mjGEOM_PLANE, mujoco.mjtGeom.mjGEOM_HFIELD) \
@@ -208,7 +213,9 @@ m.vis.quality.offsamples = 4
 # The sun's shadow map spans shadowclip x the model's extent, which the ground planes
 # make metres wide; at that spread its texels are centimetres and the floor speckles
 # (shadow acne). Clip it to SHADOW_REACH m around the scene centre instead.
-SHADOW_REACH = 0.4
+#: 0.4 left a few specks of acne at the map's edge in the close-ups; 0.3 is clean and
+#: still holds the whole robot's shadow, mid-roll included (2026-10-30, tuck-roll close-up).
+SHADOW_REACH = 0.3
 m.vis.map.shadowclip = min(m.vis.map.shadowclip, SHADOW_REACH / max(m.stat.extent, 1e-6))
 d = mujoco.MjData(m)
 pre = "robot/" if mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_JOINT, "robot/" + names[0]) >= 0 else ""
@@ -245,10 +252,36 @@ def pose(t: float) -> None:
     d.qpos[root:root + 3] = (1 - u) * pos[k] + u * pos[k + 1]
     d.qpos[root + 3:root + 7] = qq
     d.qpos[adr] = (1 - u) * q[k] + u * q[k + 1]
-    # The sun's shadow map is centred on the model's centre and spans SHADOW_REACH:
-    # keep it on the robot, which may walk a metre or more.
+    # The sun's shadow map spans SHADOW_REACH round the light, for a directional light
+    # its position (not the model's centre): keep both over the robot, which may walk
+    # a metre or more -- off it, the robot cast no shadow and the patch the map did
+    # cover, left behind, showed the floor's self-shadowing.
     m.stat.center[:2] = d.qpos[root:root + 2]
+    for li in range(m.nlight):
+        if m.light_castshadow[li]:
+            m.light_pos[li][:2] = d.qpos[root:root + 2]
     mujoco.mj_forward(m, d)
+
+
+class Clip:
+    """Frames streamed to the encoder as they are drawn: a 1920x1080 clip held in
+    memory is 6 MB a frame, 4-7 GB a clip at 60 fps, more than a render machine
+    may have."""
+
+    def __init__(self, path):
+        self.path, self.n = path, 0
+        self._w = mediapy.VideoWriter(path, shape=(a.height, a.width), fps=a.fps, crf=18)
+        self._w.__enter__()
+
+    def append(self, frame):
+        self._w.add_image(frame)
+        self.n += 1
+
+    def __len__(self):
+        return self.n
+
+    def close(self):
+        self._w.__exit__(None, None, None)
 
 
 r = mujoco.Renderer(m, a.height, a.width)
@@ -275,7 +308,8 @@ if a.track:
     n = int(round((t1 - t0) / speed * a.fps))
     cam = mujoco.MjvCamera()
     cam.elevation, cam.distance = -a.track_elevation, a.track_distance
-    frames = []
+    out = os.path.join(a.out_dir, f"{a.name}_track_{speed:g}x.mp4")
+    frames = Clip(out)
     for i in range(n + 1):
         t = t0 + i * speed / a.fps
         pose(t)
@@ -286,8 +320,7 @@ if a.track:
         cam.azimuth = yaw_axis + a.track_start + a.track_sweep * i / max(n, 1)
         r.update_scene(d, cam, scene_option=vopt)
         frames.append(r.render())
-    out = os.path.join(a.out_dir, f"{a.name}_track_{speed:g}x.mp4")
-    mediapy.write_video(out, frames, fps=a.fps, crf=18)
+    frames.close()
     print(f"wrote {out}: {len(frames)} frames, {len(frames) / a.fps:.1f} s")
     sys.exit(0)
 
@@ -309,7 +342,8 @@ if a.orbit:
     rate = 360.0 / a.orbit
     dt_f = 1.0 / a.fps
     az, el, t = a.orbit_start, a.orbit_elevation, 0.0
-    frames = []
+    out = os.path.join(a.out_dir, f"{a.name}_orbit.mp4")
+    frames = Clip(out)
 
     def shot(fade=1.0):
         cam.azimuth, cam.elevation = az, -el
@@ -356,8 +390,7 @@ if a.orbit:
     n_fade = int(round(a.fade_out * a.fps))
     for k in range(n_fade):
         shot(fade=1.0 - (k + 1) / n_fade)
-    out = os.path.join(a.out_dir, f"{a.name}_orbit.mp4")
-    mediapy.write_video(out, frames, fps=a.fps, crf=18)
+    frames.close()
     print(f"wrote {out}: {len(frames)} frames, {len(frames) / a.fps:.1f} s")
     sys.exit(0)
 
@@ -368,11 +401,11 @@ for angle in a.angles.split(","):
     cam.azimuth, cam.elevation, cam.distance = yaw_axis + az, el, dist * a.zoom
     for speed in (float(s) for s in a.speeds.split(",")):
         n = int(round((length + 2 * a.hold) / speed * a.fps))
-        frames = []
+        out = os.path.join(a.out_dir, f"{a.name}_{angle}_{speed:g}x.mp4")
+        frames = Clip(out)
         for i in range(n + 1):
             pose(i * speed / a.fps - a.hold)
             r.update_scene(d, cam, scene_option=vopt)
             frames.append(r.render())
-        out = os.path.join(a.out_dir, f"{a.name}_{angle}_{speed:g}x.mp4")
-        mediapy.write_video(out, frames, fps=a.fps, crf=18)
+        frames.close()
         print(f"wrote {out}: {len(frames)} frames, {len(frames) / a.fps:.1f} s")
