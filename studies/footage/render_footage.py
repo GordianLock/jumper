@@ -22,6 +22,7 @@ import argparse
 import json
 import math
 import os
+import sys
 
 import mujoco
 import numpy as np
@@ -49,6 +50,9 @@ p.add_argument("--fps", type=int, default=60)
 p.add_argument("--width", type=int, default=1920)
 p.add_argument("--height", type=int, default=1080)
 p.add_argument("--hold", type=float, default=0.5, help="s of still pose added at each end")
+p.add_argument("--scene", default=None,
+               help="a repository scene id (scripts/play.py --list): its ground, sky and "
+                    "lights instead of the footage's own; props are left out")
 p.add_argument("--colour", default=None,
                help="a colour pattern folder (design/carapace/colour/<folder>): its display "
                     "meshes replace the top shell's and carapace's visuals")
@@ -59,14 +63,6 @@ h = np.load(a.rec)
 names = [str(n) for n in h["joint_names"]]
 spec = mujoco.MjSpec.from_file(os.path.join(
     ASSETS, "jumper.xml" if a.model == "jumper" else f"jumper_{a.model}.xml"))
-tex = spec.add_texture(name="footage_grid", type=mujoco.mjtTexture.mjTEXTURE_2D,
-                       builtin=mujoco.mjtBuiltin.mjBUILTIN_CHECKER, width=512, height=512,
-                       rgb1=[0.30, 0.33, 0.36], rgb2=[0.26, 0.29, 0.32])
-mat = spec.add_material(name="footage_floor", texrepeat=[8, 8], reflectance=0.03)
-mat.textures[mujoco.mjtTextureRole.mjTEXROLE_RGB] = "footage_grid"
-spec.add_texture(name="footage_sky", type=mujoco.mjtTexture.mjTEXTURE_SKYBOX,
-                 builtin=mujoco.mjtBuiltin.mjBUILTIN_GRADIENT, width=512, height=512,
-                 rgb1=[0.55, 0.62, 0.70], rgb2=[0.12, 0.14, 0.17])
 if a.colour:
     # The pattern's pieces (design/carapace/colour/README.md): display-only meshes in the
     # upper_shell_link frame, one per filament, replacing the shell's and carapace's visuals.
@@ -82,12 +78,31 @@ if a.colour:
         del g
     for n in ("upper_shell_link_visual", "upper_shell_carapace_visual"):
         spec.geom(n).rgba[3] = 0.0
-spec.worldbody.add_geom(name="floor", type=mujoco.mjtGeom.mjGEOM_PLANE, size=[4, 4, 0.1],
-                        material="footage_floor")
-spec.worldbody.add_light(pos=[0.6, -0.6, 2.0], dir=[-0.3, 0.3, -1], diffuse=[0.75, 0.75, 0.75],
-                         castshadow=True)
-spec.worldbody.add_light(pos=[-1, 1, 2.5], dir=[0.4, -0.4, -1], diffuse=[0.3, 0.3, 0.3],
-                         castshadow=False)
+if a.scene:
+    # The scene compiled onto an empty world the way its exporter does it
+    # (scenes/tools/export_web_scene.py `_build_spec`), the robot attached to it.
+    sys.path.insert(0, os.path.join(HERE, "..", ".."))
+    import scenes  # noqa: E402
+    from scenes.tools.export_web_scene import _build_spec  # noqa: E402
+
+    world = _build_spec(scenes.load(a.scene))
+    world.attach(spec, prefix="robot/", frame=world.worldbody.add_frame())
+    spec = world
+else:
+    spec.add_texture(name="footage_grid", type=mujoco.mjtTexture.mjTEXTURE_2D,
+                     builtin=mujoco.mjtBuiltin.mjBUILTIN_CHECKER, width=512, height=512,
+                     rgb1=[0.30, 0.33, 0.36], rgb2=[0.26, 0.29, 0.32])
+    mat = spec.add_material(name="footage_floor", texrepeat=[8, 8], reflectance=0.03)
+    mat.textures[mujoco.mjtTextureRole.mjTEXROLE_RGB] = "footage_grid"
+    spec.add_texture(name="footage_sky", type=mujoco.mjtTexture.mjTEXTURE_SKYBOX,
+                     builtin=mujoco.mjtBuiltin.mjBUILTIN_GRADIENT, width=512, height=512,
+                     rgb1=[0.55, 0.62, 0.70], rgb2=[0.12, 0.14, 0.17])
+    spec.worldbody.add_geom(name="floor", type=mujoco.mjtGeom.mjGEOM_PLANE, size=[4, 4, 0.1],
+                            material="footage_floor")
+    spec.worldbody.add_light(pos=[0.6, -0.6, 2.0], dir=[-0.3, 0.3, -1],
+                             diffuse=[0.75, 0.75, 0.75], castshadow=True)
+    spec.worldbody.add_light(pos=[-1, 1, 2.5], dir=[0.4, -0.4, -1], diffuse=[0.3, 0.3, 0.3],
+                             castshadow=False)
 m = spec.compile()
 m.vis.global_.offwidth = max(m.vis.global_.offwidth, a.width)
 m.vis.global_.offheight = max(m.vis.global_.offheight, a.height)
