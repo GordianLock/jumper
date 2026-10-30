@@ -1,40 +1,51 @@
 {
  "title": "Proto4b performing Shoulder Roll",
  "rows": [
-  [
-   "Successful rolls",
-   "40 / 40"
-  ],
-  [
-   "Roll time",
-   "1.12 – 1.16 s"
-  ],
-  [
-   "Peak joint torque from floor contact",
-   "4.1 – 7.5 N·m"
-  ],
-  [
-   "KingKong's own jump, measured the same way",
-   "4.8 N·m (5.6 worst)",
-   "note"
-  ],
-  [
-   "Floor impact",
-   "65 – 122 N"
-  ],
-  [
-   "Carapace impact",
-   "0 – 51 N"
-  ],
-  [
-   "Face / sensors touching floor",
-   "0 N"
-  ],
-  [
-   "Longest airborne moment",
-   "0.02 – 0.04 s"
-  ]
+  {
+   "en": "Successful rolls",
+   "zh": "成功翻滚次数",
+   "value": "40 / 40"
+  },
+  {
+   "en": "Roll time",
+   "zh": "翻滚用时",
+   "value": "1.12 – 1.16 s"
+  },
+  {
+   "en": "Peak joint torque from floor contact",
+   "zh": "地面接触产生的关节扭矩峰值",
+   "value": "4.1 – 7.5 N·m"
+  },
+  {
+   "en": "KingKong's own jump, measured the same way",
+   "zh": "同法测得的 KingKong 官方跳跃",
+   "value": "4.8 N·m (5.6 worst)",
+   "note": true
+  },
+  {
+   "en": "Floor impact",
+   "zh": "地面冲击力",
+   "value": "65 – 122 N"
+  },
+  {
+   "en": "Carapace impact",
+   "zh": "甲壳冲击力",
+   "value": "0 – 51 N"
+  },
+  {
+   "en": "Face / sensors touching floor",
+   "zh": "面部/传感器触地",
+   "value": "0 N"
+  },
+  {
+   "en": "Longest airborne moment",
+   "zh": "最长腾空时间",
+   "value": "0.02 – 0.04 s"
+  }
  ],
  "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 8 rolls each",
- "schema": "Color schema: Fibonacci (1, 1, 2, 3, 5, 8, 13, 21, …)"
+ "schema": "Color schema: Fibonacci (1, 1, 2, 3, 5, 8, 13, 21, …)",
+ "title_zh": "原型 4b 演示：肩滚翻",
+ "footnote_zh": "MuJoCo 仿真：1 台标准机器人 + 4 台随机化机器人（摩擦、质量分布、传感器偏差），每台翻滚 8 次",
+ "schema_zh": "配色方案：斐波那契数列（1, 1, 2, 3, 5, 8, 13, 21, …）"
 }
