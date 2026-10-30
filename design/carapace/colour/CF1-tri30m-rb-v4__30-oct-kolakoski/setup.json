@@ -1,0 +1,18 @@
+{
+  "name": "30 Oct Kolakoski",
+  "version": "CF1-tri30m-rb-v4",
+  "sequence": "kolakoski",
+  "unit_mm": 0.25,
+  "grow_from": "tip",
+  "colour_rule": "n_mod_k",
+  "k": 3,
+  "accent_below_mm": 1.1,
+  "stock_tolerance_mm": 0.001,
+  "colours": {
+    "stock": "#0F0F0F",
+    "accent": "#71920C",
+    "c0": "#2C2020",
+    "c1": "#910808",
+    "c2": "#251D1D"
+  }
+}

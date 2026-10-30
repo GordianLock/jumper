@@ -9,7 +9,8 @@ the stock top shell (distance to the stock visual mesh), and that height decides
 - `accent`: added surface lower than `accent_below_mm` -- the thin CAD-blend leftovers that
   form the striping, plus the feathered edge where horns meet the shell.
 - `c0..c(k-1)`: bands from an integer sequence. Band n is a(n) * unit_mm thick, counted up from
-  the stock surface; its filament is a(n) mod k or n mod k.
+  the stock surface (`grow_from: "base"`) or down from the highest point of the relief
+  (`"tip"`); its filament is a(n) mod k (`"a_mod_k"`) or n mod k (`"n_mod_k"`).
 
 Triangles that straddle a band edge are cut along the iso-line (height is interpolated
 linearly across each triangle), so colour boundaries are smooth rather than stepped.
@@ -32,31 +33,60 @@ STOCK_VISUAL = REPO / "assets/jumper/urdf/jumper/meshes/visual/upper_shell_link.
 
 
 def sequence(kind, count):
+    """The first `count` terms, generated exactly as the colour preview generates them."""
+    a = []
     if kind == "fibonacci":
         a = [1, 1]
         while len(a) < count:
             a.append(a[-1] + a[-2])
-        return a[:count]
-    raise ValueError(f"sequence {kind!r} not implemented here yet")
+    elif kind == "padovan":
+        a = [1, 1, 1]
+        while len(a) < count:
+            a.append(a[-2] + a[-3])
+    elif kind == "triangular":
+        a = [i * (i + 1) // 2 for i in range(1, count + 1)]
+    elif kind == "primes":
+        p = 2
+        while len(a) < count:
+            if all(p % q for q in range(2, int(p ** 0.5) + 1)):
+                a.append(p)
+            p += 1
+    elif kind == "kolakoski":
+        a = [1, 2, 2]
+        i = 2
+        while len(a) < count:
+            a.extend([1 if i % 2 == 0 else 2] * a[i])
+            i += 1
+    elif kind == "thue_morse_plus_1":
+        a = [bin(i).count("1") % 2 + 1 for i in range(count)]
+    else:
+        raise ValueError(f"unknown sequence {kind!r}")
+    return a[:count]
 
 
 def intervals(setup, dmax):
     """Relief intervals [lo, hi) in mm, each with its filament name."""
     tol, acc = setup["stock_tolerance_mm"], setup["accent_below_mm"]
-    if setup["grow_from"] != "base":
-        raise ValueError("only grow_from='base' is implemented")
-    out = [(-1.0, tol, "stock"), (tol, acc, "accent")]
-    top = 0.0
-    for n, a in enumerate(sequence(setup["sequence"], 200), start=1):
-        if top >= dmax:
+    rule, k, unit = setup["colour_rule"], setup["k"], setup["unit_mm"]
+    if setup["grow_from"] not in ("base", "tip"):
+        raise ValueError("grow_from must be 'base' (shell surface up) or 'tip' (highest tip down)")
+    bands, done = [], 0.0
+    for n, a in enumerate(sequence(setup["sequence"], 2000), start=1):
+        if done >= dmax:
             break
-        lo, hi = top, top + a * setup["unit_mm"]
-        top = hi
-        rule = setup["colour_rule"]
-        ci = (a if rule == "a_mod_k" else n) % setup["k"]
+        w = a * unit
+        if setup["grow_from"] == "base":
+            lo, hi = done, min(dmax, done + w)
+        else:  # counted down from the highest point of the relief
+            lo, hi = max(0.0, dmax - done - w), dmax - done
+        done += w
+        bands.append((lo, hi, f"c{(a if rule == 'a_mod_k' else n) % k}"))
+    bands.sort()
+    out = [(-1.0, tol, "stock"), (tol, acc, "accent")]
+    for lo, hi, name in bands:
         lo = max(lo, acc)
         if hi > lo:
-            out.append((lo, hi, f"c{ci}"))
+            out.append((lo, hi, name))
     out[-1] = (out[-1][0], dmax + 1.0, out[-1][2])
     return out
 
