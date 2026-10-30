@@ -52,6 +52,13 @@ p.add_argument("--height", type=int, default=1080)
 p.add_argument("--center", default=None,
                help="aim the camera at the middle of this phase (a walk_then_behave.py "
                     "recording's phase name) instead of the middle of its path")
+p.add_argument("--orbit", type=float, default=0.0,
+               help="instead of the angles: hold the first pose and circle it once in "
+                    "this many seconds")
+p.add_argument("--orbit-distance", type=float, default=0.55)
+p.add_argument("--orbit-elevation", type=float, default=28.0, help="degrees above level")
+p.add_argument("--orbit-height", type=float, default=0.09, help="aim point above the floor, m")
+p.add_argument("--orbit-start", type=float, default=200.0, help="first azimuth, degrees")
 p.add_argument("--zoom", type=float, default=1.0,
                help="camera distance multiplier, for clips that cover more ground")
 p.add_argument("--hold", type=float, default=0.5, help="s of still pose added at each end")
@@ -230,6 +237,23 @@ vopt = mujoco.MjvOption()
 vopt.geomgroup[1] = 0
 os.makedirs(a.out_dir, exist_ok=True)
 length = (T - 1) * dt
+if a.orbit:
+    # A turntable: the recording's first pose held, the camera circling it once.
+    pose(0.0)
+    cam = mujoco.MjvCamera()
+    cam.lookat[:] = [d.qpos[root], d.qpos[root + 1], a.orbit_height]
+    cam.elevation, cam.distance = -a.orbit_elevation, a.orbit_distance
+    frames = []
+    n = int(round(a.orbit * a.fps))
+    for i in range(n):
+        cam.azimuth = a.orbit_start + 360.0 * i / n
+        r.update_scene(d, cam, scene_option=vopt)
+        frames.append(r.render())
+    out = os.path.join(a.out_dir, f"{a.name}_orbit.mp4")
+    mediapy.write_video(out, frames, fps=a.fps, crf=18)
+    print(f"wrote {out}: {len(frames)} frames, {len(frames) / a.fps:.1f} s")
+    sys.exit(0)
+
 for angle in a.angles.split(","):
     az, el, dist = ANGLES[angle]
     cam = mujoco.MjvCamera()
