@@ -62,10 +62,10 @@ echo "assembling"
 for tag in tk sr sd; do
   d=$(dur $C/${tag}_side_1x.mp4)
   ffmpeg -loglevel error -y -i $C/${tag}_side_1x.mp4 -i $C/${tag}_front_1x.mp4 -i $C/${tag}_low_1x.mp4 -i $C/${tag}_top_1x.mp4 \
-    -filter_complex "[0][1]hstack[t];[2][3]hstack[b];[t][b]vstack,trim=0:$(echo "$d-3" | bc),setpts=PTS-STARTPTS" $ENC $W/${tag}_four.mp4
+    -filter_complex "[0][1]hstack[t];[2][3]hstack[b];[t][b]vstack,trim=0:$(awk "BEGIN{print $d-3}"),setpts=PTS-STARTPTS" $ENC $W/${tag}_four.mp4
   d=$(dur $C/${tag}_close_track_0.5x.mp4)
   ffmpeg -loglevel error -y -i $C/${tag}_close_track_0.5x.mp4 -i $O/speed_0.5x.png \
-    -filter_complex "[0][1]overlay=0:0,fade=t=out:st=$(echo "$d-1" | bc):d=1" $ENC $W/${tag}_close.mp4
+    -filter_complex "[0][1]overlay=0:0,fade=t=out:st=$(awk "BEGIN{print $d-1}"):d=1" $ENC $W/${tag}_close.mp4
 done
 # Stock: the side view held 4 s at the landing (6.76 s in) under the warning, its last
 # 3 s cut; then the 0.25x close-up of the self-stand, fading out as it walks off.
@@ -73,11 +73,11 @@ AT=6.76
 ffmpeg -loglevel error -y -ss $AT -i $C/st_side_1x.mp4 -frames:v 1 $W/st_landing.png
 d=$(dur $C/st_side_1x.mp4)
 ffmpeg -loglevel error -y -i $C/st_side_1x.mp4 -loop 1 -t 4 -i $W/st_landing.png -i $O/stock_shell_warning.png \
-  -filter_complex "[0]trim=0:$AT,setpts=PTS-STARTPTS,fps=60,format=yuv420p[a];[1][2]overlay=0:0,fps=60,format=yuv420p,setsar=1[b];[0]trim=start=$AT:end=$(echo "$d-3" | bc),setpts=PTS-STARTPTS,fps=60,format=yuv420p[c];[a][b][c]concat=n=3:v=1:a=0" \
+  -filter_complex "[0]trim=0:$AT,setpts=PTS-STARTPTS,fps=60,format=yuv420p[a];[1][2]overlay=0:0,fps=60,format=yuv420p,setsar=1[b];[0]trim=start=$AT:end=$(awk "BEGIN{print $d-3}"),setpts=PTS-STARTPTS,fps=60,format=yuv420p[c];[a][b][c]concat=n=3:v=1:a=0" \
   $ENC $W/st_side.mp4
 d=$(dur $C/st_close_track_0.25x.mp4)
 ffmpeg -loglevel error -y -i $C/st_close_track_0.25x.mp4 -i $O/speed_0.25x.png \
-  -filter_complex "[0][1]overlay=0:0,fade=t=out:st=$(echo "$d-1" | bc):d=1" $ENC $W/st_close.mp4
+  -filter_complex "[0][1]overlay=0:0,fade=t=out:st=$(awk "BEGIN{print $d-1}"):d=1" $ENC $W/st_close.mp4
 
 in=(); filt=""; n=0
 add_still() { in+=(-loop 1 -t "$2" -i "$1"); filt+="[$n]scale=1920:1080,setsar=1,fps=60,format=yuv420p${3:-}[v$n];"; n=$((n+1)); }
