@@ -57,6 +57,9 @@ p.add_argument("--orbit", type=float, default=0.0,
                     "this many seconds")
 p.add_argument("--orbit-distance", type=float, default=0.55)
 p.add_argument("--orbit-elevation", type=float, default=28.0, help="degrees above level")
+p.add_argument("--orbit-peak", type=float, default=None,
+               help="degrees above level the camera rises to at mid-orbit (e.g. 85: "
+                    "nearly overhead), easing up from and back to --orbit-elevation")
 p.add_argument("--orbit-height", type=float, default=0.09, help="aim point above the floor, m")
 p.add_argument("--orbit-start", type=float, default=200.0, help="first azimuth, degrees")
 p.add_argument("--track", default=None,
@@ -294,6 +297,10 @@ if a.orbit:
     n = int(round(a.orbit * a.fps))
     for i in range(n):
         cam.azimuth = a.orbit_start + 360.0 * i / n
+        if a.orbit_peak is not None:
+            # Rise smoothly to --orbit-peak at mid-orbit and back: over the top once.
+            bump = 0.5 * (1.0 - math.cos(2.0 * math.pi * i / n))
+            cam.elevation = -(a.orbit_elevation + (a.orbit_peak - a.orbit_elevation) * bump)
         r.update_scene(d, cam, scene_option=vopt)
         frames.append(r.render())
     out = os.path.join(a.out_dir, f"{a.name}_orbit.mp4")
