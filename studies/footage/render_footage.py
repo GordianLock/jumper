@@ -56,6 +56,12 @@ p.add_argument("--scene", default=None,
 p.add_argument("--floor", default=None, choices=("hardwood",),
                help="a look for the ground (display only; the physics is untouched): "
                     "hardwood, from studies/footage/make_wood.py")
+p.add_argument("--surround", default=None, choices=("grass",),
+               help="with --floor: the floor becomes a deck --deck m across around the "
+                    "action, and the ground beyond it this (display only)")
+p.add_argument("--deck", type=float, default=12.0,
+               help="deck size for --surround, m: wide enough that the grass shows only "
+                    "towards the horizon")
 p.add_argument("--colour", default=None,
                help="a colour pattern folder (design/carapace/colour/<folder>): its display "
                     "meshes replace the top shell's and carapace's visuals")
@@ -120,10 +126,44 @@ if a.floor == "hardwood":
                              texrepeat=[1 / 1.2, 1 / 1.2], reflectance=0.0, specular=0.25,
                              shininess=0.4)
     wood.textures[mujoco.mjtTextureRole.mjTEXROLE_RGB] = "footage_hardwood"
-    for g in spec.geoms:
-        if g.type == mujoco.mjtGeom.mjGEOM_PLANE:
+    planes = [g for g in spec.geoms if g.type == mujoco.mjtGeom.mjGEOM_PLANE]
+    if a.surround == "grass":
+        # The ground plane keeps its physics and wears the wood, drawn only --deck m
+        # across around the action; beyond it a display-only lawn 5 cm lower runs to
+        # the horizon. A separate plane rather than a second one coplanar with the
+        # floor: two planes millimetres apart fight for the depth buffer at distance.
+        # The grass image is the football scene's (two mown bands per repeat).
+        spec.add_texture(name="footage_grass", type=mujoco.mjtTexture.mjTEXTURE_2D,
+                         file=os.path.join(HERE, "..", "..", "scenes", "assets", "football",
+                                           "grass.png"))
+        grass = spec.add_material(name="footage_grass", texuniform=True,
+                                  texrepeat=[0.7, 0.7], reflectance=0.0)
+        grass.textures[mujoco.mjtTextureRole.mjTEXROLE_RGB] = "footage_grass"
+        rp = np.load(a.rec)["root_pos"]
+        cx, cy = (rp[:, 0].min() + rp[:, 0].max()) / 2, (rp[:, 1].min() + rp[:, 1].max()) / 2
+        for g in planes:
+            g.material = "footage_hardwood"
+            g.size = [a.deck / 2, a.deck / 2, g.size[2]]
+            g.pos = [cx, cy, g.pos[2]]
+        spec.worldbody.add_geom(name="footage_lawn", type=mujoco.mjtGeom.mjGEOM_PLANE,
+                                size=[400.0, 400.0, 0.01], pos=[cx, cy, -0.05],
+                                material="footage_grass", contype=0, conaffinity=0, group=2)
+        for t in list(spec.textures):
+            if t.type == mujoco.mjtTexture.mjTEXTURE_SKYBOX:
+                spec.delete(t)
+        spec.add_texture(name="footage_day_sky", type=mujoco.mjtTexture.mjTEXTURE_SKYBOX,
+                         builtin=mujoco.mjtBuiltin.mjBUILTIN_GRADIENT, width=512, height=512,
+                         rgb1=[0.62, 0.77, 0.93], rgb2=[0.30, 0.50, 0.80])
+    else:
+        for g in planes:
             g.material = "footage_hardwood"
 m = spec.compile()
+# The camera's near/far planes and the shadow map scale with the model's extent, which
+# a ground plane drawn out to the horizon makes hundreds of metres: the near plane then
+# cuts into the robot. Set it to the action's scale, and the far plane past the horizon.
+m.stat.extent = 2.0
+m.vis.map.znear = 0.01
+m.vis.map.zfar = 400.0
 # No mirror in the ground: MuJoCo's reflectance mirrors the whole scene under the floor.
 for g in range(m.ngeom):
     if m.geom_type[g] in (mujoco.mjtGeom.mjGEOM_PLANE, mujoco.mjtGeom.mjGEOM_HFIELD) \
@@ -133,6 +173,11 @@ m.vis.global_.offwidth = max(m.vis.global_.offwidth, a.width)
 m.vis.global_.offheight = max(m.vis.global_.offheight, a.height)
 m.vis.quality.shadowsize = 4096
 m.vis.quality.offsamples = 4
+# The sun's shadow map spans shadowclip x the model's extent, which the ground planes
+# make metres wide; at that spread its texels are centimetres and the floor speckles
+# (shadow acne). Clip it to SHADOW_REACH m around the scene centre instead.
+SHADOW_REACH = 0.4
+m.vis.map.shadowclip = min(m.vis.map.shadowclip, SHADOW_REACH / max(m.stat.extent, 1e-6))
 d = mujoco.MjData(m)
 pre = "robot/" if mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_JOINT, "robot/" + names[0]) >= 0 else ""
 adr = [m.jnt_qposadr[m.joint(pre + n).id] for n in names]
