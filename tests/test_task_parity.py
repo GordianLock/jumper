@@ -102,6 +102,7 @@ NOT_LOCOMOTION = {
     "jumper.horn_roll",
     # Self-righting from on its back, paid for rising, not turning: one-shot.
     "jumper.self_right",
+    "jumper.lie_down",
     # jumper.horn_roll with the arms tucked under the face: arms collide with the
     # body, front-of-body floor contact charged, a tuck term.
     "jumper.tuck_roll",

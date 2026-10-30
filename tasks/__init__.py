@@ -62,6 +62,7 @@ from .jumper import five_foot  # noqa: F401,E402
 from .jumper import flourish_roll  # noqa: F401,E402
 from .jumper import horn_roll  # noqa: F401,E402
 from .jumper import self_right  # noqa: F401,E402
+from .jumper import lie_down  # noqa: F401,E402
 from .jumper import tuck_roll  # noqa: F401,E402
 from .jumper import diag_roll  # noqa: F401,E402
 from .jumper import spin_drift  # noqa: F401,E402
