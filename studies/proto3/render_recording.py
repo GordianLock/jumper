@@ -25,6 +25,7 @@ p.add_argument("rec")
 p.add_argument("out")
 p.add_argument("--speed", type=float, default=0.5)
 p.add_argument("--fps", type=int, default=30)
+p.add_argument("--label", default="turn", help="the word before the angle in the caption")
 p.add_argument("--model", default=None,
                help="carapace model name (e.g. CF1-tri30m-rb-v4); default: the search scene's")
 a = p.parse_args()
@@ -35,7 +36,8 @@ h = np.load(a.rec)
 names = [str(n) for n in h["joint_names"]]
 if a.model:
     spec = mujoco.MjSpec.from_file(os.path.join(HERE, "..", "..", "assets", "jumper",
-                                                f"jumper_{a.model}.xml"))
+                                                "jumper.xml" if a.model == "jumper"
+                                                else f"jumper_{a.model}.xml"))
     spec.worldbody.add_geom(name="floor", type=mujoco.mjtGeom.mjGEOM_PLANE, size=[5, 5, 0.1],
                             rgba=[0.25, 0.35, 0.5, 1])
     spec.worldbody.add_light(pos=[0, 0, 3], dir=[0, 0, -1], diffuse=[0.8, 0.8, 0.8])
@@ -74,7 +76,7 @@ for i in range(n_out):
     img = Image.fromarray(np.hstack(views))
     dr = ImageDraw.Draw(img)
     turn = math.degrees(float(h["total"][k]))
-    dr.text((10, 8), f"t = {k * dt:4.2f} s   turn {turn:4.0f} deg   ({a.speed:g}x speed)",
+    dr.text((10, 8), f"t = {k * dt:4.2f} s   {a.label} {turn:4.0f} deg   ({a.speed:g}x speed)",
             fill=(255, 255, 255))
     dr.text((10, H - 20), "across the roll axis", fill=(255, 255, 255))
     dr.text((W + 10, H - 20), "along the roll axis", fill=(255, 255, 255))

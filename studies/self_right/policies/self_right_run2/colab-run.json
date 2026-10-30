@@ -1,0 +1,60 @@
+{
+  "checkpoint": "/content/stock-stand-2/logs/jumper/jumper.self_right/2026-10-29_23-19-51/model_2499.pt",
+  "checkpoints": {
+    "model_0.pt": "b8e2aceb57f88b7fd27b41f03055a1cfe0050a83d5ea45bd325511a0f0943c7a",
+    "model_1000.pt": "4622bda3ae06cce1fc704eda05435acec313da94383c15b15127018feb13d813",
+    "model_1250.pt": "ef5be4592381cb5fab9de497b1354297b44c295559163e76267b60b988c866f7",
+    "model_1500.pt": "5f0c016da89dc1ba00d8f60a6a1adad11164c78826f25dceded2a8a2e17f0839",
+    "model_1750.pt": "ef4cc70d2dff15719ade8681d0e0e54fa4cea2f24bf545d2604283fe85c1a5ff",
+    "model_2000.pt": "ed9e67810f27ff46309239e57639e1f1dadf221901f5a63aa448b78d4cdcce5f",
+    "model_2250.pt": "71f4f5cf1d0e52bbbea9009291b70e574b1f2a1268dbeee0039d3a0489cc68a1",
+    "model_2499.pt": "43754f77080448375c0fcdc393fb0ffea80ed232b2c2ded16efb41f07ff29bfb",
+    "model_250.pt": "71437a8584e1c84cb05fc6ed7bf035ff3f18c2ee1844cc45bed1b9d3da0e1b78",
+    "model_500.pt": "35d578c7a7dea1b0a666a1dc68ae35086d8933b1415cd242cf18920272484910",
+    "model_750.pt": "2a490cdfe66f9444825ebe1975a1d53e2e0dbab2f790a46129ba099c4773b063"
+  },
+  "command": [
+    "/content/stock-stand-2/.venv/bin/python",
+    "scripts/train.py",
+    "--task",
+    "jumper.self_right",
+    "--model",
+    "jumper",
+    "--backend",
+    "warp",
+    "--device",
+    "cuda:0",
+    "--num_envs",
+    "256",
+    "--max-iterations",
+    "2500",
+    "--headless",
+    "--no-tensorboard",
+    "--logger",
+    "tensorboard"
+  ],
+  "config": {
+    "backend": "warp",
+    "device": "cuda:0",
+    "mjrl_environment": {},
+    "model": "jumper",
+    "num_envs": 256,
+    "repository_url": "https://github.com/GordianLock/jumper.git",
+    "revision": "ae1462758b6788d589c64c50d2552c5c8c2561fb",
+    "runtime_versions": {
+      "mujoco": "3.11.0",
+      "mujoco-warp": "3.11.0",
+      "numpy": "2.5.4",
+      "tensordict": "0.15.3",
+      "torch": "2.15.0",
+      "warp-lang": "1.18.0"
+    },
+    "source_sha256": "7c0f6eea9d0dd7b01c5a4902b7c09f29dec0fc05d747f1f4393df9df472a2583",
+    "task": "jumper.self_right"
+  },
+  "operation": "4b98c8ab09834080afb30b61f68e1499",
+  "resume_from": null,
+  "run_directory": "/content/stock-stand-2/logs/jumper/jumper.self_right/2026-10-29_23-19-51",
+  "schema": 1,
+  "status": "finished"
+}
