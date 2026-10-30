@@ -64,6 +64,8 @@ p.add_argument("--track", default=None,
                     "phase (a walk_then_behave.py recording's phase name), at the first "
                     "of --speeds")
 p.add_argument("--track-pad", type=float, default=0.4, help="s before and after the phase")
+p.add_argument("--track-pre", type=float, default=None,
+               help="s before the phase, if not --track-pad")
 p.add_argument("--track-distance", type=float, default=0.6)
 p.add_argument("--track-elevation", type=float, default=22.0, help="degrees above level")
 p.add_argument("--track-height", type=float, default=0.09)
@@ -254,7 +256,8 @@ if a.track:
     # jitters with every bounce), and swings --track-sweep degrees round it.
     names = [str(nm) for nm in h["phase_names"]]
     i_ = names.index(a.track)
-    t0 = (int(h["phases"][i_ - 1]) if i_ > 0 else 0) * dt - a.track_pad
+    pre = a.track_pre if a.track_pre is not None else a.track_pad
+    t0 = (int(h["phases"][i_ - 1]) if i_ > 0 else 0) * dt - pre
     t1 = int(h["phases"][i_]) * dt + a.track_pad
     TRACK_SMOOTH = 0.25
     k_ = np.exp(-0.5 * (np.arange(-60, 61) * dt / (TRACK_SMOOTH / 2)) ** 2)
