@@ -64,7 +64,7 @@ from .jumper import horn_roll  # noqa: F401,E402
 from .jumper import self_right  # noqa: F401,E402
 from .jumper import tuck_roll  # noqa: F401,E402
 from .jumper import diag_roll  # noqa: F401,E402
-from .jumper import spin_roll  # noqa: F401,E402
+from .jumper import spin_drift  # noqa: F401,E402
 from .jumper import spin_roll_axis  # noqa: F401,E402
 from .jumper import spin_spin  # noqa: F401,E402
 from .jumper import flat  # noqa: F401,E402

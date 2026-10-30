@@ -108,10 +108,10 @@ NOT_LOCOMOTION = {
     # jumper.tuck_roll about a diagonal: its own demonstration, nothing else.
     "jumper.diag_roll",
     # jumper.tuck_roll with the spin roll's demonstration, prototype 4 first.
-    "jumper.spin_roll",
-    # jumper.spin_roll held to its demonstration's roll axis.
+    "jumper.spin_drift",
+    # jumper.spin_drift held to its demonstration's roll axis.
     "jumper.spin_roll_axis",
-    # jumper.spin_roll free to pivot on the spot (no axis_heading charge).
+    # jumper.spin_drift free to pivot on the spot (no axis_heading charge).
     "jumper.spin_spin",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of

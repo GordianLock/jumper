@@ -1,4 +1,4 @@
-"""jumper.spin_roll -- the spin roll, standing to standing.
+"""jumper.spin_drift -- the spin roll, standing to standing.
 
 The move (named 2026-10-29): the robot crouches, tips over a front corner, goes up
 onto its side until nearly vertical, and comes over and down onto its legs. It does

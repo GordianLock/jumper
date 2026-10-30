@@ -1,6 +1,6 @@
 """jumper.spin_spin -- the spin roll, free to pivot on the spot.
 
-jumper.spin_roll (the version that lets the roll drift off its demonstration's axis
+jumper.spin_drift (the version that lets the roll drift off its demonstration's axis
 once the guide fades) with one term removed: `axis_heading`, jumper.horn_roll's charge
 on the roll axis turning in the world, which is what a robot pivoting about the
 vertical does. So the roll may wind up into a spin about the vertical as well.
@@ -16,11 +16,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ..spin_roll import env_cfg as spin
+from ..spin_drift import env_cfg as spin
 
 
 def env_cfg(asset: Path | None = None, play: bool = False):
-    """jumper.spin_roll without the charge on pivoting."""
+    """jumper.spin_drift without the charge on pivoting."""
     cfg = spin.env_cfg(asset=asset, play=play)
     cfg.rewards.pop("axis_heading")
     return cfg
