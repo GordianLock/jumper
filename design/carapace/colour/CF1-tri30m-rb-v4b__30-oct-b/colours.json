@@ -1,0 +1,138 @@
+{
+  "setup": "30 Oct B",
+  "version": "CF1-tri30m-rb-v4b",
+  "frame": "upper_shell_link (as urdf/jumper/meshes/visual/upper_shell_link.stl)",
+  "units": "metres",
+  "relief_intervals_mm": [
+    {
+      "lo": 0.0,
+      "hi": 0.001,
+      "filament": "stock"
+    },
+    {
+      "lo": 0.001,
+      "hi": 0.6,
+      "filament": "accent"
+    },
+    {
+      "lo": 0.6,
+      "hi": 2.5,
+      "filament": "c1"
+    },
+    {
+      "lo": 2.5,
+      "hi": 5.0,
+      "filament": "c2"
+    },
+    {
+      "lo": 5.0,
+      "hi": 10.0,
+      "filament": "c3"
+    },
+    {
+      "lo": 10.0,
+      "hi": 17.5,
+      "filament": "c0"
+    },
+    {
+      "lo": 17.5,
+      "hi": 30.0,
+      "filament": "c1"
+    },
+    {
+      "lo": 30.0,
+      "hi": 40.932,
+      "filament": "c2"
+    }
+  ],
+  "pieces": [
+    {
+      "filament": "stock",
+      "file": "stock.stl",
+      "hex": "#D33416",
+      "rgba": [
+        0.8275,
+        0.2039,
+        0.0863,
+        1
+      ],
+      "triangles": 38260,
+      "area_mm2": 96051.4,
+      "area_share": 0.8
+    },
+    {
+      "filament": "accent",
+      "file": "accent.stl",
+      "hex": "#0C0D0D",
+      "rgba": [
+        0.0471,
+        0.051,
+        0.051,
+        1
+      ],
+      "triangles": 20308,
+      "area_mm2": 2643.1,
+      "area_share": 0.022
+    },
+    {
+      "filament": "c0",
+      "file": "c0.stl",
+      "hex": "#1F1F1F",
+      "rgba": [
+        0.1216,
+        0.1216,
+        0.1216,
+        1
+      ],
+      "triangles": 13506,
+      "area_mm2": 3955.1,
+      "area_share": 0.0329
+    },
+    {
+      "filament": "c1",
+      "file": "c1.stl",
+      "hex": "#9CC21E",
+      "rgba": [
+        0.6118,
+        0.7608,
+        0.1176,
+        1
+      ],
+      "triangles": 30216,
+      "area_mm2": 8351.3,
+      "area_share": 0.0696
+    },
+    {
+      "filament": "c2",
+      "file": "c2.stl",
+      "hex": "#E6DA32",
+      "rgba": [
+        0.902,
+        0.8549,
+        0.1961,
+        1
+      ],
+      "triangles": 18943,
+      "area_mm2": 4925.0,
+      "area_share": 0.041
+    },
+    {
+      "filament": "c3",
+      "file": "c3.stl",
+      "hex": "#530A75",
+      "rgba": [
+        0.3255,
+        0.0392,
+        0.4588,
+        1
+      ],
+      "triangles": 15228,
+      "area_mm2": 4137.5,
+      "area_share": 0.0345
+    }
+  ],
+  "area_check_mm2": {
+    "pieces": 120063.5,
+    "printable": 120063.5
+  }
+}
