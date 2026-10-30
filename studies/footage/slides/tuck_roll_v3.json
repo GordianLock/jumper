@@ -8,17 +8,17 @@
   },
   {
    "en": "Roll time",
-   "zh": "翻滚用时",
+   "zh": "翻滚耗时",
    "value": "0.84 – 0.88 s"
   },
   {
    "en": "Peak joint torque from floor contact",
-   "zh": "地面接触产生的关节扭矩峰值",
+   "zh": "地面接触引起的关节力矩峰值",
    "value": "5.6 – 7.7 N·m"
   },
   {
    "en": "KingKong's own jump, measured the same way",
-   "zh": "同法测得的 KingKong 官方跳跃",
+   "zh": "KingKong 自身跳跃时的测量值（采用相同方法）",
    "value": "4.8 N·m (5.6 worst)",
    "note": true
   },
@@ -29,12 +29,12 @@
   },
   {
    "en": "Carapace impact",
-   "zh": "甲壳冲击力",
+   "zh": "甲壳受到的冲击力",
    "value": "97 – 164 N"
   },
   {
    "en": "Face / sensors touching floor",
-   "zh": "面部/传感器触地",
+   "zh": "面部／传感器与地面接触",
    "value": "0 N"
   },
   {
@@ -46,6 +46,6 @@
  "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 11 rolls each",
  "schema": "Color schema: Fibonacci (1, 1, 2, 3, 5, 8, 13, 21, …)",
  "title_zh": "原型 3 演示：抱团前滚翻",
- "footnote_zh": "MuJoCo 仿真：1 台标准机器人 + 4 台随机化机器人（摩擦、质量分布、传感器偏差），每台翻滚 11 次",
+ "footnote_zh": "MuJoCo 仿真：1 台基准机器人 + 4 台参数随机化机器人（摩擦系数、质量分布、传感器偏差），每台翻滚 11 次",
  "schema_zh": "配色方案：斐波那契数列（1, 1, 2, 3, 5, 8, 13, 21, …）"
 }
