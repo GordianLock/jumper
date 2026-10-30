@@ -1,0 +1,49 @@
+{
+ "title": "Stock model performing Self-righting",
+ "rows": [
+  {
+   "en": "Successful self-rights",
+   "zh": "成功翻正次数",
+   "value": "49 / 49"
+  },
+  {
+   "en": "Time from release to standing",
+   "zh": "从释放到站立的耗时",
+   "value": "0.42 – 0.44 s"
+  },
+  {
+   "en": "Peak joint torque from floor contact",
+   "zh": "地面接触引起的关节力矩峰值",
+   "value": "4.2 – 5.1 N·m"
+  },
+  {
+   "en": "KingKong's own jump, measured the same way",
+   "zh": "KingKong 自身跳跃时的测量值（采用相同方法）",
+   "value": "4.8 N·m (5.6 worst)",
+   "note": true
+  },
+  {
+   "en": "Floor impact",
+   "zh": "地面冲击力",
+   "value": "73 – 133 N"
+  },
+  {
+   "en": "Stock shell impact",
+   "zh": "原厂外壳受到的冲击力",
+   "value": "66 – 133 N"
+  },
+  {
+   "en": "Face / sensors touching floor",
+   "zh": "面部／传感器触地受力",
+   "value": "0 N"
+  },
+  {
+   "en": "Longest airborne moment",
+   "zh": "最长腾空时间",
+   "value": "0.04 – 0.06 s"
+  }
+ ],
+ "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 9–10 self-rights each",
+ "title_zh": "原厂型号演示：自主翻正",
+ "footnote_zh": "MuJoCo 仿真：1 台基准机器人 + 4 台参数随机化机器人（摩擦系数、质量分布、传感器偏差），每台翻正 9–10 次"
+}
