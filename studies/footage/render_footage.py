@@ -294,7 +294,8 @@ if a.track:
 if a.orbit:
     # A turntable, the recording's first pose held. The camera circles low at one turn
     # per --orbit s. With --orbit-peak: from --orbit-rise-at s it spirals up -- still
-    # turning, slowing smoothly -- to that elevation, arriving there just as it stops
+    # turning at that rate, easing only at the very end -- to that elevation, arriving
+    # there just as it stops
     # on the heading that puts the robot's front at the top of the screen; holds
     # --orbit-end-hold s; fades to black over --fade-out s. Without it, one low turn
     # and the fade.
@@ -325,20 +326,29 @@ if a.orbit:
             shot()
             az += rate * dt_f
             t += dt_f
-        # A spiral: from here the camera keeps turning, slowing smoothly from the low
-        # turn's rate to a stop exactly on the heading that puts the robot's front at
-        # the top of the screen, and rises with it, arriving overhead as it stops.
+        # A spiral: from here the camera keeps turning at the low turn's rate and rises
+        # with it, easing to a stop over the last STOP_S on the heading that puts the
+        # robot's front at the top of the screen, overhead as it stops.
+        STOP_S = 0.6
         target = az + (front - az) % 360.0
         if target - az < 90.0:
             target += 360.0
         span = target - az
-        dur = 2.0 * span / rate                              # az = span (2u - u^2)
+        cruise = (span - rate * STOP_S / 2) / rate           # s at full rate
+        dur = cruise + STOP_S
         az0 = az
         for k in range(int(round(dur * a.fps))):
-            u = min(1.0, k / (dur * a.fps))
-            az = az0 + span * (2 * u - u * u)
+            tt = k / a.fps
+            if tt <= cruise:
+                done = rate * tt
+            else:
+                e = tt - cruise
+                done = rate * cruise + rate * e - rate * e * e / (2 * STOP_S)
+            az = az0 + min(done, span)
+            u = min(1.0, done / span)
             el = a.orbit_elevation + (a.orbit_peak - a.orbit_elevation) * (3 * u * u - 2 * u ** 3)
             shot()
+        az = target
         el = a.orbit_peak
         az = target
         for _ in range(int(round(a.orbit_end_hold * a.fps))):
