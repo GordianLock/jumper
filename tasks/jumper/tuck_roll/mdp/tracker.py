@@ -10,6 +10,8 @@
 `front_force` reads the sensor's contact positions, so one geom (the base, the upper
 shell) counts only where it actually touches: its back on the floor is not its front.
 
+- `rot_sum`, `axis_error_deg`, `off_axis_rate`: which way the roll is going, for a
+  task that holds it to the demonstration's axis (jumper.spin_roll_axis).
 - `peak_load`: the episode's worst floor-contact joint torque |J^T f|, N*m, from
   `common/floor_load.py` (`floor_load`), sampled at every physics step.
 """
@@ -57,6 +59,9 @@ class TuckRollTracker(HornRollTracker):
         self.metrics["peak_joint_load_Nm"] = torch.zeros(n, device=self.device)
         self.floor_load = FloorJointLoad(env, cfg.load_sensor, cfg.load_joints,
                                          cfg.entity_name)
+        #: The body-frame rotation accumulated while between belly-up and upright, rad:
+        #: its horizontal direction is the axis this episode rolled about.
+        self.rot_sum = torch.zeros(n, 3, device=self.device)
 
     def substep_joint_load(self) -> torch.Tensor:
         """This physics step's floor load per load joint, N*m, [B, J]."""
@@ -65,6 +70,22 @@ class TuckRollTracker(HornRollTracker):
     def floor_joint_load(self) -> torch.Tensor:
         """The worst floor load per load joint over this control step, N*m, [B, J]."""
         return self.floor_load.step()
+
+    def off_axis_rate(self) -> torch.Tensor:
+        """The body's horizontal rotation rate about axes other than the
+        demonstration's, rad/s: |w_xy - (w_xy . a) a|, a the demonstration's axis."""
+        w = self.robot.data.root_link_ang_vel_b[:, :2]
+        a = self.axis[:2] / self.axis[:2].norm()
+        return (w - (w @ a).unsqueeze(1) * a).norm(dim=1)
+
+    def axis_error_deg(self) -> torch.Tensor:
+        """The angle between the axis rolled about so far this episode (`rot_sum`) and
+        the demonstration's, either way round, degrees; 0 before any rolling."""
+        r = self.rot_sum[:, :2]
+        a = self.axis[:2] / self.axis[:2].norm()
+        n = r.norm(dim=1)
+        cos = ((r @ a).abs() / n.clamp(min=1e-6)).clamp(max=1.0)
+        return torch.where(n > 0.3, torch.rad2deg(torch.acos(cos)), torch.zeros_like(n))
 
     def front_force(self) -> torch.Tensor:
         """Floor force on the front of the body now, N (module docstring)."""
@@ -84,6 +105,7 @@ class TuckRollTracker(HornRollTracker):
         self.peak_front[env_ids] = 0.0
         self.peak_load[env_ids] = 0.0
         self.floor_load.reset(env_ids)
+        self.rot_sum[env_ids] = 0.0
 
     def _update_metrics(self) -> None:
         super()._update_metrics()
@@ -101,6 +123,9 @@ class TuckRollTracker(HornRollTracker):
         self.peak_load.copy_(torch.maximum(self.peak_load,
                                            self.floor_joint_load().max(dim=1).values * lf))
         self.floor_load.end_step()
+        up = -self.robot.data.projected_gravity_b[:, 2]
+        mid = ((up > -0.9) & (up < 0.9) & ~self.settling).float().unsqueeze(1)
+        self.rot_sum.add_(self.robot.data.root_link_ang_vel_b * mid * self._env.step_dt)
 
 
 __all__ = ["TuckRollTracker", "TuckRollTrackerCfg"]

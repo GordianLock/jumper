@@ -1,0 +1,49 @@
+"""jumper.spin_roll_axis -- the spin roll, held to its axis.
+
+jumper.spin_roll counts the turn about the demonstration's axis, and once the guide
+has faded nothing holds the roll to it: jumper.diag_roll's first policy, trained the
+same way, drifted from its 47 deg diagonal to 81 deg, nearly end over end (kept as the
+shoulder roll). This task is jumper.spin_roll, identical, plus two terms that last the
+whole of training:
+
+- **`off_axis`**, per step: the body's horizontal rotation rate about axes other than
+  the demonstration's, charged ((r - `OFF_AXIS_FREE`) / `OFF_AXIS_SCALE`)^2, capped.
+  The move is a spin: the demonstration itself turns off its axis at 1.5 rad/s median,
+  4.1 at its 90th percentile, 7.8 at most (measured on `spin_roll/ref/spin_roll.npz`),
+  so rates up to its 90th percentile are free and the charge is for leaving it.
+- **The finishing bonus is scaled by the axis**: exp(-(e / `AXIS_SIGMA_DEG`)^2), e the
+  angle between the axis the episode rolled about (body-frame rotation accumulated
+  between belly-up and upright, `tuck_roll/mdp/tracker.py`) and the demonstration's.
+  At 20 deg off a roll keeps 37% of the bonus; at the shoulder roll's 29 deg, 12%.
+
+The bonus scaling is what holds the axis; the per-step charge only keeps the roll from
+leaving the demonstration's own amount of spin. Everything else, the demonstration
+included, is jumper.spin_roll's.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from mjlab.managers.reward_manager import RewardTermCfg
+
+from ..spin_roll import env_cfg as spin
+from ..tuck_roll import mdp as tr
+
+AXIS_SIGMA_DEG = 20.0
+OFF_AXIS_FREE = 4.0
+OFF_AXIS_SCALE = 4.0
+OFF_AXIS_WEIGHT = -0.3
+
+
+def env_cfg(asset: Path | None = None, play: bool = False):
+    """jumper.spin_roll held to its demonstration's axis."""
+    cfg = spin.env_cfg(asset=asset, play=play)
+    cfg.rewards["complete"].params["axis_sigma_deg"] = AXIS_SIGMA_DEG
+    cfg.rewards["off_axis"] = RewardTermCfg(func=tr.rewards.off_axis, weight=OFF_AXIS_WEIGHT,
+                                            params={"free": OFF_AXIS_FREE,
+                                                    "scale": OFF_AXIS_SCALE})
+    return cfg
+
+
+__all__ = ["env_cfg"]

@@ -75,9 +75,14 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
                     shell: tuple[float, float] = (30.0, 150.0),
                     carapace_impact: tuple[float, float] = (50.0, 200.0),
                     ground_impact: tuple[float, float] = (60.0, 250.0),
-                    flight: tuple[float, float] = (0.06, 0.20)) -> torch.Tensor:
+                    flight: tuple[float, float] = (0.06, 0.20),
+                    axis_sigma_deg: float | None = None) -> torch.Tensor:
     """jumper.horn_roll's bonus (its `rewards.gentle_complete`), the arms' load and the
-    front of the body's floor force among the factors the lowest of which scales it."""
+    front of the body's floor force among the factors the lowest of which scales it.
+    With `axis_sigma_deg`, the whole bonus is also multiplied by
+    exp(-(e / axis_sigma_deg)^2), e the angle between the axis rolled about and the
+    demonstration's (`tracker.axis_error_deg`): a roll about another axis earns none
+    of it."""
     cmd = _cmd(env, command_name)
     done = standing_done(env, command_name=command_name, min_own_turn=min_own_turn).float()
     worst = {
@@ -98,8 +103,20 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
         worst["load"] = torch.maximum(cmd.peak_load, cmd.floor_load.worst())
         bands["load"] = load
     g = torch.stack([_factor(worst[k], *bands[k]) for k in bands], dim=1).min(dim=1).values
-    return done * (gentle_floor + (1.0 - gentle_floor) * g)
+    bonus = done * (gentle_floor + (1.0 - gentle_floor) * g)
+    if axis_sigma_deg is not None:
+        bonus = bonus * torch.exp(-(cmd.axis_error_deg() / axis_sigma_deg) ** 2)
+    return bonus
 
 
-__all__ = ["arm_contact", "front_contact", "gentle_complete",
+def off_axis(env, free: float = 0.0, scale: float = 2.0, cap: float = 4.0,
+             command_name: str = "roll") -> torch.Tensor:
+    """Per step: ((r - free) / scale)^2, capped, r the body's rotation rate about
+    horizontal axes other than the demonstration's (`tracker.off_axis_rate`), rad/s."""
+    cmd = _cmd(env, command_name)
+    over = (cmd.off_axis_rate() - free).clamp(min=0.0)
+    return ((over / scale) ** 2).clamp(max=cap) * (~cmd.settling).float()
+
+
+__all__ = ["arm_contact", "front_contact", "gentle_complete", "off_axis",
            "nose_down", "tuck"]

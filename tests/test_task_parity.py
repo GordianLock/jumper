@@ -109,6 +109,8 @@ NOT_LOCOMOTION = {
     "jumper.diag_roll",
     # jumper.tuck_roll with the spin roll's demonstration, prototype 4 first.
     "jumper.spin_roll",
+    # jumper.spin_roll held to its demonstration's roll axis.
+    "jumper.spin_roll_axis",
     # Picks debris up with the left claw and puts it in a tray, standing on five
     # legs: 21 driven joints, props in the scene, a world-wide friction model of
     # its own, symmetry off, and a reward ladder for a manipulation job.
