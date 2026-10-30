@@ -15,9 +15,14 @@ back and forth earns nothing twice.
 ## The settle window
 
 Every episode starts with the robot set down on its back (`events.reset_on_back`).
-For `settle_steps` control steps it settles onto the floor; the hits and the
-high-water mark of that window are the spawn's, not the policy's, and rewards that
-judge the policy are multiplied by `~settling`.
+It then lies there, its joints held at HOME whatever the policy asks
+(`actions.HoldWhileSettlingAction`), until it is still: at least `settle_steps`
+control steps, then until the body has turned slower than `still_ang_vel` and moved
+slower than `still_lin_vel` for `still_steps` steps running, at most
+`max_settle_steps`. Only then does the policy act. The hits and the high-water mark of
+that window are the spawn's, not the policy's, and rewards that judge the policy are
+multiplied by `~settling`. (Runs 1 and 2 had a fixed window in which the policy acted
+unjudged, and learnt to rock and pump in it.)
 
 ## Contact, per episode
 
@@ -48,8 +53,15 @@ if TYPE_CHECKING:
 class SelfRightTrackerCfg(CommandTermCfg):
     entity_name: str = "robot"
     resampling_time_range: tuple[float, float] = (1.0e9, 1.0e9)
-    #: Control steps after a spawn in which the robot settles onto its back.
+    #: Settling (`SelfRightTracker.settling`): at least `settle_steps` control steps,
+    #: then until the body has been still -- turning slower than `still_ang_vel` rad/s
+    #: and moving slower than `still_lin_vel` m/s -- for `still_steps` steps running,
+    #: and never longer than `max_settle_steps`.
     settle_steps: int = 25
+    max_settle_steps: int = 100
+    still_ang_vel: float = 0.17
+    still_lin_vel: float = 0.02
+    still_steps: int = 5
     limb_sensor: str = "limb_ground_contact"
     sensor_sensor: str = "sensor_ground_contact"
     shell_sensor: str = "shell_ground_contact"
@@ -76,6 +88,8 @@ class SelfRightTracker(CommandTerm):
         self.peak_shell_impact, self.peak_ground_impact = z(), z()
         self.flight, self.longest_flight = z(), z()
         self._last: dict[str, torch.Tensor] = {}
+        self._released = torch.zeros(n, dtype=torch.bool, device=self.device)
+        self._still = torch.zeros(n, dtype=torch.long, device=self.device)
         self._dummy = torch.zeros(n, 1, device=self.device)
         self.peak_load = z()
         self.floor_load = FloorJointLoad(env, cfg.load_sensor, cfg.load_joints,
@@ -93,7 +107,20 @@ class SelfRightTracker(CommandTerm):
 
     @property
     def settling(self) -> torch.Tensor:
-        return self._env.episode_length_buf <= self.cfg.settle_steps
+        """True until the robot is released: lying still on its back after the spawn
+        (the cfg's settle fields). The action is held at HOME meanwhile
+        (`actions.HoldWhileSettlingAction`), and nothing is paid or charged."""
+        return ~self._released
+
+    def _update_release(self) -> None:
+        w = self.robot.data.root_link_ang_vel_b.norm(dim=1)
+        v = self.robot.data.root_link_lin_vel_b.norm(dim=1)
+        still = (w < self.cfg.still_ang_vel) & (v < self.cfg.still_lin_vel)
+        self._still.copy_(torch.where(still, self._still + 1, torch.zeros_like(self._still)))
+        steps = self._env.episode_length_buf
+        go = ((steps >= self.cfg.settle_steps) & (self._still >= self.cfg.still_steps)) \
+            | (steps >= self.cfg.max_settle_steps)
+        self._released |= go
 
     # ── Forces ────────────────────────────────────────────────────────────────
     def force(self, sensor: str) -> torch.Tensor:
@@ -125,6 +152,8 @@ class SelfRightTracker(CommandTerm):
                     self.peak_load):
             buf[env_ids] = 0.0
         self.floor_load.reset(env_ids)
+        self._released[env_ids] = False
+        self._still[env_ids] = 0
         for last in self._last.values():
             last[env_ids] = float("inf")             # no rise across the reset
 
@@ -162,6 +191,8 @@ class SelfRightTracker(CommandTerm):
             self._last[s] = h[:, :, 0].norm(dim=-1).sum(dim=1, keepdim=True)
         self.peak_load.copy_(torch.maximum(self.peak_load, self.floor_load.worst() * lf))
         self.floor_load.end_step()
+        # Last: a robot released now is still settling for this step's bookkeeping.
+        self._update_release()
 
 
 __all__ = ["SelfRightTracker", "SelfRightTrackerCfg"]

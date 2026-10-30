@@ -12,8 +12,16 @@ guide.
 Every episode, training and replay alike, starts on the robot's back: turned
 `SPAWN_ANGLE_RANGE` about its long axis (flat on its back +-15 deg), legs at HOME
 with `SPAWN_JOINT_NOISE`, set down on the floor (jumper.roll's `reset_rolled`). The
-first `SETTLE_STEPS` control steps (0.5 s) it settles; nothing is paid or charged
-in them, and how upright it is at their end is the baseline it must rise from.
+robot then lies still: its joints are held at HOME whatever the policy asks
+(`mdp/actions.py`) for at least `SETTLE_STEPS` control steps (0.5 s) and until the
+body has stopped moving (`mdp/tracker.py`, at most `MAX_SETTLE_STEPS`). Only then does
+the policy act; nothing is paid or charged before, and how upright it is then is the
+baseline it must rise from.
+
+Runs 1 and 2 had a fixed 0.5 s window in which the policy already acted, unjudged.
+Both learnt to rock and pump in it and launched from the swing: on run 2's nominal
+replay the body turned 180-350 deg/s through the whole window and 1150 deg/s by its
+end (2026-10-29). From at rest is what is asked for; slower is accepted.
 
 ## Objective
 
@@ -63,6 +71,7 @@ half is gone at `LOAD_BAND[1]` -- jumper.tuck_roll's band.
 
 from __future__ import annotations
 
+import dataclasses
 import math
 from pathlib import Path
 
@@ -90,6 +99,7 @@ DECIMATION = 4
 SPAWN_ANGLE_RANGE = (math.radians(165.0), math.radians(195.0))
 SPAWN_JOINT_NOISE = 0.1
 SETTLE_STEPS = 25
+MAX_SETTLE_STEPS = 100
 EPISODE_S = 5.0
 
 # ── Objective ──────────────────────────────────────────────────────────────────
@@ -157,8 +167,15 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
     )
 
     # ── Command: how upright, and the hardest hits ────────────────────────────
-    cfg.commands = {"roll": sr.tracker.SelfRightTrackerCfg(settle_steps=SETTLE_STEPS,
-                                                           load_joints=GAIT_JOINTS)}
+    cfg.commands = {"roll": sr.tracker.SelfRightTrackerCfg(
+        settle_steps=SETTLE_STEPS, max_settle_steps=MAX_SETTLE_STEPS,
+        load_joints=GAIT_JOINTS)}
+
+    # ── The joints hold HOME until the robot is released ──────────────────────
+    a = cfg.actions["joint_pos"]
+    cfg.actions["joint_pos"] = sr.actions.HoldWhileSettlingActionCfg(
+        **{f.name: getattr(a, f.name) for f in dataclasses.fields(a) if f.init},
+        command_name="roll")
     critic = cfg.observations["critic"].terms
     critic.pop("roll_progress", None)
     critic["self_right"] = ObservationTermCfg(func=up_obs, params={"command_name": "roll"})
