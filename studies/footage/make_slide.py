@@ -16,8 +16,8 @@ or, for a statement slide,
     {"paragraphs": [{"en": str, "zh": str?, "style": "body" | "sub" | "title"}, ...],
      "gap": px?, "width": px?}
 
-each paragraph wrapped and centred, its Chinese beneath it; "title" is a stats
-slide's title size, "sub" between that and the default "body".
+each paragraph wrapped and centred, its Chinese beneath it; "title" largest,
+"sub" between that and the default "body".
 
 A note row is drawn smaller, grey and italic (a comparison line). 1920x1080; Inter
 for Latin, Noto Sans CJK SC for Chinese.
@@ -41,14 +41,13 @@ def statement(spec):
     img = Image.new("RGB", (W, H), (0, 0, 0))
     dr = ImageDraw.Draw(img)
     width = spec.get("width", 1320)
-    # style -> (English font, Chinese font, Chinese colour); "title" is the size and
-    # weight of a stats slide's title.
+    # style -> (English font, Chinese font, Chinese colour).
     fonts = {"body": (ImageFont.truetype(INTER.format("Regular"), 32),
                       ImageFont.truetype(CJK.format("Regular"), 25, index=CJK_SC), DIM),
              "sub": (ImageFont.truetype(INTER.format("Regular"), 44),
                      ImageFont.truetype(CJK.format("Regular"), 34, index=CJK_SC), DIM),
-             "title": (ImageFont.truetype(INTER.format("SemiBold"), 76),
-                       ImageFont.truetype(CJK.format("Medium"), 52, index=CJK_SC), WHITE)}
+             "title": (ImageFont.truetype(INTER.format("SemiBold"), 56),
+                       ImageFont.truetype(CJK.format("Medium"), 40, index=CJK_SC), WHITE)}
 
     def units(text, by_char):
         """English by word; Chinese by clause (after ，、。) where a clause fits, else
