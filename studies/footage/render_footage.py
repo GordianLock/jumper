@@ -59,7 +59,7 @@ p.add_argument("--floor", default=None, choices=("hardwood",),
 p.add_argument("--surround", default=None, choices=("grass",),
                help="with --floor: the floor becomes a deck --deck m across around the "
                     "action, and the ground beyond it this (display only)")
-p.add_argument("--deck", type=float, default=12.0,
+p.add_argument("--deck", type=float, default=30.0,
                help="deck size for --surround, m: wide enough that the grass shows only "
                     "towards the horizon")
 p.add_argument("--colour", default=None,
