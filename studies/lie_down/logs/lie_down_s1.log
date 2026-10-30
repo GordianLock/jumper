@@ -1,0 +1,218 @@
+/usr/local/lib/python3.13/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+/home/claude/jumper/rl/mjlab/scene/scene.py:66: UserWarning: Entity 'robot' has non-default <option> fields (integrator, timestep) that will not be propagated by MjSpec.attach(). Use MujocoCfg instead.
+  self._add_entities()
+WARNING: Attach conflict when attaching 'jumper' to 'mjlab scene', policy is 'warning'
+timestep: parent has 0.002 (default), child has 0.001, keeping parent value
+integrator: parent has 0 (default), child has 3, keeping parent value
+
+/home/claude/jumper/rl/mjrl/backend/native_sim.py:485: UserWarning: Attach conflict when attaching 'jumper' to 'mjlab scene', policy is 'warning'
+timestep: parent has 0.002 (default), child has 0.001, keeping parent value
+integrator: parent has 0 (default), child has 3, keeping parent value
+  full_model = spec.compile()
+/home/claude/jumper/rl/mjrl/backend/model_slim.py:145: UserWarning: Attach conflict when attaching 'jumper' to 'mjlab scene', policy is 'warning'
+timestep: parent has 0.002 (default), child has 0.001, keeping parent value
+integrator: parent has 0 (default), child has 3, keeping parent value
+  before = spec.compile()
+/home/claude/jumper/rl/mjrl/backend/model_slim.py:183: UserWarning: Attach conflict when attaching 'jumper' to 'mjlab scene', policy is 'warning'
+timestep: parent has 0.002 (default), child has 0.001, keeping parent value
+integrator: parent has 0 (default), child has 3, keeping parent value
+  after = spec.compile()
+/home/claude/jumper/rl/mjrl/backend/model_slim.py:84: UserWarning: Attach conflict when attaching 'jumper' to 'mjlab scene', policy is 'warning'
+timestep: parent has 0.002 (default), child has 0.001, keeping parent value
+integrator: parent has 0 (default), child has 3, keeping parent value
+  before = spec.compile()
+/home/claude/jumper/rl/mjrl/backend/native_sim.py:511: UserWarning: Attach conflict when attaching 'jumper' to 'mjlab scene', policy is 'warning'
+timestep: parent has 0.002 (default), child has 0.001, keeping parent value
+integrator: parent has 0 (default), child has 3, keeping parent value
+  after = model_nbytes(spec.compile())
+[mjrl] stripped visual meshes: MjModel 75.8 -> 5.2 MiB per copy, 32 copies 2.4 -> 0.16 GiB.
+[mjrl] cost: **camera sensors** now see collision geometry rather than appearance meshes (the live viewer is unaffected; it has its own full model, see render_model).
+[mjrl] Use MJRL_STRIP_VISUAL=off to disable stripping if memory allows.
+/home/claude/jumper/rl/mjrl/backend/native_sim.py:607: UserWarning: Attach conflict when attaching 'jumper' to 'mjlab scene', policy is 'warning'
+timestep: parent has 0.002 (default), child has 0.001, keeping parent value
+integrator: parent has 0 (default), child has 3, keeping parent value
+  mj_model = spec.compile()
+Warp CUDA warning: Could not find or load the NVIDIA CUDA driver. GPU execution will not be available.
+Warp 1.18.0 initialized:
+   CUDA Toolkit 13.4, CUDA driver not available (NVRTC compilation available)
+   Devices:
+     "cpu"      : "x86_64"
+   Kernel cache:
+     /root/.cache/warp/1.18.0
+
++--------------------------------+
+|        Base Environment        |
++------------------------+-------+
+| Property               | Value |
++------------------------+-------+
+| Number of environments | 32    |
+| Environment device     | cpu   |
+| Environment seed       | None  |
+| Physics step-size      | 0.005 |
+| Environment step-size  | 0.02  |
++------------------------+-------+
+
+[INFO] <EventManager> contains 2 active terms.
++-------------------------------------+
+| Active Event Terms in Mode: 'reset' |
++---------+---------------------------+
+|  Index  | Name                      |
++---------+---------------------------+
+|    0    | reset_to_default          |
+|    1    | reset_rolled              |
++---------+---------------------------+
++---------------------------------------+
+| Active Event Terms in Mode: 'startup' |
++-----------+---------------------------+
+|   Index   | Name                      |
++-----------+---------------------------+
+|     0     | foot_friction             |
+|     1     | encoder_bias              |
+|     2     | base_com                  |
++-----------+---------------------------+
++-----------------------------+
+| Domain Randomization Fields |
++-------+---------------------+
+| Index | Field Name          |
++-------+---------------------+
+|   0   | geom_friction       |
+|   1   | body_ipos           |
+|   2   | body_subtreemass    |
+|   3   | dof_invweight0      |
+|   4   | body_invweight0     |
+|   5   | tendon_length0      |
+|   6   | tendon_invweight0   |
+|   7   | actuator_acc0       |
++-------+---------------------+
+
+[INFO] <CommandManager> contains 1 active terms.
++-------------------------------+
+|      Active Command Terms     |
++-------+------+----------------+
+| Index | Name |      Type      |
++-------+------+----------------+
+|   0   | roll | LieDownTracker |
++-------+------+----------------+
+
+[INFO] <ActionManager> contains 1 active terms.
++---------------------------------+
+| Active Action Terms (shape: 20) |
++-------+-----------+-------------+
+| Index | Name      |   Dimension |
++-------+-----------+-------------+
+|   0   | joint_pos |          20 |
++-------+-----------+-------------+
+
+[INFO] <ObservationManager> contains 2 groups.
++------------------------------------------------------------+
+| Active Observation Terms in Group: 'actor' (shape: (406,)) |
++--------+------------------------+--------------------------+
+| Index  | Name                   |          Shape           |
++--------+------------------------+--------------------------+
+|   0    | base_ang_vel           |           (3,)           |
+|   1    | projected_gravity      |           (3,)           |
+|   2    | joint_pos              |    (100,)  ← 5×(20,)     |
+|   3    | joint_vel              |    (100,)  ← 5×(20,)     |
+|   4    | actions                |    (100,)  ← 5×(20,)     |
+|   5    | actuator_force         |    (100,)  ← 5×(20,)     |
++--------+------------------------+--------------------------+
++-------------------------------------------------------------+
+| Active Observation Terms in Group: 'critic' (shape: (411,)) |
++--------+-------------------------+--------------------------+
+| Index  | Name                    |          Shape           |
++--------+-------------------------+--------------------------+
+|   0    | base_lin_vel            |           (3,)           |
+|   1    | base_ang_vel            |           (3,)           |
+|   2    | projected_gravity       |           (3,)           |
+|   3    | joint_pos               |    (100,)  ← 5×(20,)     |
+|   4    | joint_vel               |    (100,)  ← 5×(20,)     |
+|   5    | actions                 |    (100,)  ← 5×(20,)     |
+|   6    | actuator_force          |    (100,)  ← 5×(20,)     |
+|   7    | lie_down                |           (2,)           |
++--------+-------------------------+--------------------------+
+
+[INFO] <TerminationManager> contains 0 active terms.
++--------------------------+
+| Active Termination Terms |
++-------+------+-----------+
+| Index | Name |  Time Out |
++-------+------+-----------+
++-------+------+-----------+
+
+[INFO] <RewardManager> contains 15 active terms.
++---------------------------------+
+|       Active Reward Terms       |
++-------+----------------+--------+
+| Index | Name           | Weight |
++-------+----------------+--------+
+|   0   | lower          |    5.0 |
+|   1   | complete       | 1000.0 |
+|   2   | back_home      |    1.0 |
+|   3   | spin           |   -0.5 |
+|   4   | joint_load     |   -2.0 |
+|   5   | limb_contact   |   -0.5 |
+|   6   | sensor_contact |   -2.0 |
+|   7   | shell_impact   |   -0.5 |
+|   8   | ground_impact  |   -0.5 |
+|   9   | airborne       |   -2.0 |
+|   10  | stop_strike    |  -0.02 |
+|   11  | torque_strain  |   -1.0 |
+|   12  | leg_collision  |   -1.0 |
+|   13  | dof_pos_limits |   -1.0 |
+|   14  | action_rate_l2 |  -0.01 |
++-------+----------------+--------+
+
+[INFO] <NullCurriculumManager> (inactive)
+[INFO] <MetricsManager> contains 2 active terms.
++----------------------------+
+|    Active Metrics Terms    |
++-------+--------------------+
+| Index | Name               |
++-------+--------------------+
+|   0   | mean_action_acc    |
+|   1   | floor_load_sampler |
++-------+--------------------+
+
+[INFO] <NullRecorderManager> (inactive)
+round 0: finished 7/32; best: down 2.00, shell 111 N, floor 122 N, load 3.8 N*m, spin 8.5 rad/s, score 30.0 (42s)
+round 1: finished 11/32; best: down 2.00, shell 147 N, floor 139 N, load 4.1 N*m, spin 7.5 rad/s, score 28.4 (80s)
+round 2: finished 11/32; best: down 2.00, shell 111 N, floor 116 N, load 5.0 N*m, spin 7.4 rad/s, score 27.1 (119s)
+round 3: finished 10/32; best: down 2.00, shell 114 N, floor 114 N, load 2.4 N*m, spin 9.1 rad/s, score 24.7 (159s)
+round 4: finished 27/32; best: down 2.00, shell 120 N, floor 120 N, load 3.7 N*m, spin 7.6 rad/s, score 24.1 (199s)
+round 5: finished 30/32; best: down 2.00, shell 96 N, floor 96 N, load 2.4 N*m, spin 8.1 rad/s, score 24.2 (236s)
+round 6: finished 29/32; best: down 1.99, shell 137 N, floor 91 N, load 2.2 N*m, spin 7.5 rad/s, score 21.9 (273s)
+round 7: finished 31/32; best: down 2.00, shell 128 N, floor 128 N, load 2.6 N*m, spin 8.6 rad/s, score 20.1 (321s)
+round 8: finished 27/32; best: down 1.99, shell 112 N, floor 102 N, load 2.8 N*m, spin 5.9 rad/s, score 21.1 (363s)
+round 9: finished 32/32; best: down 1.99, shell 94 N, floor 83 N, load 4.0 N*m, spin 6.3 rad/s, score 21.7 (402s)
+round 10: finished 28/32; best: down 2.00, shell 96 N, floor 87 N, load 2.9 N*m, spin 7.8 rad/s, score 19.3 (444s)
+round 11: finished 30/32; best: down 1.99, shell 89 N, floor 93 N, load 3.0 N*m, spin 7.1 rad/s, score 17.7 (487s)
+round 12: finished 29/32; best: down 2.00, shell 98 N, floor 93 N, load 3.1 N*m, spin 6.8 rad/s, score 17.1 (530s)
+round 13: finished 31/32; best: down 2.00, shell 80 N, floor 92 N, load 3.4 N*m, spin 7.3 rad/s, score 17.3 (573s)
+round 14: finished 29/32; best: down 1.99, shell 80 N, floor 102 N, load 2.6 N*m, spin 6.5 rad/s, score 15.8 (616s)
+round 15: finished 30/32; best: down 1.99, shell 87 N, floor 78 N, load 2.2 N*m, spin 6.7 rad/s, score 14.6 (662s)
+round 16: finished 30/32; best: down 1.99, shell 90 N, floor 89 N, load 2.7 N*m, spin 7.3 rad/s, score 12.4 (706s)
+round 17: finished 29/32; best: down 1.99, shell 102 N, floor 102 N, load 3.1 N*m, spin 7.9 rad/s, score 9.5 (750s)
+round 18: finished 31/32; best: down 1.99, shell 109 N, floor 109 N, load 2.9 N*m, spin 5.7 rad/s, score 12.6 (795s)
+round 19: finished 30/32; best: down 2.00, shell 113 N, floor 99 N, load 2.9 N*m, spin 6.7 rad/s, score 10.4 (838s)
+round 20: finished 29/32; best: down 1.99, shell 98 N, floor 104 N, load 2.4 N*m, spin 6.2 rad/s, score 11.9 (878s)
+round 21: finished 30/32; best: down 2.00, shell 108 N, floor 103 N, load 2.1 N*m, spin 5.4 rad/s, score 12.4 (919s)
+round 22: finished 29/32; best: down 2.00, shell 107 N, floor 86 N, load 2.8 N*m, spin 5.5 rad/s, score 14.1 (960s)
+round 23: finished 28/32; best: down 2.00, shell 97 N, floor 97 N, load 2.8 N*m, spin 5.3 rad/s, score 14.8 (1004s)
+round 24: finished 29/32; best: down 1.99, shell 63 N, floor 63 N, load 2.8 N*m, spin 5.7 rad/s, score 17.7 (1046s)
+round 25: finished 29/32; best: down 2.00, shell 108 N, floor 102 N, load 2.9 N*m, spin 5.3 rad/s, score 14.1 (1088s)
+round 26: finished 27/32; best: down 1.99, shell 62 N, floor 63 N, load 2.8 N*m, spin 6.5 rad/s, score 14.1 (1131s)
+round 27: finished 28/32; best: down 1.99, shell 61 N, floor 64 N, load 3.7 N*m, spin 5.6 rad/s, score 17.7 (1171s)
+round 28: finished 29/32; best: down 1.99, shell 77 N, floor 85 N, load 4.4 N*m, spin 5.1 rad/s, score 16.3 (1210s)
+round 29: finished 30/32; best: down 1.99, shell 85 N, floor 92 N, load 3.0 N*m, spin 5.8 rad/s, score 13.8 (1248s)
+round 30: finished 31/32; best: down 1.99, shell 66 N, floor 91 N, load 3.0 N*m, spin 5.1 rad/s, score 17.2 (1288s)
+round 31: finished 31/32; best: down 1.99, shell 75 N, floor 70 N, load 2.8 N*m, spin 5.2 rad/s, score 17.3 (1327s)
+round 32: finished 31/32; best: down 1.99, shell 66 N, floor 84 N, load 2.6 N*m, spin 5.2 rad/s, score 17.4 (1368s)
+round 33: finished 29/32; best: down 1.99, shell 92 N, floor 94 N, load 2.9 N*m, spin 6.4 rad/s, score 14.0 (1407s)
+round 34: finished 28/32; best: down 1.99, shell 67 N, floor 95 N, load 4.5 N*m, spin 6.3 rad/s, score 13.9 (1444s)
+candidate mean: finishes in 31/32; worst shell 205 N, floor 205 N, load 4.6 N*m, spin 10.5 rad/s
+candidate best: finishes in 13/32; worst shell 175 N, floor 252 N, load 5.0 N*m, spin 10.1 rad/s
+candidate elite0: finishes in 30/32; worst shell 225 N, floor 225 N, load 5.0 N*m, spin 11.1 rad/s
+candidate elite1: finishes in 30/32; worst shell 226 N, floor 226 N, load 5.5 N*m, spin 10.6 rad/s
+candidate elite2: finishes in 24/32; worst shell 266 N, floor 266 N, load 5.7 N*m, spin 11.2 rad/s
+saved studies/lie_down/plans/lie_down_s1.npy: candidate mean, finishes in 31/32
