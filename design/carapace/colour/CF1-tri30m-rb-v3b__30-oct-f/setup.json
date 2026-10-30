@@ -1,0 +1,27 @@
+{
+  "name": "30 Oct F",
+  "version": "CF1-tri30m-rb-v3b",
+  "sequence": "fibonacci",
+  "unit_mm": 0.5,
+  "grow_from": "base",
+  "colour_rule": "a_mod_k",
+  "k": 4,
+  "accent_below_mm": 1.35,
+  "stock_tolerance_mm": 0.001,
+  "min_band_mm": 0.2,
+  "stock_fade": {
+    "mode": "wall",
+    "from_pct": 0,
+    "to_pct": 100,
+    "steps": 4,
+    "low": "#1116A2"
+  },
+  "colours": {
+    "stock": "#000000",
+    "accent": "#2A1ED2",
+    "c0": "#743501",
+    "c1": "#290000",
+    "c2": "#000000",
+    "c3": "#2BFF00"
+  }
+}

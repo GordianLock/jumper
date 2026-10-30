@@ -13,6 +13,7 @@ in the interactive colour preview; each folder here is one saved setup applied t
 | `CF1-tri30m-rb-v4__30-oct-thue-morse/` | `CF1-tri30m-rb-v4` | "30 Oct Thue-Morse": Thue-Morse (+1) bands, 3.55 mm unit (bands 3.55 or 7.1 mm), grown from the shell surface up, filament = n mod 3, accent under 1.5 mm, minimum band for a 0.4 mm nozzle; stock fades by height in 3 steps from `#141414` at the top to `#5F0202` at the bottom, between 27 % and 100 % (`stock_s0` bottom .. `stock_s2` top). 7 pieces. |
 | `CF1-tri30m-rb-v4b__30-oct-d/` | `CF1-tri30m-rb-v4b` | "30 Oct D": triangular-number bands, 1.9 mm unit, counted down from the highest tip, filament = n mod 4, accent under 1.4 mm, minimum band for a 0.6 mm nozzle; stock fades down the sides in 4 steps from `#3616D4` on the whole top to `#171616` at the lower edge (`stock_s0` bottom .. `stock_s3` top). 9 pieces. |
 | `CF1-tri30m-rb-v4__30-oct-e/` | `CF1-tri30m-rb-v4` | "30 Oct E": Thue-Morse (+1) bands, 0.35 mm unit (bands 0.35 or 0.7 mm), counted down from the highest tip, filament = n mod 4, accent under 1.4 mm, minimum band for a 0.2 mm nozzle; stock fades down the sides in 4 steps from `#427321` on the whole top to `#171616` at the lower edge (`stock_s0` bottom .. `stock_s3` top). 9 pieces. |
+| `CF1-tri30m-rb-v3b__30-oct-f/` | `CF1-tri30m-rb-v3b` | "30 Oct F": Fibonacci bands, 0.5 mm unit, grown from the shell surface up, filament = a(n) mod 4, accent under 1.35 mm, minimum band for a 0.2 mm nozzle; stock fades down the sides in 4 steps from `#000000` on the whole top to `#1116A2` at the lower edge (`stock_s0` bottom .. `stock_s3` top). 9 pieces. |
 
 ## What a folder holds
 
@@ -44,7 +45,8 @@ compiles and `upper_shell_link`'s mass is unchanged: 0.174437 kg for `30-oct-b` 
 `jumper_CF1-tri30m-rb-v4.xml`, and the same for `30-oct-kolakoski-v2` (10 pieces); 0.174437 kg
 for `30-oct-c` (9 pieces) on `jumper_CF1-tri30m-rb-v4b.xml`; 0.176437 kg for `30-oct-thue-morse`
 (7 pieces) on `jumper_CF1-tri30m-rb-v4.xml`; 0.174437 kg for `30-oct-d` (9 pieces) on
-`jumper_CF1-tri30m-rb-v4b.xml`; 0.176437 kg for `30-oct-e` (9 pieces) on `jumper_CF1-tri30m-rb-v4.xml`.
+`jumper_CF1-tri30m-rb-v4b.xml`; 0.176437 kg for `30-oct-e` (9 pieces) on `jumper_CF1-tri30m-rb-v4.xml`; 0.186437 kg for
+`30-oct-f` (9 pieces) on `jumper_CF1-tri30m-rb-v3b.xml`.
 
 The snippets below are for `CF1-tri30m-rb-v4b__30-oct-b`. For another folder, add the pattern
 to that version's model (`jumper_<version>.xml`), use that folder's name in the paths, list
