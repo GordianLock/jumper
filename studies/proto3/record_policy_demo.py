@@ -7,7 +7,7 @@ jumper.momentum_roll's reference format plus the axis it rolled about -- the for
 The policy is the exported actor (`scripts/export.py`'s `actor.onnx`, observation
 normalisation inside it). It is played in its task's own environment (`task`,
 jumper.horn_roll by default) on
-prototype 3: the nominal robot (no randomised friction, centre of mass or encoder
+prototype 3, or the carapace model named by env var `MODEL` (e.g. CF1-tri30m-rb-v4): the nominal robot (no randomised friction, centre of mass or encoder
 bias), play mode (no pushes, no feedforward guide), one environment, from standing,
 with the standing termination off so the recording runs past it.
 
@@ -16,6 +16,7 @@ recording stops `HOLD` s after the robot has turned a full roll within 0.3 rad, 
 upright and has stopped turning; it refuses to write one that never gets there.
 """
 import math
+import os
 import sys
 from pathlib import Path
 
@@ -37,7 +38,7 @@ from mjlab.utils.lab_api.math import quat_apply_inverse  # noqa: E402
 
 ACTOR, OUT = Path(sys.argv[1]), Path(sys.argv[2])
 TASK = sys.argv[3] if len(sys.argv) > 3 else "jumper.horn_roll"
-MODEL = ROOT / "assets" / "jumper" / "jumper_CF1-tri30m-rb-v3.xml"
+MODEL = ROOT / "assets" / "jumper" / f"jumper_{os.environ.get('MODEL', 'CF1-tri30m-rb-v3')}.xml"
 HOLD = 0.3
 MAX_S = 4.0
 
