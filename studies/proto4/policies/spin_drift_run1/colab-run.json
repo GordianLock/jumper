@@ -1,0 +1,60 @@
+{
+  "checkpoint": "/content/proto-4-1-spin-drift/logs/jumper_CF1-tri30m-rb-v4/jumper.spin_drift/2026-10-30_03-57-06/model_2499.pt",
+  "checkpoints": {
+    "model_0.pt": "03869b190c736a91f6177f5b09774a79876fbbb108e5b5806704cb2734d24931",
+    "model_1000.pt": "3220532efc18c69ff24a2dba6d35ee40562e283ba0dd4e0ef7847a414e5bd347",
+    "model_1250.pt": "53a35d25017b85d7b30ae69e9da618f6ff59bca4f10606a6fbc9f1c6a0b3c3e5",
+    "model_1500.pt": "54d33c7a20817113a82385010f4bee41cf0e451e7a7429692bc972ec666292d7",
+    "model_1750.pt": "1d27a0ef3c24ab3dd181e8f1503e9c17cbe53cc61f8a5be18e73bf838c0a89b4",
+    "model_2000.pt": "cd9ed9428b9ace46d3acc861dc836432f39f051a8f2fdcf1cd174430add23668",
+    "model_2250.pt": "a5938d444a9421850fb892d17d60d7c42cb1d59712d63a7eb58930f53dc8c7b0",
+    "model_2499.pt": "18786cd430a85050362bcc0449d5cd836da739e49f303a2aa5f3730d530a426c",
+    "model_250.pt": "573ed378c0f330f4fa180c508f4a877f3843dfb5bb19b427f5649cc17262ab31",
+    "model_500.pt": "5b8da7b711de3ea43bc9f0867a840751df1affe31d7da93316f030c5dee2506f",
+    "model_750.pt": "dc40e59a99789a0743ce689579050a28c691fe58f63e694bdadd4576a2befa2d"
+  },
+  "command": [
+    "/content/proto-4-1-spin-drift/.venv/bin/python",
+    "scripts/train.py",
+    "--task",
+    "jumper.spin_drift",
+    "--model",
+    "CF1-tri30m-rb-v4",
+    "--backend",
+    "warp",
+    "--device",
+    "cuda:0",
+    "--num_envs",
+    "256",
+    "--max-iterations",
+    "2500",
+    "--headless",
+    "--no-tensorboard",
+    "--logger",
+    "tensorboard"
+  ],
+  "config": {
+    "backend": "warp",
+    "device": "cuda:0",
+    "mjrl_environment": {},
+    "model": "CF1-tri30m-rb-v4",
+    "num_envs": 256,
+    "repository_url": "https://github.com/GordianLock/jumper.git",
+    "revision": "4d6dfc011546869569ab9dded856fc6c21cc1066",
+    "runtime_versions": {
+      "mujoco": "3.11.0",
+      "mujoco-warp": "3.11.0",
+      "numpy": "2.5.4",
+      "tensordict": "0.15.3",
+      "torch": "2.15.0",
+      "warp-lang": "1.18.0"
+    },
+    "source_sha256": "7c0f6eea9d0dd7b01c5a4902b7c09f29dec0fc05d747f1f4393df9df472a2583",
+    "task": "jumper.spin_drift"
+  },
+  "operation": "236257845b1d4b69b8cbe01c380f0e79",
+  "resume_from": null,
+  "run_directory": "/content/proto-4-1-spin-drift/logs/jumper_CF1-tri30m-rb-v4/jumper.spin_drift/2026-10-30_03-57-06",
+  "schema": 1,
+  "status": "finished"
+}
