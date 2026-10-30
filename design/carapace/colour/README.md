@@ -9,6 +9,7 @@ in the interactive colour preview; each folder here is one saved setup applied t
 | `CF1-tri30m-rb-v4b__30-oct-b/` | `CF1-tri30m-rb-v4b` | "30 Oct B": Fibonacci bands, 2.5 mm unit, grown from the shell surface up, filament = n mod 4, accent on added surface under 0.6 mm |
 | `CF1-tri30m-rb-v4__30-oct-kolakoski/` | `CF1-tri30m-rb-v4` | "30 Oct Kolakoski": Kolakoski bands, 0.25 mm unit (bands 0.25 or 0.5 mm), counted down from the highest tip, filament = n mod 3, accent on added surface under 1.1 mm. Three band filaments, so the pieces are `stock`, `accent`, `c0`..`c2`. |
 | `CF1-tri30m-rb-v4__30-oct-kolakoski-v2/` | `CF1-tri30m-rb-v4` | "30 Oct Kolakoski v2": the same bands and accent as `30-oct-kolakoski` (those pieces are byte-identical), plus a stepped height fade on the stock surface: 6 level steps from `#0F0F0F` at the top to `#B20606` at the bottom, starting 22 % and ending 88 % of the way down from the top of the stock shell to its lowest point. The stock piece is replaced by `stock_s0` (bottom) .. `stock_s5` (top); `colours.json` lists each step's colour and z range. |
+| `CF1-tri30m-rb-v4b__30-oct-c/` | `CF1-tri30m-rb-v4b` | "30 Oct C": Fibonacci bands, 2.5 mm unit, grown from the shell surface up, filament = a(n) mod 4, accent under 0.6 mm, minimum band for a 0.4 mm nozzle; stock fades down the sides in 4 steps from `#B72306` on the whole top to `#1F1F1F` at the lower edge (`stock_s0` bottom .. `stock_s3` top; `colours.json` lists each step's colour and wall-fraction range). 9 pieces. |
 
 ## What a folder holds
 
@@ -37,7 +38,8 @@ Display-only geoms (`class="visual"`: `contype="0" conaffinity="0" group="2"`, `
 change nothing in the physics. Loaded on MuJoCo 3.11.0 with the pieces added, each model
 compiles and `upper_shell_link`'s mass is unchanged: 0.174437 kg for `30-oct-b` on
 `jumper_CF1-tri30m-rb-v4b.xml`, 0.176437 kg for `30-oct-kolakoski` on
-`jumper_CF1-tri30m-rb-v4.xml`, and the same for `30-oct-kolakoski-v2` (10 pieces).
+`jumper_CF1-tri30m-rb-v4.xml`, and the same for `30-oct-kolakoski-v2` (10 pieces); 0.174437 kg
+for `30-oct-c` (9 pieces) on `jumper_CF1-tri30m-rb-v4b.xml`.
 
 The snippets below are for `CF1-tri30m-rb-v4b__30-oct-b`. For another folder, add the pattern
 to that version's model (`jumper_<version>.xml`), use that folder's name in the paths, list
@@ -83,8 +85,12 @@ python design/carapace/colour/split_colours.py design/carapace/colour/<folder>/s
 Needs trimesh and rtree. The script implements every sequence the preview offers
 (`fibonacci`, `padovan`, `triangular`, `primes`, `kolakoski`, `thue_morse_plus_1`) the same
 way the preview generates them, both growth directions (`grow_from`: `"base"` or `"tip"`) and
-both colour rules (`colour_rule`: `"a_mod_k"` or `"n_mod_k"`), and a stepped stock fade
-(`stock_fade` with `mode: "height"`; the preview's other mode, fading down the sides, is not
-in the script yet, and a smooth fade cannot be split into filaments). Its relief intervals for
+both colour rules (`colour_rule`: `"a_mod_k"` or `"n_mod_k"`), a stepped stock fade in
+either of the preview's modes (`stock_fade.mode`: `"height"` or `"wall"`, the preview's "down
+the sides"; a smooth fade cannot be split into filaments), and the preview's minimum band
+(`min_band_mm`, the nozzle width: unit, accent cut-off and fade steps are checked, slivers are
+folded into the neighbouring band as the preview folds them). For `30-oct-c` its relief
+intervals match the preview's Copy settings ranges, and its wall fraction agrees with the
+preview's to within 0.002 (the preview stores it to 1/255). Its relief intervals for
 `30-oct-kolakoski`, merged and rounded to 0.1 mm, match all 107 ranges in the preview's Copy
 settings output for that setup.
