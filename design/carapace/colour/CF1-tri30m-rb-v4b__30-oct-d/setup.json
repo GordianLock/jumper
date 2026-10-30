@@ -1,0 +1,27 @@
+{
+  "name": "30 Oct D",
+  "version": "CF1-tri30m-rb-v4b",
+  "sequence": "triangular",
+  "unit_mm": 1.9,
+  "grow_from": "tip",
+  "colour_rule": "n_mod_k",
+  "k": 4,
+  "accent_below_mm": 1.4,
+  "stock_tolerance_mm": 0.001,
+  "min_band_mm": 0.6,
+  "stock_fade": {
+    "mode": "wall",
+    "from_pct": 0,
+    "to_pct": 100,
+    "steps": 4,
+    "low": "#171616"
+  },
+  "colours": {
+    "stock": "#3616D4",
+    "accent": "#F03000",
+    "c0": "#1F1F1F",
+    "c1": "#9CC21E",
+    "c2": "#E6DA32",
+    "c3": "#530A75"
+  }
+}
