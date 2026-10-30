@@ -44,6 +44,6 @@
   }
  ],
  "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 9–10 self-rights each",
- "title_zh": "原厂型号演示：自主翻正",
+ "title_zh": "原厂模型演示：自主翻正",
  "footnote_zh": "MuJoCo 仿真：1 台基准机器人 + 4 台参数随机化机器人（摩擦系数、质量分布、传感器偏差），每台翻正 9–10 次"
 }
