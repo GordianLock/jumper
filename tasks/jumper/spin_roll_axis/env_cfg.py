@@ -25,7 +25,7 @@ included, is jumper.spin_drift's.
 ## The episode ends at the finish
 
 Tried and reverted (2026-10-30): keeping the episode going after the finish to settle
-at HOME (`common/neutral_finish.py`, revision 7501321). Colab, 2500 iterations on
+at HOME (`common/neutral_finish.py` at revision 7501321, since removed). Colab, 2500 iterations on
 prototype 4: once the guide faded the policy rolled (a full turn 97-99% of the time)
 and then crouched short of standing for the rest of the 4 s episode, collecting
 `finish_upright` per step; the finishing bonus fell to nothing and no episode ever
