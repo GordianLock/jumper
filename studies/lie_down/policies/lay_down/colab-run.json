@@ -1,0 +1,60 @@
+{
+  "checkpoint": "/content/stock-lay-2/logs/jumper/jumper.lie_down/2026-10-30_11-40-59/model_2499.pt",
+  "checkpoints": {
+    "model_0.pt": "1c0732158a5cf855195d4f534326f34cfd534a7280a540936ff7ab89588de2c2",
+    "model_1000.pt": "083126198b57b4f3a8cef8a90d866d4680a55d2e29852d2783824da6a72bfe28",
+    "model_1250.pt": "6160ff5b35f6fc17718d3bb884ee1dda230b996de0871930eb03172a17b7a310",
+    "model_1500.pt": "b55acf9dd673246139613c3dfb26dad2912edacf08a39467e59419e99c51f663",
+    "model_1750.pt": "a21153b0c8428ae42a0778758a62327717c79f67e381d3487b33d877eea1d57a",
+    "model_2000.pt": "ed719d347908646f0e01dbbe9b8dcffdfcc9af4a9cb130de494c2c7ebb849600",
+    "model_2250.pt": "d9de51f8499fe6e287b5b46bb45ef22aa03cb24afef8a5e12214a19618d05a79",
+    "model_2499.pt": "fc606192aea818e23416d39cd3d1c9129ce3efe6184ad87b1a3ea0c06e895dc0",
+    "model_250.pt": "12851f3ef1bddddd15bf1fa4f95571ce4531f5a0442dbd0cdd7ce671a3630e92",
+    "model_500.pt": "79232556aafbd39f503f8a83946f12ad78a83e0e5199bb331ce4dd97213dd962",
+    "model_750.pt": "abb073557bf74d07f06805a0c3e47fb13d4d9ced83f60cd41be0d65a6fb66724"
+  },
+  "command": [
+    "/content/stock-lay-2/.venv/bin/python",
+    "scripts/train.py",
+    "--task",
+    "jumper.lie_down",
+    "--model",
+    "jumper",
+    "--backend",
+    "warp",
+    "--device",
+    "cuda:0",
+    "--num_envs",
+    "256",
+    "--max-iterations",
+    "2500",
+    "--headless",
+    "--no-tensorboard",
+    "--logger",
+    "tensorboard"
+  ],
+  "config": {
+    "backend": "warp",
+    "device": "cuda:0",
+    "mjrl_environment": {},
+    "model": "jumper",
+    "num_envs": 256,
+    "repository_url": "https://github.com/GordianLock/jumper.git",
+    "revision": "c808f698f5c1f0416d592b386a94b216f5d4548d",
+    "runtime_versions": {
+      "mujoco": "3.11.0",
+      "mujoco-warp": "3.11.0",
+      "numpy": "2.5.4",
+      "tensordict": "0.15.3",
+      "torch": "2.15.0",
+      "warp-lang": "1.18.0"
+    },
+    "source_sha256": "7c0f6eea9d0dd7b01c5a4902b7c09f29dec0fc05d747f1f4393df9df472a2583",
+    "task": "jumper.lie_down"
+  },
+  "operation": "0eca69ec02a2473082c2c5ced5928e6e",
+  "resume_from": null,
+  "run_directory": "/content/stock-lay-2/logs/jumper/jumper.lie_down/2026-10-30_11-40-59",
+  "schema": 1,
+  "status": "finished"
+}
