@@ -32,7 +32,7 @@ ASSETS = os.path.join(HERE, "..", "..", "assets", "jumper")
 
 #: name -> (azimuth relative to the roll axis, elevation, distance), degrees and m.
 ANGLES = {
-    "side": (90.0, -12.0, 0.85),
+    "side": (90.0, -25.0, 0.85),
     "front": (180.0, -12.0, 0.85),
     "three_quarter": (135.0, -22.0, 0.95),
     "low": (60.0, -4.0, 0.75),
