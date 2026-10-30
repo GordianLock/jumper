@@ -26,5 +26,6 @@ The .pt and .onnx files are force-added past `.gitignore` on purpose.
 the walking legs collided with it, the policy puts its left-rear calf up to 4.5 cm into
 the base and its right-middle foot up to 3.4 cm (Colab replay's joint angles against
 the stock collision hulls), so as trained it is not fully valid on the robot. It also
-pumps in the settling window (the body turns 180-350 deg/s there). Both are fixed in
-jumper.self_right from run 4 on.
+pumps in the settling window (the body turns 180-350 deg/s there). The settling pump is fixed
+from run 3 on (`self_right_run3/`); the walking legs collide with the body in
+jumper.self_right after run 3.
