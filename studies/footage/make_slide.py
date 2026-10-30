@@ -11,6 +11,13 @@ slide.json:
      "footnote": str, "footnote_zh": str?,
      "schema": str?, "schema_zh": str?}
 
+or, for a statement slide,
+
+    {"paragraphs": [{"en": str, "zh": str?, "lead": bool?}, ...]}
+
+each paragraph wrapped and centred, its Chinese beneath it; a lead paragraph (an
+opening or closing line) is drawn larger.
+
 A note row is drawn smaller, grey and italic (a comparison line). 1920x1080; Inter
 for Latin, Noto Sans CJK SC for Chinese.
 """
@@ -26,6 +33,78 @@ CJK_SC = 2                       # the Simplified Chinese face inside the collec
 WHITE, GREY, DIM, LINE = (255, 255, 255), (165, 165, 165), (190, 190, 190), (70, 70, 70)
 
 spec = json.load(open(sys.argv[1]))
+
+
+def statement(spec):
+    """A slide of paragraphs, English then Chinese, centred."""
+    img = Image.new("RGB", (W, H), (0, 0, 0))
+    dr = ImageDraw.Draw(img)
+    width = 1320
+    fonts = {True: (ImageFont.truetype(INTER.format("SemiBold"), 46),
+                    ImageFont.truetype(CJK.format("Medium"), 34, index=CJK_SC)),
+             False: (ImageFont.truetype(INTER.format("Regular"), 32),
+                     ImageFont.truetype(CJK.format("Regular"), 25, index=CJK_SC))}
+
+    def units(text, by_char):
+        """English by word; Chinese by clause (after ，、。) where a clause fits, else
+        by character, so a line does not break inside a phrase if it can help it."""
+        if not by_char:
+            return text.split()
+        out, cur = [], ""
+        for ch in text:
+            cur += ch
+            if ch in "，、。；：":
+                out.append(cur)
+                cur = ""
+        return out + ([cur] if cur else [])
+
+    def greedy(text, font, by_char, w_max):
+        words, lines, cur = [], [], ""
+        for u in units(text, by_char):
+            words += [u] if dr.textlength(u, font=font) <= w_max else list(u)
+        for w in words:
+            t = cur + w if by_char or not cur else cur + " " + w
+            if dr.textlength(t, font=font) > w_max and cur:
+                lines.append(cur)
+                cur = w
+            else:
+                cur = t
+        return lines + [cur]
+
+    def wrap(text, font, by_char):
+        """As few lines as fit `width`, then made as even as that many lines allow,
+        so a paragraph never ends on a word or two alone."""
+        n = len(greedy(text, font, by_char, width))
+        if by_char:                      # clause breaks already keep it even enough
+            return greedy(text, font, by_char, width)
+        w_max = width
+        while w_max > 200 and len(greedy(text, font, by_char, w_max - 10)) == n:
+            w_max -= 10
+        return greedy(text, font, by_char, w_max)
+
+    blocks = []
+    for para in spec["paragraphs"]:
+        f_en, f_zh = fonts[bool(para.get("lead"))]
+        lines = [(t, f_en, WHITE, round(f_en.size * 1.32)) for t in wrap(para["en"], f_en, False)]
+        if para.get("zh"):
+            lines.append(("", f_zh, DIM, round(f_zh.size * 0.3)))
+            lines += [(t, f_zh, DIM, round(f_zh.size * 1.5)) for t in wrap(para["zh"], f_zh, True)]
+        blocks.append(lines)
+    gap = 40
+    total = sum(sum(h for *_, h in b) for b in blocks) + gap * (len(blocks) - 1)
+    y = (H - total) // 2
+    for b in blocks:
+        for text, font, fill, h in b:
+            dr.text(((W - dr.textlength(text, font=font)) / 2, y), text, font=font, fill=fill)
+            y += h
+        y += gap
+    img.save(sys.argv[2])
+    print("wrote", sys.argv[2])
+    sys.exit(0)
+
+
+if "paragraphs" in spec:
+    statement(spec)
 rows = [r if isinstance(r, dict) else {"en": r[0], "value": r[1], "note": (r[2:] or [""])[0] == "note"}
         for r in spec["rows"]]
 zh = any(r.get("zh") for r in rows) or bool(spec.get("title_zh"))
