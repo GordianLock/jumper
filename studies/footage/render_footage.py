@@ -49,6 +49,8 @@ p.add_argument("--angles", default=",".join(ANGLES))
 p.add_argument("--fps", type=int, default=60)
 p.add_argument("--width", type=int, default=1920)
 p.add_argument("--height", type=int, default=1080)
+p.add_argument("--zoom", type=float, default=1.0,
+               help="camera distance multiplier, for clips that cover more ground")
 p.add_argument("--hold", type=float, default=0.5, help="s of still pose added at each end")
 p.add_argument("--scene", default=None,
                help="a repository scene id (scripts/play.py --list): its ground, sky and "
@@ -205,6 +207,9 @@ def pose(t: float) -> None:
     d.qpos[root:root + 3] = (1 - u) * pos[k] + u * pos[k + 1]
     d.qpos[root + 3:root + 7] = qq
     d.qpos[adr] = (1 - u) * q[k] + u * q[k + 1]
+    # The sun's shadow map is centred on the model's centre and spans SHADOW_REACH:
+    # keep it on the robot, which may walk a metre or more.
+    m.stat.center[:2] = d.qpos[root:root + 2]
     mujoco.mj_forward(m, d)
 
 
@@ -218,7 +223,7 @@ for angle in a.angles.split(","):
     az, el, dist = ANGLES[angle]
     cam = mujoco.MjvCamera()
     cam.lookat[:] = look
-    cam.azimuth, cam.elevation, cam.distance = yaw_axis + az, el, dist
+    cam.azimuth, cam.elevation, cam.distance = yaw_axis + az, el, dist * a.zoom
     for speed in (float(s) for s in a.speeds.split(",")):
         n = int(round((length + 2 * a.hold) / speed * a.fps))
         frames = []
