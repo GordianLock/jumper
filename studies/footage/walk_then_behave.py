@@ -15,7 +15,8 @@ simulation for footage, controllers in sequence as the robot's FSM would run the
 3. **Behaviour**: the state (root pose and velocity, joint positions and velocities)
    is written into the behaviour task's own environment and its policy runs, with
    its finishing termination off, until that termination's predicate holds.
-4. **Return**: the stand controller again.
+4. **Return**: the stand controller again. With several `--task`/`--actor` pairs,
+   3 and 4 repeat for each in turn (e.g. lie down, then self-right from the back).
 5. **On**: back in the walking environment from that state, `--walk-after` (a few
    steps forward), a zero command, the stand controller, then `--tail` s still.
 
@@ -42,8 +43,10 @@ from tasks.jumper.common.constants import GAIT_JOINTS  # noqa: E402
 
 p = argparse.ArgumentParser()
 p.add_argument("--model", required=True)
-p.add_argument("--task", required=True)
-p.add_argument("--actor", required=True)
+p.add_argument("--task", required=True, action="append",
+               help="the behaviour's task; repeat (with --actor) for behaviours in sequence, "
+                    "each from where the last left off, HOME between them")
+p.add_argument("--actor", required=True, action="append")
 p.add_argument("--out", required=True)
 p.add_argument("--walk", default="0.3,0,0,4.0")
 p.add_argument("--stop", type=float, default=1.0, help="s of zero walking command before standing")
@@ -167,56 +170,56 @@ walk(obs, a.walk)
 phases.append(("walk", len(rec["q"])))
 stand(wenv, wids)
 phases.append(("stand", len(rec["q"])))
-root = wr.data.root_state_w.clone() if hasattr(wr.data, "root_state_w") else torch.cat(
-    [wr.data.root_link_pos_w, wr.data.root_link_quat_w, wr.data.root_link_lin_vel_w,
-     wr.data.root_link_ang_vel_w], dim=1).clone()
-root[:, :3] -= wenv.scene.env_origins
-jpos, jvel = wr.data.joint_pos.clone(), wr.data.joint_vel.clone()
-jnames = list(wr.joint_names)
 
-# ── 3: the behaviour, from exactly that state ──────────────────────────────────
-bcfg = nominal(tasks.load_env_cfg(a.task, asset=XML, play=True))
-finish = {k: bcfg.terminations.pop(k) for k in ("rolled_and_standing", "standing", "on_back")
-          if k in bcfg.terminations}
-assert len(finish) == 1, f"{a.task}: no single finishing termination ({list(bcfg.terminations)})"
-fin = next(iter(finish.values()))
-bcfg.episode_length_s = 60.0
-benv = ManagerBasedRlEnv(cfg=bcfg, device="cpu")
-br = benv.scene["robot"]
-bids = benv.action_manager.get_term("joint_pos")._target_ids
-assert list(br.joint_names) == jnames
-policy = ort.InferenceSession(str(Path(a.actor)))
-pname = policy.get_inputs()[0].name
-benv.reset()
-root[:, :3] += benv.scene.env_origins
-br.write_root_state_to_sim(root)
-br.write_joint_state_to_sim(jpos, jvel)
-benv.sim.forward()
-cmd = benv.command_manager.get_term("roll")
-cmd._resample_command(torch.arange(1))                 # the turn counts from here
-obs = benv.observation_manager.compute()
-for k in range(int(10.0 / benv.step_dt)):
-    act = policy.run(None, {pname: obs["actor"].numpy().astype(np.float32)})[0]
-    obs, *_ = benv.step(torch.as_tensor(act))
-    log(benv, bids)
-    if bool(fin.func(benv, **fin.params)[0]):
-        break
-else:
-    print("warning: the behaviour's finish never held")
-phases.append((a.task, len(rec["q"])))
+# ── 3-4: each behaviour from exactly the state before it, then back to HOME ────
 
-# ── 4: back to HOME ────────────────────────────────────────────────────────────
-stand(benv, bids)
-phases.append(("home", len(rec["q"])))
+
+def copy_state(src, dst):
+    """Write `src`'s robot state into `dst`'s robot, at `dst`'s origin."""
+    sr, dr = src.scene["robot"], dst.scene["robot"]
+    assert list(dr.joint_names) == list(sr.joint_names)
+    st = torch.cat([sr.data.root_link_pos_w - src.scene.env_origins + dst.scene.env_origins,
+                    sr.data.root_link_quat_w, sr.data.root_link_lin_vel_w,
+                    sr.data.root_link_ang_vel_w], dim=1)
+    dr.write_root_state_to_sim(st)
+    dr.write_joint_state_to_sim(sr.data.joint_pos.clone(), sr.data.joint_vel.clone())
+    dst.sim.forward()
+
+
+prev = wenv
+for task, actor in zip(a.task, a.actor):
+    bcfg = nominal(tasks.load_env_cfg(task, asset=XML, play=True))
+    finish = {k: bcfg.terminations.pop(k) for k in ("rolled_and_standing", "standing", "on_back")
+              if k in bcfg.terminations}
+    assert len(finish) == 1, f"{task}: no single finishing termination ({list(bcfg.terminations)})"
+    fin = next(iter(finish.values()))
+    bcfg.episode_length_s = 60.0
+    benv = ManagerBasedRlEnv(cfg=bcfg, device="cpu")
+    br = benv.scene["robot"]
+    bids = benv.action_manager.get_term("joint_pos")._target_ids
+    policy = ort.InferenceSession(str(Path(actor)))
+    pname = policy.get_inputs()[0].name
+    benv.reset()
+    copy_state(prev, benv)
+    cmd = benv.command_manager.get_term("roll")
+    cmd._resample_command(torch.arange(1))             # the task's turn / settle counts from here
+    obs = benv.observation_manager.compute()
+    for k in range(int(10.0 / benv.step_dt)):
+        act = policy.run(None, {pname: obs["actor"].numpy().astype(np.float32)})[0]
+        obs, *_ = benv.step(torch.as_tensor(act))
+        log(benv, bids)
+        if bool(fin.func(benv, **fin.params)[0]):
+            break
+    else:
+        print(f"warning: {task}'s finish never held")
+    phases.append((task, len(rec["q"])))
+    stand(benv, bids)
+    phases.append(("home", len(rec["q"])))
+    prev = benv
 
 # ── 5: a few steps on, stop, stand (the walking environment, from this state) ──
 if a.walk_after:
-    st = torch.cat([br.data.root_link_pos_w - benv.scene.env_origins + wenv.scene.env_origins,
-                    br.data.root_link_quat_w, br.data.root_link_lin_vel_w,
-                    br.data.root_link_ang_vel_w], dim=1)
-    wr.write_root_state_to_sim(st)
-    wr.write_joint_state_to_sim(br.data.joint_pos.clone(), br.data.joint_vel.clone())
-    wenv.sim.forward()
+    copy_state(benv, wenv)
     walk(wenv.observation_manager.compute(), a.walk_after)
     phases.append(("walk_after", len(rec["q"])))
     stand(wenv, wids)
