@@ -59,6 +59,17 @@ p.add_argument("--orbit-distance", type=float, default=0.55)
 p.add_argument("--orbit-elevation", type=float, default=28.0, help="degrees above level")
 p.add_argument("--orbit-height", type=float, default=0.09, help="aim point above the floor, m")
 p.add_argument("--orbit-start", type=float, default=200.0, help="first azimuth, degrees")
+p.add_argument("--track", default=None,
+               help="instead of the angles: a close-up following the robot through this "
+                    "phase (a walk_then_behave.py recording's phase name), at the first "
+                    "of --speeds")
+p.add_argument("--track-pad", type=float, default=0.4, help="s before and after the phase")
+p.add_argument("--track-distance", type=float, default=0.6)
+p.add_argument("--track-elevation", type=float, default=22.0, help="degrees above level")
+p.add_argument("--track-height", type=float, default=0.09)
+p.add_argument("--track-start", type=float, default=60.0,
+               help="first azimuth, degrees relative to the recording's axis")
+p.add_argument("--track-sweep", type=float, default=90.0, help="degrees swung over the clip")
 p.add_argument("--zoom", type=float, default=1.0,
                help="camera distance multiplier, for clips that cover more ground")
 p.add_argument("--hold", type=float, default=0.5, help="s of still pose added at each end")
@@ -237,6 +248,39 @@ vopt = mujoco.MjvOption()
 vopt.geomgroup[1] = 0
 os.makedirs(a.out_dir, exist_ok=True)
 length = (T - 1) * dt
+if a.track:
+    # A close-up that follows the robot through one phase: the camera aims at the
+    # robot's position smoothed over TRACK_SMOOTH s (so it glides rather than
+    # jitters with every bounce), and swings --track-sweep degrees round it.
+    names = [str(nm) for nm in h["phase_names"]]
+    i_ = names.index(a.track)
+    t0 = (int(h["phases"][i_ - 1]) if i_ > 0 else 0) * dt - a.track_pad
+    t1 = int(h["phases"][i_]) * dt + a.track_pad
+    TRACK_SMOOTH = 0.25
+    k_ = np.exp(-0.5 * (np.arange(-60, 61) * dt / (TRACK_SMOOTH / 2)) ** 2)
+    k_ /= k_.sum()
+    padded = np.pad(pos, ((60, 60), (0, 0)), mode="edge")
+    smooth = np.stack([np.convolve(padded[:, j], k_, mode="valid") for j in range(3)], 1)
+    speed = float(a.speeds.split(",")[0])
+    n = int(round((t1 - t0) / speed * a.fps))
+    cam = mujoco.MjvCamera()
+    cam.elevation, cam.distance = -a.track_elevation, a.track_distance
+    frames = []
+    for i in range(n + 1):
+        t = t0 + i * speed / a.fps
+        pose(t)
+        x = min(max(t / dt, 0.0), T - 1.0)
+        kk, u = min(int(x), T - 2), x - min(int(x), T - 2)
+        c = (1 - u) * smooth[kk] + u * smooth[kk + 1]
+        cam.lookat[:] = [c[0], c[1], a.track_height]
+        cam.azimuth = yaw_axis + a.track_start + a.track_sweep * i / max(n, 1)
+        r.update_scene(d, cam, scene_option=vopt)
+        frames.append(r.render())
+    out = os.path.join(a.out_dir, f"{a.name}_track_{speed:g}x.mp4")
+    mediapy.write_video(out, frames, fps=a.fps, crf=18)
+    print(f"wrote {out}: {len(frames)} frames, {len(frames) / a.fps:.1f} s")
+    sys.exit(0)
+
 if a.orbit:
     # A turntable: the recording's first pose held, the camera circling it once.
     pose(0.0)
