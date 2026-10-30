@@ -3,7 +3,7 @@ control step, as `record_demo.py` / `record_policy_demo.py` write them) as an MP
 
 Nothing is re-simulated: each frame poses prototype 3 at the recorded state (the
 unactuated J4 joints at 0) and draws it, so what is shown is exactly what the
-training environment produced. Two views side by side -- front-right and the roll's
+training environment produced. Two views side by side -- across the roll and the roll's
 own side (looking along the roll axis) -- with the recording's clock and turn.
 
     MUJOCO_GL=egl python studies/proto3/render_recording.py <recording.npz> <out.mp4> [--speed 0.5]
@@ -65,7 +65,7 @@ for i in range(n_out):
     d.qpos[adr] = h["q"][k]
     mujoco.mj_forward(m, d)
     views = []
-    for az in (-45.0, yaw_axis + 180.0):
+    for az in (yaw_axis + 90.0, yaw_axis + 180.0):
         cam = mujoco.MjvCamera()
         cam.lookat[:] = [d.qpos[root], d.qpos[root + 1], 0.08]
         cam.distance, cam.azimuth, cam.elevation = 0.9, az, -18.0
@@ -76,7 +76,7 @@ for i in range(n_out):
     turn = math.degrees(float(h["total"][k]))
     dr.text((10, 8), f"t = {k * dt:4.2f} s   turn {turn:4.0f} deg   ({a.speed:g}x speed)",
             fill=(255, 255, 255))
-    dr.text((10, H - 20), "front-right", fill=(255, 255, 255))
+    dr.text((10, H - 20), "across the roll axis", fill=(255, 255, 255))
     dr.text((W + 10, H - 20), "along the roll axis", fill=(255, 255, 255))
     frames.append(np.asarray(img))
 mediapy.write_video(a.out, frames, fps=a.fps)
