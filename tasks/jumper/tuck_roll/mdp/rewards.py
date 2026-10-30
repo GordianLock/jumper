@@ -76,13 +76,14 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
                     carapace_impact: tuple[float, float] = (50.0, 200.0),
                     ground_impact: tuple[float, float] = (60.0, 250.0),
                     flight: tuple[float, float] = (0.06, 0.20),
-                    axis_sigma_deg: float | None = None) -> torch.Tensor:
+                    axis_sigma_deg: float | None = None,
+                    axis_free_deg: float = 0.0) -> torch.Tensor:
     """jumper.horn_roll's bonus (its `rewards.gentle_complete`), the arms' load and the
     front of the body's floor force among the factors the lowest of which scales it.
     With `axis_sigma_deg`, the whole bonus is also multiplied by
-    exp(-(e / axis_sigma_deg)^2), e the angle between the axis rolled about and the
-    demonstration's (`tracker.axis_error_deg`): a roll about another axis earns none
-    of it."""
+    exp(-(max(0, e - axis_free_deg) / axis_sigma_deg)^2), e the angle between the axis
+    rolled about and the demonstration's (`tracker.axis_error_deg`): within
+    `axis_free_deg` it is kept whole, and a roll about another axis earns none of it."""
     cmd = _cmd(env, command_name)
     done = standing_done(env, command_name=command_name, min_own_turn=min_own_turn).float()
     worst = {
@@ -105,7 +106,8 @@ def gentle_complete(env, command_name: str = "roll", min_own_turn: float = 1.0,
     g = torch.stack([_factor(worst[k], *bands[k]) for k in bands], dim=1).min(dim=1).values
     bonus = done * (gentle_floor + (1.0 - gentle_floor) * g)
     if axis_sigma_deg is not None:
-        bonus = bonus * torch.exp(-(cmd.axis_error_deg() / axis_sigma_deg) ** 2)
+        over = (cmd.axis_error_deg() - axis_free_deg).clamp(min=0.0)
+        bonus = bonus * torch.exp(-(over / axis_sigma_deg) ** 2)
     return bonus
 
 
