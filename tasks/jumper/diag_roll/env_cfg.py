@@ -24,6 +24,14 @@ axis 47 deg off the centreline, 381 deg, standing after 1.68 s; face 0 N, stock 
 air, worst floor-contact joint torque 8.4 N*m -- the last one is what training charges
 down.
 
+**Run 1 (2026-10-29) did not stay diagonal:** once the guide faded the policy rolled
+about an axis 81 deg off the centreline, nearly end over end, because the turn is
+counted about the demonstration's axis and a nearby axis completes it too. Nothing
+holds the axis after the guide. Its roll was kept as the **shoulder roll**
+(`studies/proto3/policies/shoulder_roll/`): 40/40 rolls, joint torque 3.4-4.2 N*m on
+four of five robots. A diagonal that stays diagonal would need a term on the rotation
+axis that lasts the whole of training.
+
 Its recorded poses have the claws pressed up to 1 cm into the body (0.1-0.6 s, as
 they brace against it) and up to 1.9 cm into each other (214-259 deg). Those are
 states the recording reached with the claws colliding, contact under load in this same

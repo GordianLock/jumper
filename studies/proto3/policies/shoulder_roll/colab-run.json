@@ -1,0 +1,60 @@
+{
+  "checkpoint": "/content/proto3-5-diag/logs/jumper_CF1-tri30m-rb-v3/jumper.diag_roll/2026-10-30_00-37-49/model_2499.pt",
+  "checkpoints": {
+    "model_0.pt": "974c4725a3c5c73931922c9fdd4c8bd3ab3c5f6e4d87166c7674759a462b3b8e",
+    "model_1000.pt": "59e42f6712b2db8775695f79858678f44e67f51255e5ee8a330ca23b1d5a7ef1",
+    "model_1250.pt": "c7242cffdbd00bcf44307c7782509b3e95407095273d4cff08a2d9fe6ceed2e1",
+    "model_1500.pt": "4a4aa2b785059ce55da230f6ea28a490f0ccf60afe4d2315205c438bdb74b506",
+    "model_1750.pt": "16c46e305560edb5ec87c9b86a25a5924ad34d6d4365d368fe98d61ea55e3db7",
+    "model_2000.pt": "5174ba7bd6f0115ddc5b743cf214ce365589612820723a640c863dbffe7a572f",
+    "model_2250.pt": "7886ebc95ec9be9067132f56821e3fe00fa7ea352622abf617f16a6854139c67",
+    "model_2499.pt": "c54b7227a307f08d80aaeffc790d000188a535e83b4dbd509b2d6e8097dc8252",
+    "model_250.pt": "377fad35d8964401dab6ded616c354cf56a1811738d9a910e5426f0165128e73",
+    "model_500.pt": "9cc300775044faf9965ad4ec865337b4101d4329e25b9be74e54aed35c135cfa",
+    "model_750.pt": "325bb8f9485f1948e2062241709be65f10370f7f340646cc0e6ebedc5f728c3a"
+  },
+  "command": [
+    "/content/proto3-5-diag/.venv/bin/python",
+    "scripts/train.py",
+    "--task",
+    "jumper.diag_roll",
+    "--model",
+    "CF1-tri30m-rb-v3",
+    "--backend",
+    "warp",
+    "--device",
+    "cuda:0",
+    "--num_envs",
+    "256",
+    "--max-iterations",
+    "2500",
+    "--headless",
+    "--no-tensorboard",
+    "--logger",
+    "tensorboard"
+  ],
+  "config": {
+    "backend": "warp",
+    "device": "cuda:0",
+    "mjrl_environment": {},
+    "model": "CF1-tri30m-rb-v3",
+    "num_envs": 256,
+    "repository_url": "https://github.com/GordianLock/jumper.git",
+    "revision": "bf536b31bc9460be6cd5132cea50a7f73f55ab8e",
+    "runtime_versions": {
+      "mujoco": "3.11.0",
+      "mujoco-warp": "3.11.0",
+      "numpy": "2.5.4",
+      "tensordict": "0.15.3",
+      "torch": "2.15.0",
+      "warp-lang": "1.18.0"
+    },
+    "source_sha256": "7c0f6eea9d0dd7b01c5a4902b7c09f29dec0fc05d747f1f4393df9df472a2583",
+    "task": "jumper.diag_roll"
+  },
+  "operation": "3c97f8e70c1d42a7b6a082478cfea647",
+  "resume_from": null,
+  "run_directory": "/content/proto3-5-diag/logs/jumper_CF1-tri30m-rb-v3/jumper.diag_roll/2026-10-30_00-37-49",
+  "schema": 1,
+  "status": "finished"
+}
