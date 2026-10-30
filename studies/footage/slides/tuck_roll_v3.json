@@ -1,0 +1,51 @@
+{
+ "title": "Proto3 performing Tuck Roll",
+ "rows": [
+  {
+   "en": "Successful rolls",
+   "zh": "成功翻滚次数",
+   "value": "55 / 55"
+  },
+  {
+   "en": "Roll time",
+   "zh": "翻滚用时",
+   "value": "0.84 – 0.88 s"
+  },
+  {
+   "en": "Peak joint torque from floor contact",
+   "zh": "地面接触产生的关节扭矩峰值",
+   "value": "5.6 – 7.7 N·m"
+  },
+  {
+   "en": "KingKong's own jump, measured the same way",
+   "zh": "同法测得的 KingKong 官方跳跃",
+   "value": "4.8 N·m (5.6 worst)",
+   "note": true
+  },
+  {
+   "en": "Floor impact",
+   "zh": "地面冲击力",
+   "value": "108 – 185 N"
+  },
+  {
+   "en": "Carapace impact",
+   "zh": "甲壳冲击力",
+   "value": "97 – 164 N"
+  },
+  {
+   "en": "Face / sensors touching floor",
+   "zh": "面部/传感器触地",
+   "value": "0 N"
+  },
+  {
+   "en": "Longest airborne moment",
+   "zh": "最长腾空时间",
+   "value": "0.04 – 0.06 s"
+  }
+ ],
+ "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 11 rolls each",
+ "schema": "Color schema: Fibonacci (1, 1, 2, 3, 5, 8, 13, 21, …)",
+ "title_zh": "原型 3 演示：抱团前滚翻",
+ "footnote_zh": "MuJoCo 仿真：1 台标准机器人 + 4 台随机化机器人（摩擦、质量分布、传感器偏差），每台翻滚 11 次",
+ "schema_zh": "配色方案：斐波那契数列（1, 1, 2, 3, 5, 8, 13, 21, …）"
+}
