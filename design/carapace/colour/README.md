@@ -7,18 +7,19 @@ in the interactive colour preview; each folder here is one saved setup applied t
 | Folder | Version | Setup |
 |---|---|---|
 | `CF1-tri30m-rb-v4b__30-oct-b/` | `CF1-tri30m-rb-v4b` | "30 Oct B": Fibonacci bands, 2.5 mm unit, grown from the shell surface up, filament = n mod 4, accent on added surface under 0.6 mm |
+| `CF1-tri30m-rb-v4__30-oct-kolakoski/` | `CF1-tri30m-rb-v4` | "30 Oct Kolakoski": Kolakoski bands, 0.25 mm unit (bands 0.25 or 0.5 mm), counted down from the highest tip, filament = n mod 3, accent on added surface under 1.1 mm. Three band filaments, so the pieces are `stock`, `accent`, `c0`..`c2`. |
 
 ## What a folder holds
 
 - `setup.json` -- the pattern's parameters and colours (the input).
 - `colours.json` -- what was produced: each piece's file, hex and `rgba`, the relief interval
   each filament covers, and an area check (the pieces sum to the printable shell's area).
-- `<filament>.stl` -- one surface mesh per filament: `stock`, `accent`, `c0`..`c3`.
+- `<filament>.stl` -- one surface mesh per filament: `stock`, `accent`, `c0`..`c(k-1)`.
   **Metres, in the `upper_shell_link` frame** -- the same frame as
   `assets/jumper/urdf/jumper/meshes/visual/upper_shell_link.stl` and the version's
   `carapace/<version>/visual.stl`, so they attach to `upper_shell_link` with no `pos`/`quat`.
 
-Together the six pieces are the whole printable top shell surface (stock shell, underside
+Together the pieces are the whole printable top shell surface (stock shell, underside
 included, plus carapace), with no gaps or overlaps. They are open surfaces, not closed
 solids: right for display, not for slicing as separate print bodies.
 
@@ -31,9 +32,14 @@ band edges, so boundaries are smooth.
 ## Using it in simulation (display only)
 
 Display-only geoms (`class="visual"`: `contype="0" conaffinity="0" group="2"`, `density="0"`)
-change nothing in the physics. Loaded on MuJoCo 3.11.0 with the six pieces added to
-`jumper_CF1-tri30m-rb-v4b.xml`: the model compiles and `upper_shell_link`'s mass stays
-0.174437 kg.
+change nothing in the physics. Loaded on MuJoCo 3.11.0 with the pieces added, each model
+compiles and `upper_shell_link`'s mass is unchanged: 0.174437 kg for `30-oct-b` on
+`jumper_CF1-tri30m-rb-v4b.xml`, 0.176437 kg for `30-oct-kolakoski` on
+`jumper_CF1-tri30m-rb-v4.xml`.
+
+The snippets below are for `CF1-tri30m-rb-v4b__30-oct-b`. For another folder, add the pattern
+to that version's model (`jumper_<version>.xml`), use that folder's name in the paths, list
+the pieces its `colours.json` lists, and take each `rgba` from there.
 
 1. In `<asset>`, add one mesh per piece. Mesh paths resolve against `assets/jumper/`:
 
@@ -72,5 +78,9 @@ change nothing in the physics. Loaded on MuJoCo 3.11.0 with the six pieces added
 python design/carapace/colour/split_colours.py design/carapace/colour/<folder>/setup.json
 ```
 
-Needs trimesh and rtree. Only the Fibonacci sequence and `grow_from: "base"` are implemented
-in the script so far; the preview offers more, and the script raises rather than guessing.
+Needs trimesh and rtree. The script implements every sequence the preview offers
+(`fibonacci`, `padovan`, `triangular`, `primes`, `kolakoski`, `thue_morse_plus_1`) the same
+way the preview generates them, both growth directions (`grow_from`: `"base"` or `"tip"`) and
+both colour rules (`colour_rule`: `"a_mod_k"` or `"n_mod_k"`). Its relief intervals for
+`30-oct-kolakoski`, merged and rounded to 0.1 mm, match all 107 ranges in the preview's Copy
+settings output for that setup.
