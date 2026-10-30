@@ -22,15 +22,16 @@ The bonus scaling is what holds the axis; the per-step charge only keeps the rol
 leaving the demonstration's own amount of spin. Everything else, the demonstration
 included, is jumper.spin_drift's.
 
-## Settling at HOME after the finish
+## The episode ends at the finish
 
-As jumper.spin_spin (see its docstring for why): the episode goes on after the finish
-(`common/neutral_finish.py`) for up to `SETTLE_WINDOW_S` and ends once the robot is
-settled -- still standing, every driven joint within `SETTLE_HOME_TOL` of HOME,
-turning slower than `SETTLE_ANG_VEL` and moving slower than `SETTLE_LIN_VEL`, for
-`SETTLE_HOLD_STEPS` running. The axis-scaled finishing bonus still pays once, on the
-finish step; settling adds `SETTLED_BONUS` once, and `settle_home` per second of legs
-near HOME while standing.
+Tried and reverted (2026-10-30): keeping the episode going after the finish to settle
+at HOME (`common/neutral_finish.py`, revision 7501321). Colab, 2500 iterations on
+prototype 4: once the guide faded the policy rolled (a full turn 97-99% of the time)
+and then crouched short of standing for the rest of the 4 s episode, collecting
+`finish_upright` per step; the finishing bonus fell to nothing and no episode ever
+settled. Finishing had stopped ending the episode, so it now cost that per-step pay,
+and in the guide's phase the settle window was unwinnable. Footage gets its neutral
+ending from a stand controller handed over to after the finish instead.
 """
 
 from __future__ import annotations
@@ -38,15 +39,9 @@ from __future__ import annotations
 from pathlib import Path
 
 from mjlab.managers.reward_manager import RewardTermCfg
-from mjlab.managers.scene_entity_config import SceneEntityCfg
 
-from ..common import neutral_finish as nf
-from ..common.constants import GAIT_JOINTS
 from ..spin_drift import env_cfg as spin
-from ..tuck_roll import env_cfg as tuck
 from ..tuck_roll import mdp as tr
-
-STEP_DT = tuck.STEP_DT
 
 AXIS_FREE_DEG = 10.0
 AXIS_SIGMA_DEG = 12.0
@@ -54,33 +49,15 @@ OFF_AXIS_FREE = 4.5
 OFF_AXIS_SCALE = 4.0
 OFF_AXIS_WEIGHT = -0.3
 
-# ── Settling at HOME after the finish ─────────────────────────────────────────
-SETTLE_WINDOW_S = 1.5
-SETTLE_HOLD_STEPS = 15
-SETTLE_HOME_TOL = 0.15
-SETTLE_ANG_VEL = 0.2
-SETTLE_LIN_VEL = 0.02
-SETTLE_HOME_WEIGHT = 1.0
-SETTLE_SIGMA_SQ = 0.10
-SETTLED_BONUS = 4.0
-
 
 def env_cfg(asset: Path | None = None, play: bool = False):
-    """jumper.spin_drift held to its demonstration's axis, settling at HOME after."""
+    """jumper.spin_drift held to its demonstration's axis."""
     cfg = spin.env_cfg(asset=asset, play=play)
     cfg.rewards["complete"].params["axis_sigma_deg"] = AXIS_SIGMA_DEG
     cfg.rewards["complete"].params["axis_free_deg"] = AXIS_FREE_DEG
     cfg.rewards["off_axis"] = RewardTermCfg(func=tr.rewards.off_axis, weight=OFF_AXIS_WEIGHT,
                                             params={"free": OFF_AXIS_FREE,
                                                     "scale": OFF_AXIS_SCALE})
-    # Last: the wrapper copies the finishing bonus's params as they stand.
-    nf.settle_after_finish(
-        cfg, "rolled_and_standing", SceneEntityCfg("robot", joint_names=list(GAIT_JOINTS)),
-        home_tol=SETTLE_HOME_TOL, still_ang_vel=SETTLE_ANG_VEL, still_lin_vel=SETTLE_LIN_VEL,
-        hold_steps=SETTLE_HOLD_STEPS, window_steps=round(SETTLE_WINDOW_S / STEP_DT),
-        settle_home_weight=SETTLE_HOME_WEIGHT, settle_sigma_sq=SETTLE_SIGMA_SQ,
-        settled_weight=SETTLED_BONUS / STEP_DT,
-        once_rewards=("complete",), until_rewards=("finish_upright", "finish_home"))
     return cfg
 
 
