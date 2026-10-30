@@ -2,7 +2,14 @@
 the demonstration format `studies/proto3/render_recording.py` draws (root pose and
 joint angles per 20 ms control step, plus the axis it turned about and how far).
 
-    python studies/self_right/record_self_right.py <actor.onnx> <out.npz>
+    python studies/self_right/record_self_right.py <actor.onnx> <out.npz> [--handover]
+
+With `--handover`, the policy hands over to a stand controller the moment the task's
+own `standing` termination fires (the point training stopped at; nothing after it was
+trained): the joint targets ramp linearly from where the joints are to HOME over
+`RAMP` s, then stay at HOME -- what the robot's stand mode would do after a
+self-right. The recording runs until the joints are within `SETTLED` rad of HOME and
+the body is still, then `HOLD` s more. Physics is simulated throughout.
 
 One episode from the task's own on-the-back spawn (play mode, no randomisation, no
 pushes), through the 0.5 s settling and the righting, then `HOLD` s standing.
@@ -29,13 +36,16 @@ from mjlab.envs import ManagerBasedRlEnv  # noqa: E402
 from mjlab.utils.lab_api.math import quat_apply_inverse  # noqa: E402
 
 ACTOR, OUT = Path(sys.argv[1]), Path(sys.argv[2])
+HANDOVER = "--handover" in sys.argv[3:]
 HOLD = 0.4
+RAMP = 0.5
+SETTLED = 0.05
 cfg = tasks.load_env_cfg("jumper.self_right", asset=ROOT / "assets/jumper/jumper.xml", play=True)
 cfg.scene.num_envs = 1
 cfg.events.pop("push_robot", None)
 for k in [k for k, e in cfg.events.items() if e.mode == "startup"]:
     cfg.events.pop(k)
-cfg.terminations.pop("standing", None)
+stand_term = cfg.terminations.pop("standing")
 env = ManagerBasedRlEnv(cfg=cfg, device="cpu")
 robot = env.scene["robot"]
 term = env.action_manager.get_term("joint_pos")
@@ -48,9 +58,19 @@ origin = env.scene.env_origins[0].numpy()
 rec = {k: [] for k in ("q", "root_pos", "root_quat")}
 wb, stood = [], None
 dt = env.step_dt
-for k in range(int(4.0 / dt)):
-    a = sess.run(None, {iname: obs["actor"].numpy().astype(np.float32)})[0]
+home = robot.data.default_joint_pos[0, term._target_ids].numpy()
+scale = term._scale[0].numpy() if torch.is_tensor(term._scale) else float(term._scale)
+handed, start, still = None, None, None
+for k in range(int(6.0 / dt)):
+    if handed is None:
+        a = sess.run(None, {iname: obs["actor"].numpy().astype(np.float32)})[0]
+    else:
+        f = min(1.0, (k - handed) * dt / RAMP)
+        a = ((1.0 - f) * (start - home) / scale)[None].astype(np.float32)
     obs, *_ = env.step(torch.as_tensor(a))
+    if HANDOVER and handed is None and bool(stand_term.func(env, **stand_term.params)[0]):
+        handed, start = k + 1, robot.data.joint_pos[0, term._target_ids].numpy().copy()
+        print(f"handover to the stand controller at {handed * dt:.2f} s")
     rec["q"].append(robot.data.joint_pos[0, term._target_ids].numpy().copy())
     rec["root_pos"].append(robot.data.root_link_pos_w[0].numpy() - origin)
     rec["root_quat"].append(robot.data.root_link_quat_w[0].numpy().copy())
@@ -59,7 +79,17 @@ for k in range(int(4.0 / dt)):
     w = float(np.linalg.norm(wb[-1]))
     if stood is None and k * dt > 0.5 and up > math.cos(math.radians(20)) and w < 1.0:
         stood = k
-    if stood is not None and k >= stood + int(HOLD / dt):
+    if not HANDOVER:
+        if stood is not None and k >= stood + int(HOLD / dt):
+            break
+        continue
+    if handed is not None and still is None and (k - handed) * dt >= RAMP:
+        qe = np.abs(robot.data.joint_pos[0, term._target_ids].numpy() - home).max()
+        vb = float(np.linalg.norm(robot.data.root_link_lin_vel_w[0].numpy()))
+        if qe < SETTLED and w < 0.1 and vb < 0.01:
+            still = k
+            print(f"at HOME and still at {still * dt:.2f} s (joints within {qe:.3f} rad)")
+    if still is not None and k >= still + int(HOLD / dt):
         break
 rec = {k: np.array(v, dtype=np.float32) for k, v in rec.items()}
 n = len(rec["q"])
@@ -77,4 +107,6 @@ print(f"stood after {stood * dt:.2f} s (0.5 s settling)" if stood is not None el
 OUT.parent.mkdir(parents=True, exist_ok=True)
 np.savez(OUT, dt=np.float32(dt), joint_names=np.array(names), total=total,
          axis=axis.astype(np.float32), source=ACTOR.name, **rec)
+if HANDOVER and still is None:
+    print("never settled at HOME within 6 s")
 print("wrote", OUT)
