@@ -8,13 +8,15 @@ in the interactive colour preview; each folder here is one saved setup applied t
 |---|---|---|
 | `CF1-tri30m-rb-v4b__30-oct-b/` | `CF1-tri30m-rb-v4b` | "30 Oct B": Fibonacci bands, 2.5 mm unit, grown from the shell surface up, filament = n mod 4, accent on added surface under 0.6 mm |
 | `CF1-tri30m-rb-v4__30-oct-kolakoski/` | `CF1-tri30m-rb-v4` | "30 Oct Kolakoski": Kolakoski bands, 0.25 mm unit (bands 0.25 or 0.5 mm), counted down from the highest tip, filament = n mod 3, accent on added surface under 1.1 mm. Three band filaments, so the pieces are `stock`, `accent`, `c0`..`c2`. |
+| `CF1-tri30m-rb-v4__30-oct-kolakoski-v2/` | `CF1-tri30m-rb-v4` | "30 Oct Kolakoski v2": the same bands and accent as `30-oct-kolakoski` (those pieces are byte-identical), plus a stepped height fade on the stock surface: 6 level steps from `#0F0F0F` at the top to `#B20606` at the bottom, starting 22 % and ending 88 % of the way down from the top of the stock shell to its lowest point. The stock piece is replaced by `stock_s0` (bottom) .. `stock_s5` (top); `colours.json` lists each step's colour and z range. |
 
 ## What a folder holds
 
 - `setup.json` -- the pattern's parameters and colours (the input).
 - `colours.json` -- what was produced: each piece's file, hex and `rgba`, the relief interval
   each filament covers, and an area check (the pieces sum to the printable shell's area).
-- `<filament>.stl` -- one surface mesh per filament: `stock`, `accent`, `c0`..`c(k-1)`.
+- `<filament>.stl` -- one surface mesh per filament: `stock` (or `stock_s0`..`stock_s<n-1>` when
+  the setup has a stepped stock fade), `accent`, `c0`..`c(k-1)`.
   **Metres, in the `upper_shell_link` frame** -- the same frame as
   `assets/jumper/urdf/jumper/meshes/visual/upper_shell_link.stl` and the version's
   `carapace/<version>/visual.stl`, so they attach to `upper_shell_link` with no `pos`/`quat`.
@@ -35,7 +37,7 @@ Display-only geoms (`class="visual"`: `contype="0" conaffinity="0" group="2"`, `
 change nothing in the physics. Loaded on MuJoCo 3.11.0 with the pieces added, each model
 compiles and `upper_shell_link`'s mass is unchanged: 0.174437 kg for `30-oct-b` on
 `jumper_CF1-tri30m-rb-v4b.xml`, 0.176437 kg for `30-oct-kolakoski` on
-`jumper_CF1-tri30m-rb-v4.xml`.
+`jumper_CF1-tri30m-rb-v4.xml`, and the same for `30-oct-kolakoski-v2` (10 pieces).
 
 The snippets below are for `CF1-tri30m-rb-v4b__30-oct-b`. For another folder, add the pattern
 to that version's model (`jumper_<version>.xml`), use that folder's name in the paths, list
@@ -81,6 +83,8 @@ python design/carapace/colour/split_colours.py design/carapace/colour/<folder>/s
 Needs trimesh and rtree. The script implements every sequence the preview offers
 (`fibonacci`, `padovan`, `triangular`, `primes`, `kolakoski`, `thue_morse_plus_1`) the same
 way the preview generates them, both growth directions (`grow_from`: `"base"` or `"tip"`) and
-both colour rules (`colour_rule`: `"a_mod_k"` or `"n_mod_k"`). Its relief intervals for
+both colour rules (`colour_rule`: `"a_mod_k"` or `"n_mod_k"`), and a stepped stock fade
+(`stock_fade` with `mode: "height"`; the preview's other mode, fading down the sides, is not
+in the script yet, and a smooth fade cannot be split into filaments). Its relief intervals for
 `30-oct-kolakoski`, merged and rounded to 0.1 mm, match all 107 ranges in the preview's Copy
 settings output for that setup.

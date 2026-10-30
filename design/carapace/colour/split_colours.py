@@ -12,6 +12,14 @@ the stock top shell (distance to the stock visual mesh), and that height decides
   the stock surface (`grow_from: "base"`) or down from the highest point of the relief
   (`"tip"`); its filament is a(n) mod k (`"a_mod_k"`) or n mod k (`"n_mod_k"`).
 
+Optional `stock_fade` splits the stock surface into stepped colours fading from
+`colours.stock` (top) to `stock_fade.low` (bottom), as the preview's stepped fade does. Only
+`mode: "height"` is implemented: level cuts, measured as a percentage of the way down from the
+top of the stock shell (0 %) to its lowest point (100 %). The step colours are interpolated in
+linear RGB, as the preview interpolates them. Pieces are `stock_s0` (bottom, the low colour) to
+`stock_s<steps-1>` (top, `colours.stock`). A smooth fade (steps 0) cannot be split into
+filaments and is refused.
+
 Triangles that straddle a band edge are cut along the iso-line (height is interpolated
 linearly across each triangle), so colour boundaries are smooth rather than stepped.
 
@@ -30,6 +38,58 @@ import trimesh
 
 REPO = Path(__file__).resolve().parents[3]
 STOCK_VISUAL = REPO / "assets/jumper/urdf/jumper/meshes/visual/upper_shell_link.stl"
+# Height-mode fade frame, as the preview defines it: the stock shell's lowest point (z, mm, in
+# upper_shell_link) and its height range to the top (the stock visual spans -7.502..40.397).
+FADE_Z0_MM, FADE_RANGE_MM = -7.5, 47.9
+
+
+def srgb_to_linear(c):
+    return np.where(c < 0.04045, c * 0.0773993808, (c * 0.9478672986 + 0.0521327014) ** 2.4)
+
+
+def linear_to_srgb(c):
+    return np.where(c <= 0.0031308, c * 12.92, c ** 0.41666 * 1.055 - 0.055)
+
+
+def hex_rgb(h):
+    return np.array([int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)])
+
+
+def fade_steps(fade, top_hex):
+    """[(z_lo, z_hi, hex)] for each step of a stepped height fade, bottom step first."""
+    if fade["mode"] != "height":
+        raise ValueError("only stock_fade mode 'height' is implemented")
+    n = int(fade["steps"])
+    if n < 2:
+        raise ValueError("a smooth fade (steps 0) cannot be split into filaments; use 2..8 steps")
+    f_top, f_bot = 1 - fade["from_pct"] / 100, 1 - fade["to_pct"] / 100
+    z = [-np.inf] + [FADE_Z0_MM + FADE_RANGE_MM * (f_bot + k / n * (f_top - f_bot))
+                     for k in range(1, n)] + [np.inf]
+    lo_lin, top_lin = srgb_to_linear(hex_rgb(fade["low"])), srgb_to_linear(hex_rgb(top_hex))
+    out = []
+    for k in range(n):
+        rgb = linear_to_srgb(lo_lin + (top_lin - lo_lin) * k / (n - 1))
+        out.append((z[k], z[k + 1], "#" + "".join(f"{round(float(c) * 255):02X}" for c in rgb)))
+    return out
+
+
+def split_by_z(tris, z_lo, z_hi):
+    """Triangles (N, 3, 3) clipped to z_lo <= z < z_hi."""
+    tz = tris[:, :, 2]
+    whole = (tz.min(1) >= z_lo) & (tz.max(1) < z_hi)
+    out = [tris[whole]]
+    cut = []
+    for t in tris[~whole & (tz.max(1) >= z_lo) & (tz.min(1) < z_hi)]:
+        poly = [(v, v[2]) for v in t]
+        if np.isfinite(z_lo):
+            poly = clip(poly, z_lo, True)
+        if len(poly) >= 3 and np.isfinite(z_hi):
+            poly = clip(poly, z_hi, False)
+        for k in range(1, len(poly) - 1):
+            cut.append([poly[0][0], poly[k][0], poly[k + 1][0]])
+    if cut:
+        out.append(np.array(cut))
+    return np.concatenate(out)
 
 
 def sequence(kind, count):
@@ -137,6 +197,18 @@ def split(setup_path):
         if cut:
             tris[name].append(np.array(cut))
 
+    colours = dict(setup["colours"])
+    steps = []
+    if setup.get("stock_fade"):
+        stock_tris = np.concatenate([c for c in tris.pop("stock") if len(c)])
+        top_hex = colours.pop("stock")
+        steps = fade_steps(setup["stock_fade"], top_hex)
+        fade_tris = {}
+        for k, (z_lo, z_hi, hexc) in enumerate(steps):
+            fade_tris[f"stock_s{k}"] = [split_by_z(stock_tris, z_lo, z_hi)]
+            colours[f"stock_s{k}"] = hexc
+        tris = {**fade_tris, **tris}
+
     pieces, total = [], 0.0
     for name, chunks in tris.items():
         chunks = [c for c in chunks if len(c)]
@@ -147,7 +219,7 @@ def split(setup_path):
         mesh.update_faces(mesh.nondegenerate_faces(height=1e-12))
         mesh.remove_unreferenced_vertices()
         mesh.export(out_dir / f"{name}.stl")
-        hexc = setup["colours"][name]
+        hexc = colours[name]
         rgb = [round(int(hexc[i:i + 2], 16) / 255, 4) for i in (1, 3, 5)]
         area = mesh.area * 1e6
         total += area
@@ -164,6 +236,11 @@ def split(setup_path):
         pieces=pieces,
         area_check_mm2=dict(pieces=round(total, 1), printable=round(shell.area, 1)),
     )
+    if steps:  # z in mm, upper_shell_link frame; open ends are null
+        manifest["stock_fade_steps_mm"] = [
+            dict(piece=f"stock_s{k}", hex=h, z_lo=round(a, 3) if np.isfinite(a) else None,
+                 z_hi=round(b, 3) if np.isfinite(b) else None)
+            for k, (a, b, h) in enumerate(steps)]
     (out_dir / "colours.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
 

@@ -1,0 +1,737 @@
+{
+  "setup": "30 Oct Kolakoski v2",
+  "version": "CF1-tri30m-rb-v4",
+  "frame": "upper_shell_link (as urdf/jumper/meshes/visual/upper_shell_link.stl)",
+  "units": "metres",
+  "relief_intervals_mm": [
+    {
+      "lo": 0.0,
+      "hi": 0.001,
+      "filament": "stock"
+    },
+    {
+      "lo": 0.001,
+      "hi": 1.1,
+      "filament": "accent"
+    },
+    {
+      "lo": 1.1,
+      "hi": 1.182,
+      "filament": "c2"
+    },
+    {
+      "lo": 1.182,
+      "hi": 1.432,
+      "filament": "c1"
+    },
+    {
+      "lo": 1.432,
+      "hi": 1.932,
+      "filament": "c0"
+    },
+    {
+      "lo": 1.932,
+      "hi": 2.182,
+      "filament": "c2"
+    },
+    {
+      "lo": 2.182,
+      "hi": 2.432,
+      "filament": "c1"
+    },
+    {
+      "lo": 2.432,
+      "hi": 2.932,
+      "filament": "c0"
+    },
+    {
+      "lo": 2.932,
+      "hi": 3.182,
+      "filament": "c2"
+    },
+    {
+      "lo": 3.182,
+      "hi": 3.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 3.682,
+      "hi": 4.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 4.182,
+      "hi": 4.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 4.432,
+      "hi": 4.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 4.682,
+      "hi": 5.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 5.182,
+      "hi": 5.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 5.432,
+      "hi": 5.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 5.682,
+      "hi": 6.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 6.182,
+      "hi": 6.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 6.682,
+      "hi": 6.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 6.932,
+      "hi": 7.432,
+      "filament": "c0"
+    },
+    {
+      "lo": 7.432,
+      "hi": 7.932,
+      "filament": "c2"
+    },
+    {
+      "lo": 7.932,
+      "hi": 8.182,
+      "filament": "c1"
+    },
+    {
+      "lo": 8.182,
+      "hi": 8.682,
+      "filament": "c0"
+    },
+    {
+      "lo": 8.682,
+      "hi": 8.932,
+      "filament": "c2"
+    },
+    {
+      "lo": 8.932,
+      "hi": 9.182,
+      "filament": "c1"
+    },
+    {
+      "lo": 9.182,
+      "hi": 9.682,
+      "filament": "c0"
+    },
+    {
+      "lo": 9.682,
+      "hi": 10.182,
+      "filament": "c2"
+    },
+    {
+      "lo": 10.182,
+      "hi": 10.432,
+      "filament": "c1"
+    },
+    {
+      "lo": 10.432,
+      "hi": 10.932,
+      "filament": "c0"
+    },
+    {
+      "lo": 10.932,
+      "hi": 11.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 11.432,
+      "hi": 11.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 11.682,
+      "hi": 11.932,
+      "filament": "c0"
+    },
+    {
+      "lo": 11.932,
+      "hi": 12.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 12.432,
+      "hi": 12.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 12.682,
+      "hi": 13.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 13.182,
+      "hi": 13.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 13.682,
+      "hi": 13.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 13.932,
+      "hi": 14.432,
+      "filament": "c0"
+    },
+    {
+      "lo": 14.432,
+      "hi": 14.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 14.682,
+      "hi": 14.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 14.932,
+      "hi": 15.432,
+      "filament": "c0"
+    },
+    {
+      "lo": 15.432,
+      "hi": 15.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 15.682,
+      "hi": 15.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 15.932,
+      "hi": 16.432,
+      "filament": "c0"
+    },
+    {
+      "lo": 16.432,
+      "hi": 16.932,
+      "filament": "c2"
+    },
+    {
+      "lo": 16.932,
+      "hi": 17.182,
+      "filament": "c1"
+    },
+    {
+      "lo": 17.182,
+      "hi": 17.682,
+      "filament": "c0"
+    },
+    {
+      "lo": 17.682,
+      "hi": 18.182,
+      "filament": "c2"
+    },
+    {
+      "lo": 18.182,
+      "hi": 18.432,
+      "filament": "c1"
+    },
+    {
+      "lo": 18.432,
+      "hi": 18.932,
+      "filament": "c0"
+    },
+    {
+      "lo": 18.932,
+      "hi": 19.182,
+      "filament": "c2"
+    },
+    {
+      "lo": 19.182,
+      "hi": 19.432,
+      "filament": "c1"
+    },
+    {
+      "lo": 19.432,
+      "hi": 19.932,
+      "filament": "c0"
+    },
+    {
+      "lo": 19.932,
+      "hi": 20.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 20.432,
+      "hi": 20.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 20.682,
+      "hi": 21.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 21.182,
+      "hi": 21.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 21.682,
+      "hi": 21.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 21.932,
+      "hi": 22.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 22.182,
+      "hi": 22.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 22.682,
+      "hi": 22.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 22.932,
+      "hi": 23.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 23.182,
+      "hi": 23.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 23.682,
+      "hi": 23.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 23.932,
+      "hi": 24.432,
+      "filament": "c0"
+    },
+    {
+      "lo": 24.432,
+      "hi": 24.932,
+      "filament": "c2"
+    },
+    {
+      "lo": 24.932,
+      "hi": 25.182,
+      "filament": "c1"
+    },
+    {
+      "lo": 25.182,
+      "hi": 25.682,
+      "filament": "c0"
+    },
+    {
+      "lo": 25.682,
+      "hi": 25.932,
+      "filament": "c2"
+    },
+    {
+      "lo": 25.932,
+      "hi": 26.182,
+      "filament": "c1"
+    },
+    {
+      "lo": 26.182,
+      "hi": 26.682,
+      "filament": "c0"
+    },
+    {
+      "lo": 26.682,
+      "hi": 27.182,
+      "filament": "c2"
+    },
+    {
+      "lo": 27.182,
+      "hi": 27.432,
+      "filament": "c1"
+    },
+    {
+      "lo": 27.432,
+      "hi": 27.932,
+      "filament": "c0"
+    },
+    {
+      "lo": 27.932,
+      "hi": 28.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 28.432,
+      "hi": 28.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 28.682,
+      "hi": 29.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 29.182,
+      "hi": 29.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 29.432,
+      "hi": 29.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 29.682,
+      "hi": 30.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 30.182,
+      "hi": 30.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 30.432,
+      "hi": 30.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 30.682,
+      "hi": 31.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 31.182,
+      "hi": 31.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 31.682,
+      "hi": 31.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 31.932,
+      "hi": 32.432,
+      "filament": "c0"
+    },
+    {
+      "lo": 32.432,
+      "hi": 32.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 32.682,
+      "hi": 32.932,
+      "filament": "c1"
+    },
+    {
+      "lo": 32.932,
+      "hi": 33.432,
+      "filament": "c0"
+    },
+    {
+      "lo": 33.432,
+      "hi": 33.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 33.682,
+      "hi": 34.182,
+      "filament": "c1"
+    },
+    {
+      "lo": 34.182,
+      "hi": 34.682,
+      "filament": "c0"
+    },
+    {
+      "lo": 34.682,
+      "hi": 34.932,
+      "filament": "c2"
+    },
+    {
+      "lo": 34.932,
+      "hi": 35.182,
+      "filament": "c1"
+    },
+    {
+      "lo": 35.182,
+      "hi": 35.682,
+      "filament": "c0"
+    },
+    {
+      "lo": 35.682,
+      "hi": 35.932,
+      "filament": "c2"
+    },
+    {
+      "lo": 35.932,
+      "hi": 36.182,
+      "filament": "c1"
+    },
+    {
+      "lo": 36.182,
+      "hi": 36.682,
+      "filament": "c0"
+    },
+    {
+      "lo": 36.682,
+      "hi": 37.182,
+      "filament": "c2"
+    },
+    {
+      "lo": 37.182,
+      "hi": 37.432,
+      "filament": "c1"
+    },
+    {
+      "lo": 37.432,
+      "hi": 37.932,
+      "filament": "c0"
+    },
+    {
+      "lo": 37.932,
+      "hi": 38.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 38.432,
+      "hi": 38.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 38.682,
+      "hi": 39.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 39.182,
+      "hi": 39.432,
+      "filament": "c2"
+    },
+    {
+      "lo": 39.432,
+      "hi": 39.682,
+      "filament": "c1"
+    },
+    {
+      "lo": 39.682,
+      "hi": 40.182,
+      "filament": "c0"
+    },
+    {
+      "lo": 40.182,
+      "hi": 40.682,
+      "filament": "c2"
+    },
+    {
+      "lo": 40.682,
+      "hi": 40.932,
+      "filament": "c1"
+    }
+  ],
+  "pieces": [
+    {
+      "filament": "stock_s0",
+      "file": "stock_s0.stl",
+      "hex": "#B20606",
+      "rgba": [
+        0.698,
+        0.0235,
+        0.0235,
+        1
+      ],
+      "triangles": 3405,
+      "area_mm2": 8452.3,
+      "area_share": 0.07
+    },
+    {
+      "filament": "stock_s1",
+      "file": "stock_s1.stl",
+      "hex": "#A10808",
+      "rgba": [
+        0.6314,
+        0.0314,
+        0.0314,
+        1
+      ],
+      "triangles": 4090,
+      "area_mm2": 7675.6,
+      "area_share": 0.0636
+    },
+    {
+      "filament": "stock_s2",
+      "file": "stock_s2.stl",
+      "hex": "#8E0A0A",
+      "rgba": [
+        0.5569,
+        0.0392,
+        0.0392,
+        1
+      ],
+      "triangles": 5165,
+      "area_mm2": 10731.2,
+      "area_share": 0.0889
+    },
+    {
+      "filament": "stock_s3",
+      "file": "stock_s3.stl",
+      "hex": "#760C0C",
+      "rgba": [
+        0.4627,
+        0.0471,
+        0.0471,
+        1
+      ],
+      "triangles": 5388,
+      "area_mm2": 11730.5,
+      "area_share": 0.0972
+    },
+    {
+      "filament": "stock_s4",
+      "file": "stock_s4.stl",
+      "hex": "#560D0D",
+      "rgba": [
+        0.3373,
+        0.051,
+        0.051,
+        1
+      ],
+      "triangles": 7753,
+      "area_mm2": 12523.7,
+      "area_share": 0.1038
+    },
+    {
+      "filament": "stock_s5",
+      "file": "stock_s5.stl",
+      "hex": "#0F0F0F",
+      "rgba": [
+        0.0588,
+        0.0588,
+        0.0588,
+        1
+      ],
+      "triangles": 25426,
+      "area_mm2": 44716.5,
+      "area_share": 0.3705
+    },
+    {
+      "filament": "accent",
+      "file": "accent.stl",
+      "hex": "#71920C",
+      "rgba": [
+        0.4431,
+        0.5725,
+        0.0471,
+        1
+      ],
+      "triangles": 25292,
+      "area_mm2": 4756.2,
+      "area_share": 0.0394
+    },
+    {
+      "filament": "c0",
+      "file": "c0.stl",
+      "hex": "#2C2020",
+      "rgba": [
+        0.1725,
+        0.1255,
+        0.1255,
+        1
+      ],
+      "triangles": 78985,
+      "area_mm2": 8731.8,
+      "area_share": 0.0724
+    },
+    {
+      "filament": "c1",
+      "file": "c1.stl",
+      "hex": "#910808",
+      "rgba": [
+        0.5686,
+        0.0314,
+        0.0314,
+        1
+      ],
+      "triangles": 70446,
+      "area_mm2": 5376.4,
+      "area_share": 0.0445
+    },
+    {
+      "filament": "c2",
+      "file": "c2.stl",
+      "hex": "#251D1D",
+      "rgba": [
+        0.1451,
+        0.1137,
+        0.1137,
+        1
+      ],
+      "triangles": 74197,
+      "area_mm2": 5991.7,
+      "area_share": 0.0496
+    }
+  ],
+  "area_check_mm2": {
+    "pieces": 120685.9,
+    "printable": 120685.9
+  },
+  "stock_fade_steps_mm": [
+    {
+      "piece": "stock_s0",
+      "hex": "#B20606",
+      "z_lo": null,
+      "z_hi": 3.517
+    },
+    {
+      "piece": "stock_s1",
+      "hex": "#A10808",
+      "z_lo": 3.517,
+      "z_hi": 8.786
+    },
+    {
+      "piece": "stock_s2",
+      "hex": "#8E0A0A",
+      "z_lo": 8.786,
+      "z_hi": 14.055
+    },
+    {
+      "piece": "stock_s3",
+      "hex": "#760C0C",
+      "z_lo": 14.055,
+      "z_hi": 19.324
+    },
+    {
+      "piece": "stock_s4",
+      "hex": "#560D0D",
+      "z_lo": 19.324,
+      "z_hi": 24.593
+    },
+    {
+      "piece": "stock_s5",
+      "hex": "#0F0F0F",
+      "z_lo": 24.593,
+      "z_hi": null
+    }
+  ]
+}
