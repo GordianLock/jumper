@@ -45,7 +45,9 @@ cfg.scene.num_envs = 1
 cfg.events.pop("push_robot", None)
 for k in [k for k, e in cfg.events.items() if e.mode == "startup"]:
     cfg.events.pop(k)
-stand_term = cfg.terminations.pop("standing")
+for k in ("standing", "settled", "settle_timeout"):
+    cfg.terminations.pop(k, None)
+stand_func = __import__("tasks.jumper.self_right.mdp.rewards", fromlist=["standing"]).standing
 env = ManagerBasedRlEnv(cfg=cfg, device="cpu")
 robot = env.scene["robot"]
 term = env.action_manager.get_term("joint_pos")
@@ -68,7 +70,7 @@ for k in range(int(6.0 / dt)):
         f = min(1.0, (k - handed) * dt / RAMP)
         a = ((1.0 - f) * (start - home) / scale)[None].astype(np.float32)
     obs, *_ = env.step(torch.as_tensor(a))
-    if HANDOVER and handed is None and bool(stand_term.func(env, **stand_term.params)[0]):
+    if HANDOVER and handed is None and bool(stand_func(env, command_name="roll")[0]):
         handed, start = k + 1, robot.data.joint_pos[0, term._target_ids].numpy().copy()
         print(f"handover to the stand controller at {handed * dt:.2f} s")
     rec["q"].append(robot.data.joint_pos[0, term._target_ids].numpy().copy())

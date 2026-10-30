@@ -28,11 +28,26 @@ end (2026-10-29). From at rest is what is asked for; slower is accepted.
 - **Rise** (`mdp/rewards.rise`): new ground in how upright the body is, so any route
   counts -- over either side, end over end, diagonally. 2 units from flat on its back
   to standing, `RISE_WEIGHT` per unit.
-- **Standing** ends the episode: within 20 deg of level, four feet loaded, turning
-  slower than 2 rad/s, having risen at least 1 unit itself.
+- **Standing** is the finish: within 20 deg of level, four feet loaded, turning
+  slower than 2 rad/s, having risen at least 1 unit itself. From run 4 on it no
+  longer ends the episode (below).
 - **Finishing bonus** `COMPLETE_BONUS`: half for standing however it went, half
   scaled by the worst of limb force, sensor force, shell impact, floor impact and air
   time. `finish_home` pays legs near HOME once upright.
+
+## Settling at HOME after standing
+
+Run 3's episodes ended on standing, so nothing after it was trained: replayed
+2026-10-30 past that point, it stood with its right-rear leg swung 1.4 rad off HOME
+and other joints 0.4-0.9 rad off. From run 4 the episode goes on after standing
+(`common/neutral_finish.py`) for up to `SETTLE_WINDOW_S` and ends once the robot is
+settled: still standing, every driven joint within `SETTLE_HOME_TOL` of HOME, turning
+slower than `SETTLE_ANG_VEL` and moving slower than `SETTLE_LIN_VEL`, for
+`SETTLE_HOLD_STEPS` running. The finishing bonus still pays once, on standing, and
+`finish_home` up to it, so getting up is learnt as before; settling adds
+`SETTLED_BONUS` once, and `settle_home` per second of legs near HOME while standing
+(at most `SETTLE_HOME_WEIGHT` x `SETTLE_WINDOW_S`, below the bonus, so lingering does
+not pay). Gentleness terms keep charging after standing.
 
 ## Gentle
 
@@ -90,6 +105,7 @@ from mjlab.tasks.velocity import mdp
 
 from ..common import body_collision as bc
 from ..common import floor_load as fl
+from ..common import neutral_finish as nf
 from ..common.constants import FOOT_GEOMS, GAIT_JOINTS
 from ..flourish_roll import env_cfg as flourish
 from ..flourish_roll.mdp import rewards as fr
@@ -111,6 +127,16 @@ RISE_WEIGHT = 5.0
 COMPLETE_BONUS = 20.0
 FINISH_HOME_WEIGHT = 1.0
 GENTLE_FLOOR = 0.5
+
+# ── Settling at HOME after standing ───────────────────────────────────────────
+SETTLE_WINDOW_S = 1.5
+SETTLE_HOLD_STEPS = 15
+SETTLE_HOME_TOL = 0.15
+SETTLE_ANG_VEL = 0.2
+SETTLE_LIN_VEL = 0.02
+SETTLE_HOME_WEIGHT = 1.0
+SETTLE_SIGMA_SQ = 0.10
+SETTLED_BONUS = 4.0
 
 # ── Gentle ─────────────────────────────────────────────────────────────────────
 LIMB_BAND = (20.0, 100.0)
@@ -244,6 +270,13 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
         "time_out": TerminationTermCfg(func=envs_mdp.time_out, time_out=True),
         "standing": TerminationTermCfg(func=sr.rewards.standing, params=stand),
     }
+    nf.settle_after_finish(
+        cfg, "standing", gait_cfg,
+        home_tol=SETTLE_HOME_TOL, still_ang_vel=SETTLE_ANG_VEL, still_lin_vel=SETTLE_LIN_VEL,
+        hold_steps=SETTLE_HOLD_STEPS, window_steps=round(SETTLE_WINDOW_S / STEP_DT),
+        settle_home_weight=SETTLE_HOME_WEIGHT, settle_sigma_sq=SETTLE_SIGMA_SQ,
+        settled_weight=SETTLED_BONUS / STEP_DT,
+        once_rewards=("complete",), until_rewards=("finish_home",))
     return cfg
 
 

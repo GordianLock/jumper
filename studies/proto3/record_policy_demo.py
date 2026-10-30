@@ -47,7 +47,8 @@ cfg.scene.num_envs = 1
 cfg.events.pop("push_robot", None)
 for k in [k for k, e in cfg.events.items() if e.mode == "startup"]:
     cfg.events.pop(k)                               # the nominal robot
-cfg.terminations.pop("rolled_and_standing", None)
+for k in ("rolled_and_standing", "settled", "settle_timeout"):
+    cfg.terminations.pop(k, None)
 cfg.episode_length_s = MAX_S + 1.0
 env = ManagerBasedRlEnv(cfg=cfg, device="cpu")
 robot = env.scene["robot"]
