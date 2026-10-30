@@ -9,7 +9,10 @@ stock robot; the task trains on any model in its asset list (prototype 4 first).
 Everything is jumper.tuck_roll's (`tuck_roll/env_cfg.py`): the claws colliding with
 the body, the face's floor force charged, the horns free to pivot on, floor-contact
 joint torque charged at every physics step, the tuck reward, the fading
-demonstration with mid-demonstration spawns. Only the demonstration differs.
+demonstration with mid-demonstration spawns. Two things differ: the demonstration, and
+**the walking legs collide with the body too** (`common/body_collision.py`,
+`walking_leg_body_collision`) -- jumper.tuck_roll makes only the claws do so, and
+jumper.self_right's second policy had a calf 4.5 cm into the base.
 
 ## The demonstration
 
@@ -39,6 +42,7 @@ from __future__ import annotations
 import math
 from pathlib import Path
 
+from ..common import body_collision as bc
 from ..tuck_roll import env_cfg as tuck
 
 REF_NPZ = Path(__file__).resolve().parent / "ref" / "spin_roll.npz"
@@ -50,6 +54,8 @@ MAX_SPAWN_TURN = math.radians(290.0)
 def env_cfg(asset: Path | None = None, play: bool = False):
     """jumper.tuck_roll with the spin roll's demonstration."""
     cfg = tuck.env_cfg(asset=asset, play=play)
+    robot = cfg.scene.entities["robot"]
+    robot.collisions = tuple(robot.collisions) + (bc.walking_leg_body_collision(),)
     cfg.commands["roll"].reference = str(REF_NPZ)
     cfg.events["reset_momentum"].params["max_spawn_turn"] = MAX_SPAWN_TURN
     return cfg

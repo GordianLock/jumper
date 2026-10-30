@@ -49,7 +49,7 @@ rise in force within a control step -- is charged. A landing costs the same what
 part takes it, so hopping onto the feet gains nothing. The bands are
 jumper.horn_roll's, which are judgement, not hardware limits.
 
-## The claws meet the body
+## The legs meet the body
 
 `common/body_collision.py`: the claws collide with the shell, base and sensors, which
 the repository's masks let every leg pass through. The first policy trained without
@@ -57,6 +57,10 @@ it (Colab, 2500 iterations, 2026-10-29) put its left claw up to 1.6 cm into the 
 its right 0.7 cm, for about 0.1 s of every righting (checked on the replay's joint
 angles). A claw resting on the body is free; leg against leg is charged pair by pair
 (`body_collision.leg_collision_pairs`), as before.
+
+The walking legs too, from run 4 on (`body_collision.walking_leg_body_collision`): run
+2's replay had its left-rear calf 4.5 cm into the base and its right-middle foot 3.4
+cm. Thighs, calves and feet collide with the body; the hips, which join it, do not.
 
 ## Joint torque from the floor
 
@@ -154,7 +158,8 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
 
     # ── The claws meet the body ───────────────────────────────────────────────
     robot = cfg.scene.entities["robot"]
-    robot.collisions = tuple(robot.collisions) + bc.arm_body_collision()
+    robot.collisions = tuple(robot.collisions) + bc.arm_body_collision() + (
+        bc.walking_leg_body_collision(),)
     pairs = bc.leg_pair_sensors(DECIMATION)
 
     # ── Sensors ───────────────────────────────────────────────────────────────

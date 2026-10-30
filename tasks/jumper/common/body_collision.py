@@ -74,6 +74,36 @@ def arm_body_collision(carapace_geoms: str | None = None,
     return tuple(out)
 
 
+#: The walking legs' links that may meet the body. Not the hip links: they join the
+#: base, and their hulls overlap it (and the upper shell's) at rest -- measured at HOME
+#: on the stock robot, 2.9-3.0 cm into the base and 0.3 cm into the upper shell --
+#: so colliding them would mean a permanent contact, not a check.
+WALKING = ("LM", "RM", "LR", "RR")
+WALKING_LINKS = ("thigh", "calf", "foot_tip")
+
+
+def walking_leg_body_collision() -> CollisionCfg:
+    """A CollisionCfg to append after `arm_body_collision`'s: the walking legs'
+    thighs, calves and feet meet the body as the claws do; their hips, leg-against-leg
+    and the floor as before.
+
+    Measured 2026-10-29 on Colab replays: jumper.self_right's second policy put its
+    left-rear calf 4.5 cm into the base and its right-middle foot 3.4 cm; jumper.roll's
+    and jumper.momentum_roll's first policies their calves 3.9-4.1 cm. The claws had
+    been fixed; the walking legs had not.
+    """
+    feet = "|".join(f"^{n}$" for n in FOOT_GEOMS)
+    links = "|".join(WALKING_LINKS)
+    return CollisionCfg(
+        geom_names_expr=tuple(f"^{w}_({links})_link_meshcol$" for w in WALKING),
+        contype={f"^{w}_": K._GROUND_BIT | K._LEG_BIT[w] for w in WALKING},
+        conaffinity={f"^{w}_": (K._ALL_LEG_BITS & ~K._LEG_BIT[w]) | BODY_BIT for w in WALKING},
+        condim={feet: 3, ".*": 1},
+        priority={feet: 1, ".*": 0},
+        disable_other_geoms=False,
+    )
+
+
 def leg_pair_sensors(decimation: int, free_pairs: tuple[frozenset, ...] = ()
                      ) -> tuple[ContactSensorCfg, ...]:
     """One sensor per leg against every leg before it in `LEGS`, pairs in `free_pairs`
@@ -107,5 +137,6 @@ def leg_collision_pairs(env, sensor_names: tuple[str, ...],
     return hit.float()
 
 
-__all__ = ["ARMS", "BODY_BIT", "BODY_GEOMS", "LEG_ROOT", "arm_body_collision",
-           "leg_collision_pairs", "leg_pair_sensors"]
+__all__ = ["ARMS", "BODY_BIT", "BODY_GEOMS", "LEG_ROOT", "WALKING", "WALKING_LINKS",
+           "arm_body_collision", "leg_collision_pairs", "leg_pair_sensors",
+           "walking_leg_body_collision"]
