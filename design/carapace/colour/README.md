@@ -10,6 +10,7 @@ in the interactive colour preview; each folder here is one saved setup applied t
 | `CF1-tri30m-rb-v4__30-oct-kolakoski/` | `CF1-tri30m-rb-v4` | "30 Oct Kolakoski": Kolakoski bands, 0.25 mm unit (bands 0.25 or 0.5 mm), counted down from the highest tip, filament = n mod 3, accent on added surface under 1.1 mm. Three band filaments, so the pieces are `stock`, `accent`, `c0`..`c2`. |
 | `CF1-tri30m-rb-v4__30-oct-kolakoski-v2/` | `CF1-tri30m-rb-v4` | "30 Oct Kolakoski v2": the same bands and accent as `30-oct-kolakoski` (those pieces are byte-identical), plus a stepped height fade on the stock surface: 6 level steps from `#0F0F0F` at the top to `#B20606` at the bottom, starting 22 % and ending 88 % of the way down from the top of the stock shell to its lowest point. The stock piece is replaced by `stock_s0` (bottom) .. `stock_s5` (top); `colours.json` lists each step's colour and z range. |
 | `CF1-tri30m-rb-v4b__30-oct-c/` | `CF1-tri30m-rb-v4b` | "30 Oct C": Fibonacci bands, 2.5 mm unit, grown from the shell surface up, filament = a(n) mod 4, accent under 0.6 mm, minimum band for a 0.4 mm nozzle; stock fades down the sides in 4 steps from `#B72306` on the whole top to `#1F1F1F` at the lower edge (`stock_s0` bottom .. `stock_s3` top; `colours.json` lists each step's colour and wall-fraction range). 9 pieces. |
+| `CF1-tri30m-rb-v4__30-oct-thue-morse/` | `CF1-tri30m-rb-v4` | "30 Oct Thue-Morse": Thue-Morse (+1) bands, 3.55 mm unit (bands 3.55 or 7.1 mm), grown from the shell surface up, filament = n mod 3, accent under 1.5 mm, minimum band for a 0.4 mm nozzle; stock fades by height in 3 steps from `#141414` at the top to `#5F0202` at the bottom, between 27 % and 100 % (`stock_s0` bottom .. `stock_s2` top). 7 pieces. |
 
 ## What a folder holds
 
@@ -39,7 +40,8 @@ change nothing in the physics. Loaded on MuJoCo 3.11.0 with the pieces added, ea
 compiles and `upper_shell_link`'s mass is unchanged: 0.174437 kg for `30-oct-b` on
 `jumper_CF1-tri30m-rb-v4b.xml`, 0.176437 kg for `30-oct-kolakoski` on
 `jumper_CF1-tri30m-rb-v4.xml`, and the same for `30-oct-kolakoski-v2` (10 pieces); 0.174437 kg
-for `30-oct-c` (9 pieces) on `jumper_CF1-tri30m-rb-v4b.xml`.
+for `30-oct-c` (9 pieces) on `jumper_CF1-tri30m-rb-v4b.xml`; 0.176437 kg for `30-oct-thue-morse`
+(7 pieces) on `jumper_CF1-tri30m-rb-v4.xml`.
 
 The snippets below are for `CF1-tri30m-rb-v4b__30-oct-b`. For another folder, add the pattern
 to that version's model (`jumper_<version>.xml`), use that folder's name in the paths, list
