@@ -1,0 +1,231 @@
+{
+  "setup": "30 Oct Fa",
+  "version": "CF1-tri30m-rb-v3",
+  "frame": "upper_shell_link (as urdf/jumper/meshes/visual/upper_shell_link.stl)",
+  "units": "metres",
+  "relief_intervals_mm": [
+    {
+      "lo": 0.0,
+      "hi": 0.001,
+      "filament": "stock"
+    },
+    {
+      "lo": 0.001,
+      "hi": 1.35,
+      "filament": "accent"
+    },
+    {
+      "lo": 1.35,
+      "hi": 2.0,
+      "filament": "c2"
+    },
+    {
+      "lo": 2.0,
+      "hi": 3.5,
+      "filament": "c3"
+    },
+    {
+      "lo": 3.5,
+      "hi": 6.0,
+      "filament": "c1"
+    },
+    {
+      "lo": 6.0,
+      "hi": 10.0,
+      "filament": "c0"
+    },
+    {
+      "lo": 10.0,
+      "hi": 27.0,
+      "filament": "c1"
+    },
+    {
+      "lo": 27.0,
+      "hi": 44.0,
+      "filament": "c2"
+    },
+    {
+      "lo": 44.0,
+      "hi": 64.32,
+      "filament": "c3"
+    }
+  ],
+  "pieces": [
+    {
+      "filament": "stock_s0",
+      "file": "stock_s0.stl",
+      "hex": "#3E43C1",
+      "rgba": [
+        0.2431,
+        0.2627,
+        0.7569,
+        1
+      ],
+      "triangles": 4496,
+      "area_mm2": 8915.4,
+      "area_share": 0.0726
+    },
+    {
+      "filament": "stock_s1",
+      "file": "stock_s1.stl",
+      "hex": "#353AAA",
+      "rgba": [
+        0.2078,
+        0.2275,
+        0.6667,
+        1
+      ],
+      "triangles": 3298,
+      "area_mm2": 6270.3,
+      "area_share": 0.051
+    },
+    {
+      "filament": "stock_s2",
+      "file": "stock_s2.stl",
+      "hex": "#2B2F8D",
+      "rgba": [
+        0.1686,
+        0.1843,
+        0.5529,
+        1
+      ],
+      "triangles": 3332,
+      "area_mm2": 6031.1,
+      "area_share": 0.0491
+    },
+    {
+      "filament": "stock_s3",
+      "file": "stock_s3.stl",
+      "hex": "#1D1F66",
+      "rgba": [
+        0.1137,
+        0.1216,
+        0.4,
+        1
+      ],
+      "triangles": 3866,
+      "area_mm2": 6503.0,
+      "area_share": 0.0529
+    },
+    {
+      "filament": "stock_s4",
+      "file": "stock_s4.stl",
+      "hex": "#000000",
+      "rgba": [
+        0.0,
+        0.0,
+        0.0,
+        1
+      ],
+      "triangles": 35694,
+      "area_mm2": 67184.4,
+      "area_share": 0.5469
+    },
+    {
+      "filament": "accent",
+      "file": "accent.stl",
+      "hex": "#2A1ED2",
+      "rgba": [
+        0.1647,
+        0.1176,
+        0.8235,
+        1
+      ],
+      "triangles": 27672,
+      "area_mm2": 5381.4,
+      "area_share": 0.0438
+    },
+    {
+      "filament": "c0",
+      "file": "c0.stl",
+      "hex": "#743501",
+      "rgba": [
+        0.4549,
+        0.2078,
+        0.0039,
+        1
+      ],
+      "triangles": 9755,
+      "area_mm2": 2446.1,
+      "area_share": 0.0199
+    },
+    {
+      "filament": "c1",
+      "file": "c1.stl",
+      "hex": "#290000",
+      "rgba": [
+        0.1608,
+        0.0,
+        0.0,
+        1
+      ],
+      "triangles": 34489,
+      "area_mm2": 9995.7,
+      "area_share": 0.0814
+    },
+    {
+      "filament": "c2",
+      "file": "c2.stl",
+      "hex": "#000000",
+      "rgba": [
+        0.0,
+        0.0,
+        0.0,
+        1
+      ],
+      "triangles": 20631,
+      "area_mm2": 5271.7,
+      "area_share": 0.0429
+    },
+    {
+      "filament": "c3",
+      "file": "c3.stl",
+      "hex": "#2BFF00",
+      "rgba": [
+        0.1686,
+        1.0,
+        0.0,
+        1
+      ],
+      "triangles": 18957,
+      "area_mm2": 4845.2,
+      "area_share": 0.0394
+    }
+  ],
+  "area_check_mm2": {
+    "pieces": 122844.4,
+    "printable": 122844.4
+  },
+  "stock_fade_steps_wall_fraction": [
+    {
+      "piece": "stock_s0",
+      "hex": "#3E43C1",
+      "lo": null,
+      "hi": 0.2
+    },
+    {
+      "piece": "stock_s1",
+      "hex": "#353AAA",
+      "lo": 0.2,
+      "hi": 0.4
+    },
+    {
+      "piece": "stock_s2",
+      "hex": "#2B2F8D",
+      "lo": 0.4,
+      "hi": 0.6
+    },
+    {
+      "piece": "stock_s3",
+      "hex": "#1D1F66",
+      "lo": 0.6,
+      "hi": 0.8
+    },
+    {
+      "piece": "stock_s4",
+      "hex": "#000000",
+      "lo": 0.8,
+      "hi": null
+    }
+  ]
+}
