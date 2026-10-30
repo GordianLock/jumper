@@ -104,6 +104,11 @@ else:
     spec.worldbody.add_light(pos=[-1, 1, 2.5], dir=[0.4, -0.4, -1], diffuse=[0.3, 0.3, 0.3],
                              castshadow=False)
 m = spec.compile()
+# No mirror in the ground: MuJoCo's reflectance mirrors the whole scene under the floor.
+for g in range(m.ngeom):
+    if m.geom_type[g] in (mujoco.mjtGeom.mjGEOM_PLANE, mujoco.mjtGeom.mjGEOM_HFIELD) \
+            and m.geom_matid[g] >= 0:
+        m.mat_reflectance[m.geom_matid[g]] = 0.0
 m.vis.global_.offwidth = max(m.vis.global_.offwidth, a.width)
 m.vis.global_.offheight = max(m.vis.global_.offheight, a.height)
 m.vis.quality.shadowsize = 4096
