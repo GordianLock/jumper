@@ -50,9 +50,8 @@ p.add_argument("--fps", type=int, default=60)
 p.add_argument("--width", type=int, default=1920)
 p.add_argument("--height", type=int, default=1080)
 p.add_argument("--center", default=None,
-               help="aim the camera at the robot's position at the end of this phase "
-                    "(a walk_then_behave.py recording's phase name) instead of the "
-                    "middle of its path")
+               help="aim the camera at the middle of this phase (a walk_then_behave.py "
+                    "recording's phase name) instead of the middle of its path")
 p.add_argument("--zoom", type=float, default=1.0,
                help="camera distance multiplier, for clips that cover more ground")
 p.add_argument("--hold", type=float, default=0.5, help="s of still pose added at each end")
@@ -196,11 +195,13 @@ yaw_axis = math.degrees(math.atan2(axis[1], axis[0]))
 look = np.array([(pos[:, 0].min() + pos[:, 0].max()) / 2,
                  (pos[:, 1].min() + pos[:, 1].max()) / 2, 0.07])
 if a.center:
-    # Aim at where the robot is at the end of a named phase (walk_then_behave.py's
-    # recordings carry them), e.g. "stand": the spot the behaviour starts from.
+    # Aim at the middle of a named phase (walk_then_behave.py's recordings carry
+    # them): the centre of the ground the robot covers during it, e.g. the behaviour's.
     names = [str(n) for n in h["phase_names"]]
-    end = int(h["phases"][names.index(a.center)]) - 1
-    look[:2] = pos[end, :2]
+    i = names.index(a.center)
+    lo_ = int(h["phases"][i - 1]) if i > 0 else 0
+    seg_ = pos[lo_:int(h["phases"][i]), :2]
+    look[:2] = (seg_.min(0) + seg_.max(0)) / 2
 
 
 def pose(t: float) -> None:

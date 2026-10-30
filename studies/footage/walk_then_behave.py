@@ -15,7 +15,9 @@ simulation for footage, controllers in sequence as the robot's FSM would run the
 3. **Behaviour**: the state (root pose and velocity, joint positions and velocities)
    is written into the behaviour task's own environment and its policy runs, with
    its finishing termination off, until that termination's predicate holds.
-4. **Return**: the stand controller again, then `--tail` s of stillness.
+4. **Return**: the stand controller again.
+5. **On**: back in the walking environment from that state, `--walk-after` (a few
+   steps forward), a zero command, the stand controller, then `--tail` s still.
 
 Both environments are play mode on the nominal robot (no randomisation, no pushes),
 with the legs and the carapace colliding with the body, as the roll tasks have it.
@@ -45,6 +47,9 @@ p.add_argument("--actor", required=True)
 p.add_argument("--out", required=True)
 p.add_argument("--walk", default="0.3,0,0,4.0")
 p.add_argument("--stop", type=float, default=1.0, help="s of zero walking command before standing")
+p.add_argument("--walk-after", default="0.3,0,0,1.5",
+               help="after the behaviour and the return to HOME, walk this too (same "
+                    "format as --walk; empty for none)")
 p.add_argument("--tail", type=float, default=0.8)
 a = p.parse_args()
 
@@ -137,21 +142,28 @@ walker = ort.InferenceSession(str(WALKER))
 wname = walker.get_inputs()[0].name
 okey = [k for k in wenv.observation_manager.active_terms if k != "critic"][0]
 obs, _ = wenv.reset()
-segments = [tuple(float(x) for x in s.split(",")) for s in a.walk.split(";")]
-for vx, vy, wz, secs in segments + [(0.0, 0.0, 0.0, None)]:
-    k = 0
-    while True:
-        vc.vel_command_b[:] = torch.tensor([vx, vy, wz])
-        pc.posture_command[:, :3] = 0.0
-        pc.posture_command[:, 3] = pc.cfg.neutral_height
-        act = walker.run(None, {wname: obs[okey].numpy().astype(np.float32)})[0]
-        obs, *_ = wenv.step(torch.as_tensor(act))
-        log(wenv, wids)
-        k += 1
-        if secs is not None and k * wenv.step_dt >= secs:
-            break
-        if secs is None and k * wenv.step_dt >= a.stop:
-            break
+
+
+def walk(obs, spec):
+    """Run the walking policy through `spec`'s segments, then `--stop` s at zero."""
+    segments = [tuple(float(x) for x in seg.split(",")) for seg in spec.split(";")]
+    for vx, vy, wz, secs in segments + [(0.0, 0.0, 0.0, None)]:
+        k = 0
+        while True:
+            vc.vel_command_b[:] = torch.tensor([vx, vy, wz])
+            pc.posture_command[:, :3] = 0.0
+            pc.posture_command[:, 3] = pc.cfg.neutral_height
+            act = walker.run(None, {wname: obs[okey].numpy().astype(np.float32)})[0]
+            obs, *_ = wenv.step(torch.as_tensor(act))
+            log(wenv, wids)
+            k += 1
+            if secs is not None and k * wenv.step_dt >= secs:
+                break
+            if secs is None and k * wenv.step_dt >= a.stop:
+                break
+
+
+walk(obs, a.walk)
 phases.append(("walk", len(rec["q"])))
 stand(wenv, wids)
 phases.append(("stand", len(rec["q"])))
@@ -193,12 +205,28 @@ else:
     print("warning: the behaviour's finish never held")
 phases.append((a.task, len(rec["q"])))
 
-# ── 4: back to HOME, then still ────────────────────────────────────────────────
+# ── 4: back to HOME ────────────────────────────────────────────────────────────
 stand(benv, bids)
-for _ in range(int(a.tail / benv.step_dt)):
-    benv.step(torch.zeros(1, benv.action_manager.total_action_dim))
-    log(benv, bids)
 phases.append(("home", len(rec["q"])))
+
+# ── 5: a few steps on, stop, stand (the walking environment, from this state) ──
+if a.walk_after:
+    st = torch.cat([br.data.root_link_pos_w - benv.scene.env_origins + wenv.scene.env_origins,
+                    br.data.root_link_quat_w, br.data.root_link_lin_vel_w,
+                    br.data.root_link_ang_vel_w], dim=1)
+    wr.write_root_state_to_sim(st)
+    wr.write_joint_state_to_sim(br.data.joint_pos.clone(), br.data.joint_vel.clone())
+    wenv.sim.forward()
+    walk(wenv.observation_manager.compute(), a.walk_after)
+    phases.append(("walk_after", len(rec["q"])))
+    stand(wenv, wids)
+    env_end, ids_end = wenv, wids
+else:
+    env_end, ids_end = benv, bids
+for _ in range(int(a.tail / env_end.step_dt)):
+    env_end.step(torch.zeros(1, env_end.action_manager.total_action_dim))
+    log(env_end, ids_end)
+phases.append(("end", len(rec["q"])))
 
 dt = REC_DT
 assert abs(benv.step_dt - REC_DT) < 1e-9, benv.step_dt
