@@ -13,9 +13,11 @@ slide.json:
 
 or, for a statement slide,
 
-    {"paragraphs": [{"en": str, "zh": str?}, ...]}
+    {"paragraphs": [{"en": str, "zh": str?, "style": "body" | "sub" | "title"}, ...],
+     "gap": px?, "width": px?}
 
-each paragraph wrapped and centred, its Chinese beneath it.
+each paragraph wrapped and centred, its Chinese beneath it; "title" is a stats
+slide's title size, "sub" between that and the default "body".
 
 A note row is drawn smaller, grey and italic (a comparison line). 1920x1080; Inter
 for Latin, Noto Sans CJK SC for Chinese.
@@ -38,11 +40,15 @@ def statement(spec):
     """A slide of paragraphs, English then Chinese, centred."""
     img = Image.new("RGB", (W, H), (0, 0, 0))
     dr = ImageDraw.Draw(img)
-    width = 1320
-    fonts = {True: (ImageFont.truetype(INTER.format("Regular"), 32),
-                    ImageFont.truetype(CJK.format("Regular"), 25, index=CJK_SC)),
-             False: (ImageFont.truetype(INTER.format("Regular"), 32),
-                     ImageFont.truetype(CJK.format("Regular"), 25, index=CJK_SC))}
+    width = spec.get("width", 1320)
+    # style -> (English font, Chinese font, Chinese colour); "title" is the size and
+    # weight of a stats slide's title.
+    fonts = {"body": (ImageFont.truetype(INTER.format("Regular"), 32),
+                      ImageFont.truetype(CJK.format("Regular"), 25, index=CJK_SC), DIM),
+             "sub": (ImageFont.truetype(INTER.format("Regular"), 44),
+                     ImageFont.truetype(CJK.format("Regular"), 34, index=CJK_SC), DIM),
+             "title": (ImageFont.truetype(INTER.format("SemiBold"), 76),
+                       ImageFont.truetype(CJK.format("Medium"), 52, index=CJK_SC), WHITE)}
 
     def units(text, by_char):
         """English by word; Chinese by clause (after ，、。) where a clause fits, else
@@ -83,13 +89,13 @@ def statement(spec):
 
     blocks = []
     for para in spec["paragraphs"]:
-        f_en, f_zh = fonts[bool(para.get("lead"))]
+        f_en, f_zh, zh_fill = fonts[para.get("style", "body")]
         lines = [(t, f_en, WHITE, round(f_en.size * 1.32)) for t in wrap(para["en"], f_en, False)]
         if para.get("zh"):
-            lines.append(("", f_zh, DIM, round(f_zh.size * 0.3)))
-            lines += [(t, f_zh, DIM, round(f_zh.size * 1.5)) for t in wrap(para["zh"], f_zh, True)]
+            lines.append(("", f_zh, zh_fill, round(f_zh.size * 0.3)))
+            lines += [(t, f_zh, zh_fill, round(f_zh.size * 1.5)) for t in wrap(para["zh"], f_zh, True)]
         blocks.append(lines)
-    gap = 40
+    gap = spec.get("gap", 40)
     total = sum(sum(h for *_, h in b) for b in blocks) + gap * (len(blocks) - 1)
     y = (H - total) // 2
     for b in blocks:

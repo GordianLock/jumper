@@ -1,0 +1,21 @@
+{
+ "gap": 70,
+ "width": 1700,
+ "paragraphs": [
+  {
+   "en": "KingKong Robotics Challenge: Open-Source Jumper Crab",
+   "zh": "KingKong 机器人挑战赛：开源跳跃蟹",
+   "style": "title"
+  },
+  {
+   "en": "October 2026",
+   "zh": "2026 年 10 月",
+   "style": "sub"
+  },
+  {
+   "en": "Rolling & Functional Carapace Design",
+   "zh": "翻滚与功能性甲壳设计",
+   "style": "sub"
+  }
+ ]
+}
