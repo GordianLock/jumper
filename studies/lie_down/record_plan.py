@@ -7,7 +7,8 @@ commanded targets), and report its hardest hits.
 The plan is played as `search.py` plays it -- from the tracker's release, keyframes
 reached by linear ramps, back to HOME and held -- in jumper.lie_down's own environment
 (play mode, no randomisation, no pushes), with the finish termination off so the
-recording runs to the end of the plan.
+recording runs to the end of the plan. The recording starts at the release (the
+settle window is left out), so its time is the plan's and the task's `demo_t`.
 """
 import sys
 from pathlib import Path
@@ -62,8 +63,9 @@ while clock < len(tg):
         clock = 0
     target = tg[clock] if clock >= 0 else home
     env.step(torch.as_tensor(((target - home) / scale)[None], dtype=torch.float32))
-    if clock >= 0:
-        clock += 1
+    if clock < 0:
+        continue                                 # settling: not part of the plan
+    clock += 1
     rec["q_cmd"].append(np.asarray(target, np.float32))
     rec["q"].append(robot.data.joint_pos[0, ids].numpy().copy())
     rec["qd"].append(robot.data.joint_vel[0, ids].numpy().copy())

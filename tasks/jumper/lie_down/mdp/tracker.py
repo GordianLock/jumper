@@ -7,6 +7,10 @@ same per-episode hardest hits and floor-contact joint torque. What it adds:
 - `down_now()` = -up: -1 standing level, 0 on its side or end, 1 flat on its back;
   `best_down` the episode's high-water mark, so lowering pays new ground only.
 - `peak_spin`: the episode's fastest body rotation after the settle window, rad/s.
+- `reference`, `demo_t`, `in_demo`: the demonstration (`ref/lie_down.npz`, a
+  `momentum_roll.mdp.reference.RollReference`) and the time into it, which starts at 0
+  on the release and runs on; -1 while settling. What jumper.momentum_roll's
+  feedforward action and joint prior read.
 - `done`: the finish -- belly-up within `max_tilt`, the body still, every driven joint
   within `home_tol` of HOME -- held for `hold_steps` control steps running.
 """
@@ -19,6 +23,7 @@ from typing import TYPE_CHECKING
 
 import torch
 
+from ...momentum_roll.mdp.reference import RollReference
 from ...self_right.mdp.tracker import SelfRightTracker, SelfRightTrackerCfg
 
 if TYPE_CHECKING:
@@ -33,6 +38,8 @@ class LieDownTrackerCfg(SelfRightTrackerCfg):
     finish_lin_vel: float = 0.02
     home_tol: float = 0.15
     hold_steps: int = 15
+    #: The demonstration, recorded from the release (`studies/lie_down/record_plan.py`).
+    reference: str = ""
 
     def build(self, env: ManagerBasedRlEnv) -> LieDownTracker:
         return LieDownTracker(self, env)
@@ -48,6 +55,8 @@ class LieDownTracker(SelfRightTracker):
         self.best_down = torch.zeros(n, device=self.device)
         self.held = torch.zeros(n, dtype=torch.long, device=self.device)
         self.peak_spin = torch.zeros(n, device=self.device)
+        self.reference = RollReference(cfg.reference, self.device) if cfg.reference else None
+        self.demo_t = torch.full((n,), -1.0, device=self.device)
         ids = self.robot.find_joints(list(cfg.load_joints), preserve_order=True)[0]
         self._joint_ids = torch.tensor(ids, device=self.device)
         for k in ("down", "lowered", "held_steps", "peak_spin_rad_s"):
@@ -71,6 +80,12 @@ class LieDownTracker(SelfRightTracker):
                 & (self.home_error() < self.cfg.home_tol) & ~self.settling)
 
     @property
+    def in_demo(self) -> torch.Tensor:
+        if self.reference is None:
+            return torch.zeros_like(self.demo_t, dtype=torch.bool)
+        return (self.demo_t >= 0.0) & (self.demo_t < self.reference.span)
+
+    @property
     def done(self) -> torch.Tensor:
         return self.held >= self.cfg.hold_steps
 
@@ -81,6 +96,7 @@ class LieDownTracker(SelfRightTracker):
         self.best_down[env_ids] = d
         self.held[env_ids] = 0
         self.peak_spin[env_ids] = 0.0
+        self.demo_t[env_ids] = -1.0
 
     def _update_metrics(self) -> None:
         super()._update_metrics()
@@ -100,8 +116,16 @@ class LieDownTracker(SelfRightTracker):
         self.peak_spin.copy_(torch.maximum(self.peak_spin, w * (~settling).float()))
         fin = self.finished_pose()
         self.held.copy_(torch.where(fin, self.held + 1, torch.zeros_like(self.held)))
-        # Last: the parent's bookkeeping ends with the release update.
+        was = self.settling.clone()
+        # The parent's bookkeeping ends with the release update.
         super()._update_command(env_ids)
+        # The demonstration's clock, as the next action sees it: 0 on the step the
+        # robot is released, then one step more each step.
+        released = was & ~self.settling
+        self.demo_t.copy_(torch.where(released, torch.zeros_like(self.demo_t),
+                                      torch.where(self.demo_t >= 0.0,
+                                                  self.demo_t + self._env.step_dt,
+                                                  self.demo_t)))
 
 
 __all__ = ["LieDownTracker", "LieDownTrackerCfg"]

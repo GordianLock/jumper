@@ -64,9 +64,28 @@ with the plan search's numbers.
 
 ## The demonstration
 
-None yet: a keyframe plan search in this environment (`studies/lie_down/search.py`)
-is to find one, which will then be fed forward and used as a fading prior as in
-jumper.momentum_roll.
+`ref/lie_down.npz`: the plan from `studies/lie_down/search.py` in this environment
+(2026-10-30, 35 rounds of 32 randomised robots, from standing at HOME,
+`studies/lie_down/logs/lie_down_s1.log`), chosen for finishing on 31 of the 32, and
+recorded on the nominal robot from its release by `studies/lie_down/record_plan.py`:
+six keyframes ramped 0.5 s apart, back to HOME and held; the
+finish 3.66 s after the release. Shell impact 83 N, floor impact 115 N, joint torque 4.3 N*m, body
+rotation 7.6 rad/s, limbs 110 N, sensors 0 N, never airborne (run 1: 13-17 rad/s,
+about 230 N on the shell).
+
+Used as jumper.momentum_roll uses its demonstration: fed forward into the action
+(`mdp/actions.py`) and a prior on the joints (`momentum_roll.mdp.rewards.
+prior_joint_pos`), both from the release, both fading from `PRIOR_HOLD_ITERATIONS` to
+nothing at `PRIOR_END_ITERATIONS` -- jumper.momentum_roll's schedule and widths.
+Every episode starts at the demonstration's start (standing); there are no mid-
+demonstration spawns.
+
+Checked 2026-10-30 (native CPU, nominal robot, training mode, zero policy action,
+feedforward whole): the robot follows the recording exactly (joint prior at its full
+3.0 throughout), and the episode ends on the finish 3.68 s after the release. The
+finishing bonus there is its floor half only: the demonstration's shell impact (83 N)
+and limb force (110 N) are past those bands' zero points (75 N, 100 N), which is what
+training is to bring down.
 """
 
 from __future__ import annotations
@@ -75,14 +94,21 @@ from pathlib import Path
 
 from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.envs import mdp as envs_mdp
+import dataclasses
+
 from mjlab.managers import TerminationTermCfg
+from mjlab.managers.curriculum_manager import CurriculumTermCfg
 from mjlab.managers.observation_manager import ObservationTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 
 from ..common.constants import GAIT_JOINTS
+from ..momentum_roll.mdp import rewards as mr_rewards
+from ..ref_free_jump.mdp import curriculum as fade
 from ..self_right import env_cfg as sr_env
 from . import mdp as ld
+
+REF_NPZ = Path(__file__).resolve().parent / "ref" / "lie_down.npz"
 
 STEP_DT = sr_env.STEP_DT
 DECIMATION = sr_env.DECIMATION
@@ -123,6 +149,15 @@ LEG_COLLISION_WEIGHT = -1.0
 JOINT_LIMIT_WEIGHT = -1.0
 ACTION_RATE_WEIGHT = -0.01
 
+# ── The demonstration, and how it fades ───────────────────────────────────────
+PRIOR_POS_WEIGHT = 3.0
+PRIOR_POS_SIGMA_SQ = 0.20
+#: Iterations at full feedforward and prior weight, and the iteration both reach 0.
+PRIOR_HOLD_ITERATIONS = 300
+PRIOR_END_ITERATIONS = 1200
+#: rsl_rl's rollout length (`rl_cfg.py`, jumper.roll's): the fade is in env steps.
+NUM_STEPS_PER_ENV = 24
+
 
 def down_obs(env, command_name: str = "roll"):
     """How far onto its back the body is, and how far it has lowered, [N, 2] (critic
@@ -143,6 +178,7 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
     cfg.commands = {"roll": ld.tracker.LieDownTrackerCfg(
         settle_steps=SETTLE_STEPS, max_settle_steps=MAX_SETTLE_STEPS,
         load_joints=GAIT_JOINTS, home_tol=HOME_TOL, hold_steps=HOLD_STEPS,
+        reference=str(REF_NPZ),
         finish_ang_vel=FINISH_ANG_VEL, finish_lin_vel=FINISH_LIN_VEL)}
     critic = cfg.observations["critic"].terms
     critic.pop("self_right", None)
@@ -152,9 +188,20 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
     cfg.events["reset_rolled"].params["rolled_fraction"] = 0.0
     cfg.episode_length_s = EPISODE_S
 
+    # ── Action: held at HOME while settling, the demonstration fed forward ────
+    a = cfg.actions["joint_pos"]
+    keep = {f.name: getattr(a, f.name) for f in dataclasses.fields(a)
+            if f.init and f.name in {g.name for g in dataclasses.fields(ld.actions.LieDownActionCfg)}}
+    keep.update(command_name="roll", hold_step=NUM_STEPS_PER_ENV * PRIOR_HOLD_ITERATIONS,
+                end_step=NUM_STEPS_PER_ENV * PRIOR_END_ITERATIONS, enabled=not play)
+    cfg.actions["joint_pos"] = ld.actions.LieDownActionCfg(**keep)
+
     # ── Rewards ───────────────────────────────────────────────────────────────
     cfg.rewards = {
         "lower": RewardTermCfg(func=ld.rewards.lower, weight=LOWER_WEIGHT),
+        "prior_joint_pos": RewardTermCfg(
+            func=mr_rewards.prior_joint_pos, weight=PRIOR_POS_WEIGHT,
+            params={"asset_cfg": gait_cfg, "sigma_sq": PRIOR_POS_SIGMA_SQ}),
         "complete": RewardTermCfg(
             func=ld.rewards.gentle_complete, weight=COMPLETE_BONUS / STEP_DT,
             params={"gentle_floor": GENTLE_FLOOR, "limb": LIMB_BAND, "sensor": SENSOR_BAND,
@@ -191,6 +238,17 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
                                         weight=JOINT_LIMIT_WEIGHT),
         "action_rate_l2": RewardTermCfg(func=old["action_rate_l2"].func,
                                         weight=ACTION_RATE_WEIGHT),
+    }
+
+    # ── Curriculum: the prior fades with the feedforward ──────────────────────
+    cfg.curriculum = {} if play else {
+        "prior_joint_pos_weight": CurriculumTermCfg(
+            func=fade.anneal_reward_weight,
+            params={"term_name": "prior_joint_pos", "start_weight": PRIOR_POS_WEIGHT,
+                    "end_weight": 0.0,
+                    "start_step": NUM_STEPS_PER_ENV * PRIOR_HOLD_ITERATIONS,
+                    "end_step": NUM_STEPS_PER_ENV * PRIOR_END_ITERATIONS}),
+        "feedforward": CurriculumTermCfg(func=fade.report_feedforward),
     }
 
     # ── Terminations ──────────────────────────────────────────────────────────
