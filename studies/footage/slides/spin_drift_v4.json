@@ -1,10 +1,40 @@
-{"title": "Proto4 performing Spin Drift",
- "rows": [["Successful rolls", "35 / 35"],
-          ["Roll time", "1.26 – 1.30 s"],
-          ["Peak joint torque from floor contact", "3.6 – 6.2 N·m"],
-          ["KingKong's own jump, measured the same way", "4.8 N·m (5.6 worst)", "note"],
-          ["Floor impact", "123 – 150 N"],
-          ["Carapace impact", "118 – 150 N"],
-          ["Face / sensors touching floor", "0 N"],
-          ["Longest airborne moment", "0.04 – 0.10 s"]],
- "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 7 rolls each"}
+{
+ "title": "Proto4 performing Spin Drift",
+ "rows": [
+  [
+   "Successful rolls",
+   "35 / 35"
+  ],
+  [
+   "Roll time",
+   "1.26 – 1.30 s"
+  ],
+  [
+   "Peak joint torque from floor contact",
+   "3.6 – 6.2 N·m"
+  ],
+  [
+   "KingKong's own jump, measured the same way",
+   "4.8 N·m (5.6 worst)",
+   "note"
+  ],
+  [
+   "Floor impact",
+   "123 – 150 N"
+  ],
+  [
+   "Carapace impact",
+   "118 – 150 N"
+  ],
+  [
+   "Face / sensors touching floor",
+   "0 N"
+  ],
+  [
+   "Longest airborne moment",
+   "0.04 – 0.10 s"
+  ]
+ ],
+ "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 7 rolls each",
+ "schema": "Color schema: Thue–Morse + 1 (1, 2, 2, 1, 2, 1, 1, 2, …)"
+}

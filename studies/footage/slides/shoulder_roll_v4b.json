@@ -1,10 +1,40 @@
-{"title": "Proto4b performing Shoulder Roll",
- "rows": [["Successful rolls", "40 / 40"],
-          ["Roll time", "1.12 – 1.16 s"],
-          ["Peak joint torque from floor contact", "4.1 – 7.5 N·m"],
-          ["KingKong's own jump, measured the same way", "4.8 N·m (5.6 worst)", "note"],
-          ["Floor impact", "65 – 122 N"],
-          ["Carapace impact", "0 – 51 N"],
-          ["Face / sensors touching floor", "0 N"],
-          ["Longest airborne moment", "0.02 – 0.04 s"]],
- "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 8 rolls each"}
+{
+ "title": "Proto4b performing Shoulder Roll",
+ "rows": [
+  [
+   "Successful rolls",
+   "40 / 40"
+  ],
+  [
+   "Roll time",
+   "1.12 – 1.16 s"
+  ],
+  [
+   "Peak joint torque from floor contact",
+   "4.1 – 7.5 N·m"
+  ],
+  [
+   "KingKong's own jump, measured the same way",
+   "4.8 N·m (5.6 worst)",
+   "note"
+  ],
+  [
+   "Floor impact",
+   "65 – 122 N"
+  ],
+  [
+   "Carapace impact",
+   "0 – 51 N"
+  ],
+  [
+   "Face / sensors touching floor",
+   "0 N"
+  ],
+  [
+   "Longest airborne moment",
+   "0.02 – 0.04 s"
+  ]
+ ],
+ "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 8 rolls each",
+ "schema": "Color schema: Fibonacci (1, 1, 2, 3, 5, 8, 13, 21, …)"
+}

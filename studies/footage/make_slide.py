@@ -2,7 +2,8 @@
 
     python studies/footage/make_slide.py <slide.json> <out.png>
 
-slide.json: {"title": str, "rows": [[label, value, style?], ...], "footnote": str}.
+slide.json: {"title": str, "rows": [[label, value, style?], ...], "footnote": str,
+"schema": str (optional, the colour pattern, drawn at the bottom)}.
 A row whose style is "note" is drawn smaller, grey and italic (a comparison line).
 1920x1080, Inter.
 """
@@ -26,7 +27,7 @@ WHITE, GREY, LINE = (255, 255, 255), (165, 165, 165), (70, 70, 70)
 rows = spec["rows"]
 row_h = [66 if (r[2:] or [""])[0] != "note" else 50 for r in rows]
 table_h = sum(row_h)
-top = (H - (110 + 50 + table_h + 90)) // 2
+top = (H - (110 + 50 + table_h + 90)) // 2 - (40 if spec.get("schema") else 0)
 tw = dr.textlength(spec["title"], font=f_title)
 dr.text(((W - tw) / 2, top), spec["title"], font=f_title, fill=WHITE)
 y = top + 110 + 50
@@ -45,5 +46,9 @@ for r, rh in zip(rows, row_h):
             dr.line([(x_label, y), (x_end, y)], fill=LINE, width=1)
 fw = dr.textlength(spec["footnote"], font=f_foot)
 dr.text(((W - fw) / 2, y + 40), spec["footnote"], font=f_foot, fill=GREY)
+if spec.get("schema"):
+    f_schema = ImageFont.truetype(FONT.format("Regular"), 34)
+    sw = dr.textlength(spec["schema"], font=f_schema)
+    dr.text(((W - sw) / 2, H - 120), spec["schema"], font=f_schema, fill=WHITE)
 img.save(sys.argv[2])
 print("wrote", sys.argv[2])
