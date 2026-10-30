@@ -53,16 +53,18 @@ p.add_argument("--center", default=None,
                help="aim the camera at the middle of this phase (a walk_then_behave.py "
                     "recording's phase name) instead of the middle of its path")
 p.add_argument("--orbit", type=float, default=0.0,
-               help="instead of the angles: hold the first pose and circle it once in "
-                    "this many seconds")
+               help="instead of the angles: hold the first pose and circle it once, low, "
+                    "in this many seconds (then see --orbit-peak)")
 p.add_argument("--orbit-distance", type=float, default=0.55)
 p.add_argument("--orbit-elevation", type=float, default=28.0, help="degrees above level")
 p.add_argument("--orbit-peak", type=float, default=None,
-               help="degrees above level the camera rises to (e.g. 85: nearly overhead), "
-                    "easing up from and back to --orbit-elevation within --orbit-rise")
-p.add_argument("--orbit-turns", type=float, default=1.0, help="turns over the clip")
-p.add_argument("--orbit-rise", type=float, default=1.0,
-               help="fraction of the clip, at its end, over which the overhead pass happens")
+               help="after the low turn, rise to this many degrees above level (e.g. 85: "
+                    "nearly overhead) and hold there")
+p.add_argument("--orbit-rise", type=float, default=2.5, help="s rising to --orbit-peak")
+p.add_argument("--orbit-hold", type=float, default=4.0, help="s held at --orbit-peak")
+p.add_argument("--orbit-hold-rate", type=float, default=12.0,
+               help="deg/s the camera turns while held overhead")
+p.add_argument("--fade-out", type=float, default=0.0, help="s fading to black at the end")
 p.add_argument("--orbit-height", type=float, default=0.09, help="aim point above the floor, m")
 p.add_argument("--orbit-start", type=float, default=200.0, help="first azimuth, degrees")
 p.add_argument("--track", default=None,
@@ -291,23 +293,39 @@ if a.track:
     sys.exit(0)
 
 if a.orbit:
-    # A turntable: the recording's first pose held, the camera circling it once.
+    # A turntable, the recording's first pose held. One low turn in --orbit s; then,
+    # with --orbit-peak, a rise over --orbit-rise s (still turning) to that elevation,
+    # held for --orbit-hold s turning at --orbit-hold-rate deg/s; the last --fade-out
+    # s fade to black.
     pose(0.0)
     cam = mujoco.MjvCamera()
     cam.lookat[:] = [d.qpos[root], d.qpos[root + 1], a.orbit_height]
-    cam.elevation, cam.distance = -a.orbit_elevation, a.orbit_distance
+    cam.distance = a.orbit_distance
+    rate = 360.0 / a.orbit                                   # deg/s on the low turn
+    over = a.orbit_peak is not None
+    t_rise = a.orbit_rise if over else 0.0
+    t_hold = a.orbit_hold if over else 0.0
+    total = a.orbit + t_rise + t_hold
     frames = []
-    n = int(round(a.orbit * a.fps))
-    for i in range(n):
-        cam.azimuth = a.orbit_start + 360.0 * a.orbit_turns * i / n
-        if a.orbit_peak is not None:
-            # Rise smoothly to --orbit-peak and back within the last --orbit-rise of
-            # the clip, after a full low turn: over the top once.
-            f = (i / n - (1.0 - a.orbit_rise)) / a.orbit_rise
-            bump = 0.5 * (1.0 - math.cos(2.0 * math.pi * f)) if 0.0 <= f <= 1.0 else 0.0
-            cam.elevation = -(a.orbit_elevation + (a.orbit_peak - a.orbit_elevation) * bump)
+    for i in range(int(round(total * a.fps))):
+        t = i / a.fps
+        if t <= a.orbit:
+            az, el = rate * t, a.orbit_elevation
+        elif t <= a.orbit + t_rise:
+            f = (t - a.orbit) / t_rise
+            ease = 0.5 * (1.0 - math.cos(math.pi * f))
+            # Turning slows from the low turn's rate to the hold's as it rises.
+            az = rate * a.orbit + (t - a.orbit) * (rate + (a.orbit_hold_rate - rate) * f / 2)
+            el = a.orbit_elevation + (a.orbit_peak - a.orbit_elevation) * ease
+        else:
+            az_r = rate * a.orbit + t_rise * (rate + a.orbit_hold_rate) / 2
+            az, el = az_r + a.orbit_hold_rate * (t - a.orbit - t_rise), a.orbit_peak
+        cam.azimuth, cam.elevation = a.orbit_start + az, -el
         r.update_scene(d, cam, scene_option=vopt)
-        frames.append(r.render())
+        img = r.render()
+        if a.fade_out and t > total - a.fade_out:
+            img = (img * max(0.0, (total - t) / a.fade_out)).astype(np.uint8)
+        frames.append(img)
     out = os.path.join(a.out_dir, f"{a.name}_orbit.mp4")
     mediapy.write_video(out, frames, fps=a.fps, crf=18)
     print(f"wrote {out}: {len(frames)} frames, {len(frames) / a.fps:.1f} s")
