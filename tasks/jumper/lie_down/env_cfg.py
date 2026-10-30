@@ -19,12 +19,26 @@ nothing before is paid or charged.
   2 units from standing to flat on its back, `LOWER_WEIGHT` per unit. Paid by the
   distance, not the speed.
 - **The finish** ends the episode (`tracker.done`): within 20 deg of flat on its back,
-  turning slower than 0.2 rad/s and moving slower than 0.02 m/s, every driven joint
-  within `HOME_TOL` of HOME, all of it held `HOLD_STEPS` running. jumper.self_right's
+  turning slower than `FINISH_ANG_VEL` and moving slower than `FINISH_LIN_VEL`, every
+  driven joint within `HOME_TOL` of HOME, all of it held `HOLD_STEPS` running (see
+  "The finish has to be reachable while exploring" below). jumper.self_right's
   run 3 finished on four feet with a leg still in the air; the legs at HOME are part
   of finishing here, and `back_home` pays them while belly-up.
 - **Finishing bonus** `COMPLETE_BONUS`: half however it went, half scaled by the
   worst of the gentle factors below.
+
+## The finish has to be reachable while exploring
+
+The first run (Colab, 2500 iterations, revision 76e61e6) had the finish at 0.15 rad,
+0.2 rad/s, 0.02 m/s, held 15 steps, and no episode in training ever finished, so the
+finishing bonus -- and every gentleness factor in it -- never paid; the policy learnt
+the fastest way over (13-17 rad/s, shell impact about 230 N). Replayed on the nominal
+robot (2026-10-30, native and warp, CPU) the same policy finishes within 0.5 s of
+landing: what stopped it in training is training's own action noise. With that noise
+added (std 0.225, the run's final `Policy/mean_std`), belly-up the body rocked at a
+median 0.37 rad/s and the joints sat a median 0.16 rad off HOME; the longest run
+meeting the old finish was 2 steps. Meeting 0.3 rad, 0.8 rad/s and 0.06 m/s: 17. Still
+far from the flip itself.
 
 ## Slow and soft
 
@@ -83,8 +97,10 @@ LOWER_WEIGHT = 5.0
 COMPLETE_BONUS = 20.0
 BACK_HOME_WEIGHT = 1.0
 GENTLE_FLOOR = 0.5
-HOME_TOL = 0.15
-HOLD_STEPS = 15
+HOME_TOL = 0.3
+FINISH_ANG_VEL = 0.8
+FINISH_LIN_VEL = 0.06
+HOLD_STEPS = 10
 
 # ── Slow and soft ──────────────────────────────────────────────────────────────
 LIMB_BAND = (20.0, 100.0)
@@ -126,7 +142,8 @@ def env_cfg(asset: Path | None = None, play: bool = False) -> ManagerBasedRlEnvC
     # ── Command: how far down, the finish, and the hardest hits ───────────────
     cfg.commands = {"roll": ld.tracker.LieDownTrackerCfg(
         settle_steps=SETTLE_STEPS, max_settle_steps=MAX_SETTLE_STEPS,
-        load_joints=GAIT_JOINTS, home_tol=HOME_TOL, hold_steps=HOLD_STEPS)}
+        load_joints=GAIT_JOINTS, home_tol=HOME_TOL, hold_steps=HOLD_STEPS,
+        finish_ang_vel=FINISH_ANG_VEL, finish_lin_vel=FINISH_LIN_VEL)}
     critic = cfg.observations["critic"].terms
     critic.pop("self_right", None)
     critic["lie_down"] = ObservationTermCfg(func=down_obs, params={"command_name": "roll"})
