@@ -61,11 +61,8 @@ p.add_argument("--orbit-peak", type=float, default=None,
                help="rise to this many degrees above level (e.g. 85: nearly overhead) at "
                     "--orbit-rise-at and end there")
 p.add_argument("--orbit-rise-at", type=float, default=8.0, help="s into the clip the rise starts")
-p.add_argument("--orbit-rise", type=float, default=2.5, help="s rising to --orbit-peak")
 p.add_argument("--orbit-end-hold", type=float, default=0.5,
                help="s held still overhead, front to the top, before the fade")
-p.add_argument("--orbit-hold-rate", type=float, default=12.0,
-               help="deg/s the camera turns while held overhead")
 p.add_argument("--fade-out", type=float, default=0.0, help="s fading to black at the end")
 p.add_argument("--orbit-height", type=float, default=0.09, help="aim point above the floor, m")
 p.add_argument("--orbit-start", type=float, default=200.0, help="first azimuth, degrees")
@@ -296,11 +293,11 @@ if a.track:
 
 if a.orbit:
     # A turntable, the recording's first pose held. The camera circles low at one turn
-    # per --orbit s. With --orbit-peak: at --orbit-rise-at s it starts rising, over
-    # --orbit-rise s, to that elevation, its turning easing to --orbit-hold-rate deg/s;
-    # overhead it keeps turning until the robot's front points to the top of the
-    # screen, eases to a stop there, holds --orbit-end-hold s, and fades to black over
-    # --fade-out s. Without it, one low turn and the fade.
+    # per --orbit s. With --orbit-peak: from --orbit-rise-at s it spirals up -- still
+    # turning, slowing smoothly -- to that elevation, arriving there just as it stops
+    # on the heading that puts the robot's front at the top of the screen; holds
+    # --orbit-end-hold s; fades to black over --fade-out s. Without it, one low turn
+    # and the fade.
     pose(0.0)
     cam = mujoco.MjvCamera()
     cam.lookat[:] = [d.qpos[root], d.qpos[root + 1], a.orbit_height]
@@ -328,22 +325,21 @@ if a.orbit:
             shot()
             az += rate * dt_f
             t += dt_f
-        t_r = 0.0
-        while t_r < a.orbit_rise:                           # rising, slowing
-            f = t_r / a.orbit_rise
-            el = a.orbit_elevation + (a.orbit_peak - a.orbit_elevation) * 0.5 * (1 - math.cos(math.pi * f))
-            shot()
-            az += (rate + (a.orbit_hold_rate - rate) * f) * dt_f
-            t_r += dt_f
-        el = a.orbit_peak
-        # Overhead: turn on to the next heading with the robot's front at the top of
-        # the screen (camera heading = the robot's front), easing to a stop.
+        # A spiral: from here the camera keeps turning, slowing smoothly from the low
+        # turn's rate to a stop exactly on the heading that puts the robot's front at
+        # the top of the screen, and rises with it, arriving overhead as it stops.
         target = az + (front - az) % 360.0
-        decel = a.orbit_hold_rate / 1.0                     # stop over about 1 s
-        while target - az > 1e-3:
+        if target - az < 90.0:
+            target += 360.0
+        span = target - az
+        dur = 2.0 * span / rate                              # az = span (2u - u^2)
+        az0 = az
+        for k in range(int(round(dur * a.fps))):
+            u = min(1.0, k / (dur * a.fps))
+            az = az0 + span * (2 * u - u * u)
+            el = a.orbit_elevation + (a.orbit_peak - a.orbit_elevation) * (3 * u * u - 2 * u ** 3)
             shot()
-            step = min(a.orbit_hold_rate, math.sqrt(2 * decel * (target - az))) * dt_f
-            az = min(target, az + max(step, 1e-3))
+        el = a.orbit_peak
         az = target
         for _ in range(int(round(a.orbit_end_hold * a.fps))):
             shot()
