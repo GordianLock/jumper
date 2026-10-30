@@ -18,8 +18,8 @@
   },
   {
    "en": "KingKong's own jump, measured the same way",
-   "zh": "KingKong 自身跳跃时的测量值（采用相同方法）",
-   "value": "4.8 N·m (5.6 worst)",
+   "zh": "KingKong 官方跳跃动作的测量值（采用相同方法）",
+   "value": "4.8 N·m (5.6 最大值)",
    "note": true
   },
   {
@@ -34,7 +34,7 @@
   },
   {
    "en": "Face / sensors touching floor",
-   "zh": "面部／传感器触地受力",
+   "zh": "面部／传感器与地面的接触力",
    "value": "0 N"
   },
   {
@@ -44,6 +44,6 @@
   }
  ],
  "footnote": "Simulated in MuJoCo: 1 nominal + 4 randomised robots (friction, mass balance, sensor bias), 9–10 self-rights each",
- "title_zh": "原厂型号：自主翻正",
+ "title_zh": "原厂模型：自主翻正",
  "footnote_zh": "MuJoCo 仿真：1 台基准机器人 + 4 台参数随机化机器人（摩擦系数、质量分布、传感器偏差），每台翻正 9–10 次"
 }

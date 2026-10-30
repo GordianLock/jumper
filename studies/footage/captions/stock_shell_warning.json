@@ -1,4 +1,4 @@
 {
  "en": "Hard impact on unreinforced stock shell; not recommended for real-world use on stock mode. Needed in simulation to position the bot on its back in order to do the next self-righting move.",
- "zh": "未经加固的原厂甲壳会受到较大冲击；不建议在现实环境中使用原厂配置执行此动作。在仿真中，此动作是必要的，用于使机器人翻转至仰卧姿态，以便执行下一步自主翻正动作。"
+ "zh": "未经加固的原厂甲壳会受到强烈冲击；不建议在现实环境中使用原厂配置执行此动作。在仿真中，此动作是必要的，用于使机器人翻转至仰卧姿态，以便执行下一步自主翻正动作。"
 }

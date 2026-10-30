@@ -18,8 +18,8 @@
   },
   {
    "en": "KingKong's own jump, measured the same way",
-   "zh": "KingKong 自身跳跃时的测量值（采用相同方法）",
-   "value": "4.8 N·m (5.6 worst)",
+   "zh": "KingKong 官方跳跃动作的测量值（采用相同方法）",
+   "value": "4.8 N·m (5.6 最大值)",
    "note": true
   },
   {
@@ -34,7 +34,7 @@
   },
   {
    "en": "Face / sensors touching floor",
-   "zh": "面部／传感器触地受力",
+   "zh": "面部／传感器与地面的接触力",
    "value": "0 N"
   },
   {

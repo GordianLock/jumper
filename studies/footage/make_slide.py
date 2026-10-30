@@ -127,9 +127,25 @@ img = Image.new("RGB", (W, H), (0, 0, 0))
 dr = ImageDraw.Draw(img)
 f_title, f_title_zh = inter("SemiBold", 76), cjk("Medium", 52)
 f_label, f_value, f_label_zh = inter("Regular", 40), inter("Medium", 40), cjk("Regular", 34)
-f_note, f_note_zh = inter("Italic", 32), cjk("Light", 25)
+f_note, f_note_zh = inter("Italic", 32), cjk("Light", 23)
 f_foot, f_foot_zh = inter("Regular", 26), cjk("Light", 22)
 f_schema, f_schema_zh = inter("Regular", 34), cjk("Regular", 28)
+
+
+def mixed(x, y, text, font, font_zh, fill):
+    """Draw `text` from x, its CJK runs in `font_zh` (Inter has no CJK glyphs)."""
+    runs, cur, cjk_run = [], "", None
+    for ch in text:
+        c = "\u3000" <= ch <= "\u9fff" or "\uff00" <= ch <= "\uffef"
+        if cjk_run is not None and c != cjk_run:
+            runs.append((cur, cjk_run))
+            cur = ""
+        cur, cjk_run = cur + ch, c
+    runs.append((cur, cjk_run))
+    for t, c in runs:
+        f = font_zh if c else font
+        dr.text((x, y + (round(f.size * 0.08) if c else 0)), t, font=f, fill=fill)
+        x += dr.textlength(t, font=f)
 
 
 def centred(y, text, font, fill):
@@ -169,9 +185,9 @@ for i, (r, rh) in enumerate(zip(rows, row_hs)):
         # The Chinese note starts at the column edge: its line is the longest there.
         dr.text((x_zh, top + (h(4) if note else h(2))), r["zh"],
                 font=f_note_zh if note else f_label_zh, fill=GREY if note else DIM)
-    # The value sits level with the English line.
-    dr.text((x_value, top), r["value"], font=f_note if note else f_value,
-            fill=GREY if note else WHITE)
+    # The value sits level with the English line; any Chinese in it in the CJK face.
+    mixed(x_value, top, r["value"], f_note if note else f_value,
+          f_note_zh if note else f_label_zh, GREY if note else WHITE)
     y += rh
     nxt_note = i + 1 < len(rows) and rows[i + 1].get("note")
     if not note and not nxt_note:
