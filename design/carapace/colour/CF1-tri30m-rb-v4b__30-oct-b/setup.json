@@ -1,0 +1,19 @@
+{
+  "name": "30 Oct B",
+  "version": "CF1-tri30m-rb-v4b",
+  "sequence": "fibonacci",
+  "unit_mm": 2.5,
+  "grow_from": "base",
+  "colour_rule": "n_mod_k",
+  "k": 4,
+  "accent_below_mm": 0.6,
+  "stock_tolerance_mm": 0.001,
+  "colours": {
+    "stock": "#D33416",
+    "accent": "#0C0D0D",
+    "c0": "#1F1F1F",
+    "c1": "#9CC21E",
+    "c2": "#E6DA32",
+    "c3": "#530A75"
+  }
+}

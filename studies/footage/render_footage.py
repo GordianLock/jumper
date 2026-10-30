@@ -19,6 +19,7 @@ pose so an editor has handles to cut on (the robot is not moving in either).
 Writes `<out_dir>/<name>_<angle>_<speed>x.mp4` for every angle and speed.
 """
 import argparse
+import json
 import math
 import os
 
@@ -48,6 +49,9 @@ p.add_argument("--fps", type=int, default=60)
 p.add_argument("--width", type=int, default=1920)
 p.add_argument("--height", type=int, default=1080)
 p.add_argument("--hold", type=float, default=0.5, help="s of still pose added at each end")
+p.add_argument("--colour", default=None,
+               help="a colour pattern folder (design/carapace/colour/<folder>): its display "
+                    "meshes replace the top shell's and carapace's visuals")
 a = p.parse_args()
 import mediapy  # noqa: E402
 
@@ -63,6 +67,21 @@ mat.textures[mujoco.mjtTextureRole.mjTEXROLE_RGB] = "footage_grid"
 spec.add_texture(name="footage_sky", type=mujoco.mjtTexture.mjTEXTURE_SKYBOX,
                  builtin=mujoco.mjtBuiltin.mjBUILTIN_GRADIENT, width=512, height=512,
                  rgb1=[0.55, 0.62, 0.70], rgb2=[0.12, 0.14, 0.17])
+if a.colour:
+    # The pattern's pieces (design/carapace/colour/README.md): display-only meshes in the
+    # upper_shell_link frame, one per filament, replacing the shell's and carapace's visuals.
+    folder = os.path.abspath(a.colour)
+    cols = json.load(open(os.path.join(folder, "colours.json")))
+    shell = spec.body("upper_shell_link")
+    for piece in cols["pieces"]:
+        mesh = spec.add_mesh(name=f"colour_{piece['filament']}",
+                             file=os.path.join(folder, piece["file"]))
+        g = shell.add_geom(name=f"upper_shell_colour_{piece['filament']}_visual",
+                           type=mujoco.mjtGeom.mjGEOM_MESH, meshname=mesh.name,
+                           rgba=piece["rgba"], contype=0, conaffinity=0, group=2, density=0)
+        del g
+    for n in ("upper_shell_link_visual", "upper_shell_carapace_visual"):
+        spec.geom(n).rgba[3] = 0.0
 spec.worldbody.add_geom(name="floor", type=mujoco.mjtGeom.mjGEOM_PLANE, size=[4, 4, 0.1],
                         material="footage_floor")
 spec.worldbody.add_light(pos=[0.6, -0.6, 2.0], dir=[-0.3, 0.3, -1], diffuse=[0.75, 0.75, 0.75],
@@ -105,6 +124,9 @@ def pose(t: float) -> None:
 
 
 r = mujoco.Renderer(m, a.height, a.width)
+#: Collision hulls (group 1) stand proud of the visual surfaces and would cover them.
+vopt = mujoco.MjvOption()
+vopt.geomgroup[1] = 0
 os.makedirs(a.out_dir, exist_ok=True)
 length = (T - 1) * dt
 for angle in a.angles.split(","):
@@ -117,7 +139,7 @@ for angle in a.angles.split(","):
         frames = []
         for i in range(n + 1):
             pose(i * speed / a.fps - a.hold)
-            r.update_scene(d, cam)
+            r.update_scene(d, cam, scene_option=vopt)
             frames.append(r.render())
         out = os.path.join(a.out_dir, f"{a.name}_{angle}_{speed:g}x.mp4")
         mediapy.write_video(out, frames, fps=a.fps, crf=18)
