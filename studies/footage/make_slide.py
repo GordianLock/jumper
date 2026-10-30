@@ -16,7 +16,7 @@ or, for a statement slide,
     {"paragraphs": [{"en": str, "zh": str?, "lead": bool?}, ...]}
 
 each paragraph wrapped and centred, its Chinese beneath it; a lead paragraph (an
-opening or closing line) is drawn larger.
+opening or closing line) is drawn in a heavier weight, at the same size.
 
 A note row is drawn smaller, grey and italic (a comparison line). 1920x1080; Inter
 for Latin, Noto Sans CJK SC for Chinese.
@@ -40,8 +40,8 @@ def statement(spec):
     img = Image.new("RGB", (W, H), (0, 0, 0))
     dr = ImageDraw.Draw(img)
     width = 1320
-    fonts = {True: (ImageFont.truetype(INTER.format("SemiBold"), 46),
-                    ImageFont.truetype(CJK.format("Medium"), 34, index=CJK_SC)),
+    fonts = {True: (ImageFont.truetype(INTER.format("SemiBold"), 32),
+                    ImageFont.truetype(CJK.format("Medium"), 25, index=CJK_SC)),
              False: (ImageFont.truetype(INTER.format("Regular"), 32),
                      ImageFont.truetype(CJK.format("Regular"), 25, index=CJK_SC))}
 
