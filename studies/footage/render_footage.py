@@ -61,7 +61,7 @@ p.add_argument("--orbit-peak", type=float, default=None,
                help="rise to this many degrees above level (e.g. 85: nearly overhead) at "
                     "--orbit-rise-at and end there")
 p.add_argument("--orbit-rise-at", type=float, default=8.0, help="s into the clip the rise starts")
-p.add_argument("--orbit-end-hold", type=float, default=0.5,
+p.add_argument("--orbit-end-hold", type=float, default=1.0,
                help="s held still overhead, front to the top, before the fade")
 p.add_argument("--fade-out", type=float, default=0.0, help="s fading to black at the end")
 p.add_argument("--orbit-height", type=float, default=0.09, help="aim point above the floor, m")
