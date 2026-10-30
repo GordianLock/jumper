@@ -16,6 +16,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 PY=${PY:-python}
+FPS=${FPS:-60}                  # FPS=30 halves the render on a machine without a GPU
 OUT=$(realpath -m "${1:-out/footage_final}")
 C=$OUT/clips
 W=$OUT/work
@@ -26,8 +27,8 @@ REC=$F/recordings
 COL=design/carapace/colour
 S=$F/slides
 O=$F/assets/overlays
-SCENE="--scene default --floor hardwood --surround grass --fps 60"
-ENC="-c:v libx264 -preset veryfast -crf 16 -pix_fmt yuv420p -r 60"
+SCENE="--scene default --floor hardwood --surround grass --fps $FPS"
+ENC="-c:v libx264 -preset veryfast -crf 16 -pix_fmt yuv420p -r $FPS"
 dur() { ffprobe -v error -show_entries format=duration -of csv=p=0 "$1"; }
 
 render() {  # out-file, args...: skip a clip already rendered
@@ -73,15 +74,15 @@ AT=6.76
 ffmpeg -loglevel error -y -ss $AT -i $C/st_side_1x.mp4 -frames:v 1 $W/st_landing.png
 d=$(dur $C/st_side_1x.mp4)
 ffmpeg -loglevel error -y -i $C/st_side_1x.mp4 -loop 1 -t 4 -i $W/st_landing.png -i $O/stock_shell_warning.png \
-  -filter_complex "[0]trim=0:$AT,setpts=PTS-STARTPTS,fps=60,format=yuv420p[a];[1][2]overlay=0:0,fps=60,format=yuv420p,setsar=1[b];[0]trim=start=$AT:end=$(awk "BEGIN{print $d-3}"),setpts=PTS-STARTPTS,fps=60,format=yuv420p[c];[a][b][c]concat=n=3:v=1:a=0" \
+  -filter_complex "[0]trim=0:$AT,setpts=PTS-STARTPTS,fps=$FPS,format=yuv420p[a];[1][2]overlay=0:0,fps=$FPS,format=yuv420p,setsar=1[b];[0]trim=start=$AT:end=$(awk "BEGIN{print $d-3}"),setpts=PTS-STARTPTS,fps=$FPS,format=yuv420p[c];[a][b][c]concat=n=3:v=1:a=0" \
   $ENC $W/st_side.mp4
 d=$(dur $C/st_close_track_0.25x.mp4)
 ffmpeg -loglevel error -y -i $C/st_close_track_0.25x.mp4 -i $O/speed_0.25x.png \
   -filter_complex "[0][1]overlay=0:0,fade=t=out:st=$(awk "BEGIN{print $d-1}"):d=1" $ENC $W/st_close.mp4
 
 in=(); filt=""; n=0
-add_still() { in+=(-loop 1 -t "$2" -i "$1"); filt+="[$n]scale=1920:1080,setsar=1,fps=60,format=yuv420p${3:-}[v$n];"; n=$((n+1)); }
-add_clip() { in+=(-i "$1"); filt+="[$n]scale=1920:1080,setsar=1,fps=60,format=yuv420p[v$n];"; n=$((n+1)); }
+add_still() { in+=(-loop 1 -t "$2" -i "$1"); filt+="[$n]scale=1920:1080,setsar=1,fps=$FPS,format=yuv420p${3:-}[v$n];"; n=$((n+1)); }
+add_clip() { in+=(-i "$1"); filt+="[$n]scale=1920:1080,setsar=1,fps=$FPS,format=yuv420p[v$n];"; n=$((n+1)); }
 add_set() { add_clip $C/$1_orbit.mp4; add_still $S/$2.png 3; add_clip $W/$1_four.mp4; add_clip $W/$1_close.mp4; }
 add_still $S/opening_title.png 5
 add_set tk tuck_roll_v3
@@ -92,7 +93,7 @@ add_still $S/stock_self_righting.png 3
 add_clip $W/st_side.mp4
 add_clip $W/st_close.mp4
 add_still $S/self_righting_stock.png 5 ",fade=t=out:st=4:d=1"
-in+=(-f lavfi -t 4 -i color=black:s=1920x1080:r=60); filt+="[$n]setsar=1,format=yuv420p[v$n];"; n=$((n+1))
+in+=(-f lavfi -t 4 -i color=black:s=1920x1080:r=$FPS); filt+="[$n]setsar=1,format=yuv420p[v$n];"; n=$((n+1))
 cat=""; for i in $(seq 0 $((n - 1))); do cat+="[v$i]"; done
 FINAL=$OUT/jumper_crab_kingkong_challenge.mp4
 ffmpeg -loglevel error -y "${in[@]}" -filter_complex "${filt}${cat}concat=n=$n:v=1:a=0" $ENC -movflags +faststart "$FINAL"
