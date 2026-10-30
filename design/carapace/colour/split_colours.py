@@ -12,6 +12,29 @@ the stock top shell (distance to the stock visual mesh), and that height decides
   the stock surface (`grow_from: "base"`) or down from the highest point of the relief
   (`"tip"`); its filament is a(n) mod k (`"a_mod_k"`) or n mod k (`"n_mod_k"`).
 
+Optional `min_band_mm` (the nozzle width) applies the colour preview's printability rule:
+every visible colour region is at least MIN_BAND_MARGIN x min_band_mm thick in relief, which
+keeps it at least min_band_mm wide on the surface. The preview already raises the unit and the
+accent cut-off to fit, so here they are only checked; slivers left where a band is cut off at
+the accent or the top are folded into the neighbouring band (the one below, or the one above
+for the lowest), as the preview folds them. Stepped fade steps are checked the same way.
+
+Optional `stock_fade` splits the stock surface into stepped colours fading from
+`colours.stock` (top) to `stock_fade.low` (bottom), as the preview's stepped fade does, in
+either of the preview's modes:
+
+- `mode: "height"`: level cuts, a percentage of the way down from the top of the stock shell
+  (0 %) to its lowest point (100 %).
+- `mode: "wall"` (the preview's "down the sides"): a percentage of the way down the side, from
+  the rim of the top surface (0 %) to the lower edge (100 %), so the whole top keeps the top
+  colour however it slopes. Rim and lower-edge heights are found per degree around the shell
+  and smoothed exactly as the preview found them (`wall_curves`); the fraction is cut along
+  linearly within each triangle, as the preview's shader interpolates it.
+ The step colours are interpolated in
+linear RGB, as the preview interpolates them. Pieces are `stock_s0` (bottom, the low colour) to
+`stock_s<steps-1>` (top, `colours.stock`). A smooth fade (steps 0) cannot be split into
+filaments and is refused.
+
 Triangles that straddle a band edge are cut along the iso-line (height is interpolated
 linearly across each triangle), so colour boundaries are smooth rather than stepped.
 
@@ -25,11 +48,149 @@ import json
 import sys
 from pathlib import Path
 
+import networkx as nx
 import numpy as np
 import trimesh
 
 REPO = Path(__file__).resolve().parents[3]
 STOCK_VISUAL = REPO / "assets/jumper/urdf/jumper/meshes/visual/upper_shell_link.stl"
+# Height-mode fade frame, as the preview defines it: the stock shell's lowest point (z, mm, in
+# upper_shell_link) and its height range to the top (the stock visual spans -7.502..40.397).
+FADE_Z0_MM, FADE_RANGE_MM = -7.5, 47.9
+# Relief is a distance, so in theory a band is never narrower on the surface than it is thick;
+# on the meshes the relief climbs up to 1.21 mm per mm along the surface (v4 and v4b, steepest
+# triangle; 1.13 on v3, 1.15 on v3b), so bands are kept 1.25 x the nozzle thick. Must match the
+# preview's MARGIN.
+MIN_BAND_MARGIN = 1.25
+
+
+def srgb_to_linear(c):
+    return np.where(c < 0.04045, c * 0.0773993808, (c * 0.9478672986 + 0.0521327014) ** 2.4)
+
+
+def linear_to_srgb(c):
+    return np.where(c <= 0.0031308, c * 12.92, c ** 0.41666 * 1.055 - 0.055)
+
+
+def hex_rgb(h):
+    return np.array([int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)])
+
+
+def wall_curves(stock):
+    """Rim of the top surface and lower edge, z per degree around the stock shell (mm).
+
+    The top surface is the largest connected patch of upward faces (normal z > 0.5); the rim
+    height is the mean z of its outermost 10 % of samples in each 1-degree sector, the lower
+    edge the lowest z among the outer 30 % of surface samples there; both are smoothed with a
+    Gaussian of sigma 8 degrees. Same seeds and steps as the preview, which agrees with this to
+    within half of its 8-bit rounding.
+    """
+    up = np.where(stock.face_normals[:, 2] > 0.5)[0]
+    adj = stock.face_adjacency
+    both = np.isin(adj[:, 0], up) & np.isin(adj[:, 1], up)
+    graph = nx.Graph()
+    graph.add_nodes_from(up)
+    graph.add_edges_from(adj[both])
+    top = list(max(nx.connected_components(graph),
+                   key=lambda c: stock.area_faces[list(c)].sum()))
+    top_pts, _ = trimesh.sample.sample_surface_even(stock.submesh([top], append=True), 60000,
+                                                    seed=1)
+    all_pts, _ = trimesh.sample.sample_surface_even(stock, 120000, seed=2)
+    nb = 360
+    edges = np.linspace(-np.pi, np.pi, nb + 1)
+    centres = (edges[:-1] + edges[1:]) / 2
+
+    def binned(pts, pick):
+        ang = np.arctan2(pts[:, 1], pts[:, 0])
+        rad = np.hypot(pts[:, 0], pts[:, 1])
+        idx = np.clip(np.digitize(ang, edges) - 1, 0, nb - 1)
+        out = np.full(nb, np.nan)
+        for i in range(nb):
+            sel = idx == i
+            if sel.sum() >= 3:
+                out[i] = pick(pts[sel], rad[sel])
+        return out
+
+    def smooth(x, sigma=8):
+        i = np.arange(nb)
+        ok = ~np.isnan(x)
+        x = np.interp(i, i[ok], x[ok], period=nb)
+        g = np.exp(-0.5 * (np.arange(-3 * sigma, 3 * sigma + 1) / sigma) ** 2)
+        g /= g.sum()
+        return np.convolve(np.r_[x[-3 * sigma:], x, x[:3 * sigma]], g, "valid")
+
+    rim = binned(top_pts, lambda p, r: p[np.argsort(r)[-max(3, len(r) // 10):], 2].mean())
+    low = binned(all_pts, lambda p, r: p[r >= np.percentile(r, 70), 2].min())
+    return centres, smooth(rim), smooth(low)
+
+
+def wall_fraction_fn(stock):
+    """Point (mm) -> fraction of the way up the side, 0 at the lower edge, 1 at the rim."""
+    centres, rim, low = wall_curves(stock)
+
+    def frac(pts):
+        ang = np.arctan2(pts[:, 1], pts[:, 0])
+        r = np.interp(ang, centres, rim, period=2 * np.pi)
+        lo = np.interp(ang, centres, low, period=2 * np.pi)
+        return np.clip((pts[:, 2] - lo) / np.maximum(r - lo, 1e-3), 0, 1)
+
+    return frac, float((rim - low).min())
+
+
+def fade_steps(fade, top_hex, stock):
+    """Stepped fade: (field, [(lo, hi, hex)] per step, bottom step first).
+
+    `field` maps points (mm) to the quantity the steps are cut along: z in mm for the height
+    mode, the wall fraction for the wall mode.
+    """
+    if fade["mode"] not in ("height", "wall"):
+        raise ValueError("stock_fade mode must be 'height' or 'wall'")
+    n = int(fade["steps"])
+    if n < 2:
+        raise ValueError("a smooth fade (steps 0) cannot be split into filaments; use 2..8 steps")
+    f_top, f_bot = 1 - fade["from_pct"] / 100, 1 - fade["to_pct"] / 100
+    nz = fade.get("min_band_mm")
+    if fade["mode"] == "wall":
+        frac, min_span = wall_fraction_fn(stock)
+        if nz and min_span * (f_top - f_bot) / n < nz * MIN_BAND_MARGIN - 1e-9:
+            raise ValueError(f"{n} fade steps are thinner than {nz} mm on the shortest wall")
+        z = [-np.inf] + [f_bot + k / n * (f_top - f_bot) for k in range(1, n)] + [np.inf]
+        field = frac
+    else:
+        if nz and FADE_RANGE_MM * (f_top - f_bot) / n < nz - 1e-9:
+            raise ValueError(f"{n} fade steps are thinner than {nz} mm")
+        z = [-np.inf] + [FADE_Z0_MM + FADE_RANGE_MM * (f_bot + k / n * (f_top - f_bot))
+                         for k in range(1, n)] + [np.inf]
+
+        def field(pts):
+            return pts[:, 2]
+    lo_lin, top_lin = srgb_to_linear(hex_rgb(fade["low"])), srgb_to_linear(hex_rgb(top_hex))
+    out = []
+    for k in range(n):
+        rgb = linear_to_srgb(lo_lin + (top_lin - lo_lin) * k / (n - 1))
+        out.append((z[k], z[k + 1], "#" + "".join(f"{round(float(c) * 255):02X}" for c in rgb)))
+    return field, out
+
+
+def split_by_field(tris, field, z_lo, z_hi):
+    """Triangles (N, 3, 3) clipped to z_lo <= field < z_hi, the field taken at the corners and
+    interpolated linearly along the edges."""
+    tz = field(tris.reshape(-1, 3)).reshape(-1, 3)
+    whole = (tz.min(1) >= z_lo) & (tz.max(1) < z_hi)
+    out = [tris[whole]]
+    cut = []
+    for t, tv in zip(tris[~whole & (tz.max(1) >= z_lo) & (tz.min(1) < z_hi)],
+                     tz[~whole & (tz.max(1) >= z_lo) & (tz.min(1) < z_hi)]):
+        poly = list(zip(t, tv))
+        if np.isfinite(z_lo):
+            poly = clip(poly, z_lo, True)
+        if len(poly) >= 3 and np.isfinite(z_hi):
+            poly = clip(poly, z_hi, False)
+        for k in range(1, len(poly) - 1):
+            cut.append([poly[0][0], poly[k][0], poly[k + 1][0]])
+    if cut:
+        out.append(np.array(cut))
+    return np.concatenate(out)
 
 
 def sequence(kind, count):
@@ -66,8 +227,17 @@ def sequence(kind, count):
 
 def intervals(setup, dmax):
     """Relief intervals [lo, hi) in mm, each with its filament name."""
-    tol, acc = setup["stock_tolerance_mm"], setup["accent_below_mm"]
+    tol = setup["stock_tolerance_mm"]
+    acc = setup.get("accent_below_mm")  # null: no accent
     rule, k, unit = setup["colour_rule"], setup["k"], setup["unit_mm"]
+    nz = setup.get("min_band_mm")
+    band_min = nz * MIN_BAND_MARGIN if nz else 0.0
+    if nz:
+        a_min = min(sequence(setup["sequence"], 60))
+        if a_min * unit < band_min - 1e-9:
+            raise ValueError(f"unit {unit} mm makes bands thinner than {band_min} mm")
+        if acc is not None and acc < band_min - 1e-9:
+            raise ValueError(f"accent cut-off {acc} mm is thinner than {band_min} mm")
     if setup["grow_from"] not in ("base", "tip"):
         raise ValueError("grow_from must be 'base' (shell surface up) or 'tip' (highest tip down)")
     bands, done = [], 0.0
@@ -82,13 +252,47 @@ def intervals(setup, dmax):
         done += w
         bands.append((lo, hi, f"c{(a if rule == 'a_mod_k' else n) % k}"))
     bands.sort()
-    out = [(-1.0, tol, "stock"), (tol, acc, "accent")]
+    out = [(-1.0, tol, "stock")] + ([(tol, acc, "accent")] if acc is not None else [])
+    floor = acc if acc is not None else tol
+    vis = []
     for lo, hi, name in bands:
-        lo = max(lo, acc)
+        lo = max(lo, floor)
         if hi > lo:
-            out.append((lo, hi, name))
+            vis.append([lo, hi, name])
+    if nz:
+        vis = fold_slivers(vis, band_min)
+    out += [tuple(v) for v in vis]
     out[-1] = (out[-1][0], dmax + 1.0, out[-1][2])
     return out
+
+
+def merge_same(regions):
+    out = []
+    for r in regions:
+        if out and out[-1][2] == r[2]:
+            out[-1][1] = r[1]
+        else:
+            out.append(list(r))
+    return out
+
+
+def fold_slivers(regions, band_min):
+    """Fold regions thinner than band_min into a neighbour, exactly as the preview does."""
+    regions = merge_same(regions)
+    folded = True
+    while folded and len(regions) > 1:
+        folded = False
+        for i, (lo, hi, _) in enumerate(regions):
+            if hi - lo < band_min - 1e-9:
+                if i > 0:
+                    regions[i - 1][1] = hi
+                else:
+                    regions[1][0] = lo
+                regions.pop(i)
+                regions = merge_same(regions)
+                folded = True
+                break
+    return regions
 
 
 def clip(poly, value, keep_above):
@@ -137,6 +341,19 @@ def split(setup_path):
         if cut:
             tris[name].append(np.array(cut))
 
+    colours = dict(setup["colours"])
+    steps = []
+    if setup.get("stock_fade"):
+        stock_tris = np.concatenate([c for c in tris.pop("stock") if len(c)])
+        top_hex = colours.pop("stock")
+        field, steps = fade_steps(
+            {**setup["stock_fade"], "min_band_mm": setup.get("min_band_mm")}, top_hex, stock)
+        fade_tris = {}
+        for k, (z_lo, z_hi, hexc) in enumerate(steps):
+            fade_tris[f"stock_s{k}"] = [split_by_field(stock_tris, field, z_lo, z_hi)]
+            colours[f"stock_s{k}"] = hexc
+        tris = {**fade_tris, **tris}
+
     pieces, total = [], 0.0
     for name, chunks in tris.items():
         chunks = [c for c in chunks if len(c)]
@@ -147,7 +364,7 @@ def split(setup_path):
         mesh.update_faces(mesh.nondegenerate_faces(height=1e-12))
         mesh.remove_unreferenced_vertices()
         mesh.export(out_dir / f"{name}.stl")
-        hexc = setup["colours"][name]
+        hexc = colours[name]
         rgb = [round(int(hexc[i:i + 2], 16) / 255, 4) for i in (1, 3, 5)]
         area = mesh.area * 1e6
         total += area
@@ -164,6 +381,16 @@ def split(setup_path):
         pieces=pieces,
         area_check_mm2=dict(pieces=round(total, 1), printable=round(shell.area, 1)),
     )
+    if steps and setup["stock_fade"]["mode"] == "wall":  # fraction up the side; open ends null
+        manifest["stock_fade_steps_wall_fraction"] = [
+            dict(piece=f"stock_s{k}", hex=h, lo=round(a, 4) if np.isfinite(a) else None,
+                 hi=round(b, 4) if np.isfinite(b) else None)
+            for k, (a, b, h) in enumerate(steps)]
+    elif steps:  # z in mm, upper_shell_link frame; open ends are null
+        manifest["stock_fade_steps_mm"] = [
+            dict(piece=f"stock_s{k}", hex=h, z_lo=round(a, 3) if np.isfinite(a) else None,
+                 z_hi=round(b, 3) if np.isfinite(b) else None)
+            for k, (a, b, h) in enumerate(steps)]
     (out_dir / "colours.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
 

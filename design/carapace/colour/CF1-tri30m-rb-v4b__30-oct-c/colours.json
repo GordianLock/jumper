@@ -1,0 +1,201 @@
+{
+  "setup": "30 Oct C",
+  "version": "CF1-tri30m-rb-v4b",
+  "frame": "upper_shell_link (as urdf/jumper/meshes/visual/upper_shell_link.stl)",
+  "units": "metres",
+  "relief_intervals_mm": [
+    {
+      "lo": 0.0,
+      "hi": 0.001,
+      "filament": "stock"
+    },
+    {
+      "lo": 0.001,
+      "hi": 0.6,
+      "filament": "accent"
+    },
+    {
+      "lo": 0.6,
+      "hi": 5.0,
+      "filament": "c1"
+    },
+    {
+      "lo": 5.0,
+      "hi": 10.0,
+      "filament": "c2"
+    },
+    {
+      "lo": 10.0,
+      "hi": 17.5,
+      "filament": "c3"
+    },
+    {
+      "lo": 17.5,
+      "hi": 30.0,
+      "filament": "c1"
+    },
+    {
+      "lo": 30.0,
+      "hi": 40.932,
+      "filament": "c0"
+    }
+  ],
+  "pieces": [
+    {
+      "filament": "stock_s0",
+      "file": "stock_s0.stl",
+      "hex": "#1F1F1F",
+      "rgba": [
+        0.1216,
+        0.1216,
+        0.1216,
+        1
+      ],
+      "triangles": 4682,
+      "area_mm2": 10572.6,
+      "area_share": 0.0881
+    },
+    {
+      "filament": "stock_s1",
+      "file": "stock_s1.stl",
+      "hex": "#722019",
+      "rgba": [
+        0.4471,
+        0.1255,
+        0.098,
+        1
+      ],
+      "triangles": 3331,
+      "area_mm2": 7570.6,
+      "area_share": 0.0631
+    },
+    {
+      "filament": "stock_s2",
+      "file": "stock_s2.stl",
+      "hex": "#992211",
+      "rgba": [
+        0.6,
+        0.1333,
+        0.0667,
+        1
+      ],
+      "triangles": 3841,
+      "area_mm2": 7853.0,
+      "area_share": 0.0654
+    },
+    {
+      "filament": "stock_s3",
+      "file": "stock_s3.stl",
+      "hex": "#B72306",
+      "rgba": [
+        0.7176,
+        0.1373,
+        0.0235,
+        1
+      ],
+      "triangles": 34196,
+      "area_mm2": 70055.2,
+      "area_share": 0.5835
+    },
+    {
+      "filament": "accent",
+      "file": "accent.stl",
+      "hex": "#0C0D0D",
+      "rgba": [
+        0.0471,
+        0.051,
+        0.051,
+        1
+      ],
+      "triangles": 20308,
+      "area_mm2": 2643.1,
+      "area_share": 0.022
+    },
+    {
+      "filament": "c0",
+      "file": "c0.stl",
+      "hex": "#3C1DAF",
+      "rgba": [
+        0.2353,
+        0.1137,
+        0.6863,
+        1
+      ],
+      "triangles": 4770,
+      "area_mm2": 1461.4,
+      "area_share": 0.0122
+    },
+    {
+      "filament": "c1",
+      "file": "c1.stl",
+      "hex": "#2E9127",
+      "rgba": [
+        0.1804,
+        0.5686,
+        0.1529,
+        1
+      ],
+      "triangles": 39943,
+      "area_mm2": 11814.9,
+      "area_share": 0.0984
+    },
+    {
+      "filament": "c2",
+      "file": "c2.stl",
+      "hex": "#000000",
+      "rgba": [
+        0.0,
+        0.0,
+        0.0,
+        1
+      ],
+      "triangles": 15228,
+      "area_mm2": 4137.5,
+      "area_share": 0.0345
+    },
+    {
+      "filament": "c3",
+      "file": "c3.stl",
+      "hex": "#9CAD14",
+      "rgba": [
+        0.6118,
+        0.6784,
+        0.0784,
+        1
+      ],
+      "triangles": 13506,
+      "area_mm2": 3955.1,
+      "area_share": 0.0329
+    }
+  ],
+  "area_check_mm2": {
+    "pieces": 120063.5,
+    "printable": 120063.5
+  },
+  "stock_fade_steps_wall_fraction": [
+    {
+      "piece": "stock_s0",
+      "hex": "#1F1F1F",
+      "lo": null,
+      "hi": 0.25
+    },
+    {
+      "piece": "stock_s1",
+      "hex": "#722019",
+      "lo": 0.25,
+      "hi": 0.5
+    },
+    {
+      "piece": "stock_s2",
+      "hex": "#992211",
+      "lo": 0.5,
+      "hi": 0.75
+    },
+    {
+      "piece": "stock_s3",
+      "hex": "#B72306",
+      "lo": 0.75,
+      "hi": null
+    }
+  ]
+}
