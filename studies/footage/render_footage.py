@@ -53,6 +53,9 @@ p.add_argument("--hold", type=float, default=0.5, help="s of still pose added at
 p.add_argument("--scene", default=None,
                help="a repository scene id (scripts/play.py --list): its ground, sky and "
                     "lights instead of the footage's own; props are left out")
+p.add_argument("--floor", default=None, choices=("hardwood",),
+               help="a look for the ground (display only; the physics is untouched): "
+                    "hardwood, from studies/footage/make_wood.py")
 p.add_argument("--colour", default=None,
                help="a colour pattern folder (design/carapace/colour/<folder>): its display "
                     "meshes replace the top shell's and carapace's visuals")
@@ -88,6 +91,11 @@ if a.scene:
     world = _build_spec(scenes.load(a.scene))
     world.attach(spec, prefix="robot/", frame=world.worldbody.add_frame())
     spec = world
+    if not any(t.type == mujoco.mjtTexture.mjTEXTURE_SKYBOX for t in spec.textures):
+        # mjlab's default scene has no sky, which renders black.
+        spec.add_texture(name="footage_sky", type=mujoco.mjtTexture.mjTEXTURE_SKYBOX,
+                         builtin=mujoco.mjtBuiltin.mjBUILTIN_GRADIENT, width=512, height=512,
+                         rgb1=[0.55, 0.62, 0.70], rgb2=[0.12, 0.14, 0.17])
 else:
     spec.add_texture(name="footage_grid", type=mujoco.mjtTexture.mjTEXTURE_2D,
                      builtin=mujoco.mjtBuiltin.mjBUILTIN_CHECKER, width=512, height=512,
@@ -103,6 +111,18 @@ else:
                              diffuse=[0.75, 0.75, 0.75], castshadow=True)
     spec.worldbody.add_light(pos=[-1, 1, 2.5], dir=[0.4, -0.4, -1], diffuse=[0.3, 0.3, 0.3],
                              castshadow=False)
+if a.floor == "hardwood":
+    # Visual only: a texture and material on the ground plane. Friction and contact
+    # are the geom's and are not touched. The image covers make_wood.TILE_M metres.
+    spec.add_texture(name="footage_hardwood", type=mujoco.mjtTexture.mjTEXTURE_2D,
+                     file=os.path.join(HERE, "assets", "hardwood.png"))
+    wood = spec.add_material(name="footage_hardwood", texuniform=True,
+                             texrepeat=[1 / 1.2, 1 / 1.2], reflectance=0.0, specular=0.25,
+                             shininess=0.4)
+    wood.textures[mujoco.mjtTextureRole.mjTEXROLE_RGB] = "footage_hardwood"
+    for g in spec.geoms:
+        if g.type == mujoco.mjtGeom.mjGEOM_PLANE:
+            g.material = "footage_hardwood"
 m = spec.compile()
 # No mirror in the ground: MuJoCo's reflectance mirrors the whole scene under the floor.
 for g in range(m.ngeom):
