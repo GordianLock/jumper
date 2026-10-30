@@ -1,0 +1,26 @@
+{
+  "name": "30 Oct Thue-Morse",
+  "version": "CF1-tri30m-rb-v4",
+  "sequence": "thue_morse_plus_1",
+  "unit_mm": 3.55,
+  "grow_from": "base",
+  "colour_rule": "n_mod_k",
+  "k": 3,
+  "accent_below_mm": 1.5,
+  "stock_tolerance_mm": 0.001,
+  "min_band_mm": 0.4,
+  "stock_fade": {
+    "mode": "height",
+    "from_pct": 27,
+    "to_pct": 100,
+    "steps": 3,
+    "low": "#5F0202"
+  },
+  "colours": {
+    "stock": "#141414",
+    "accent": "#53B62F",
+    "c0": "#2C2020",
+    "c1": "#8A0000",
+    "c2": "#000000"
+  }
+}
